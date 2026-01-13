@@ -147,3 +147,36 @@ Katalog firm/
 - `DELETE /admin/companies/{id}` - Usuń firmę
 - `PATCH /admin/companies/{id}/promote` - Promocja firmy
 - `GET/POST/DELETE /admin/categories` - Zarządzanie kategoriami
+
+### Newsletter
+- `GET /companies/random?count=5` - Losowe firmy dla newslettera
+- `GET /companies/{id}/photo` - Główne zdjęcie firmy jako obrazek
+
+---
+
+## 📤 Git - Wysyłanie zmian na GitHub
+
+### Pierwsze użycie (jeśli repo nie jest skonfigurowane)
+```bash
+cd "c:\REPO\Katalog firm"
+git init
+git remote add origin https://github.com/Pawelpoprawski/katalog-firm.git
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git push -u origin main
+```
+
+### Codzienne wysyłanie zmian
+```bash
+cd "c:\REPO\Katalog firm"
+git add .
+git commit -m "Opis zmian"
+git push
+```
+
+### Szybkie komendy (skopiuj i wklej)
+```powershell
+# Wyślij wszystkie zmiany na GitHub
+cd "c:\REPO\Katalog firm"; git add .; git commit -m "Update"; git push
+```
