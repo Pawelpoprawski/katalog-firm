@@ -1,0 +1,9 @@
+fastapi==0.115.12
+uvicorn[standard]==0.34.0
+pydantic-settings==2.7.1
+pydantic==2.10.6
+PyJWT==2.10.1
+python-multipart==0.0.20
+slowapi==0.1.9
+bleach==6.2.0
+googlemaps==4.10.0

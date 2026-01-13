@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "Beauty",
+    "slug": "beauty",
+    "description": "💄 Salony kosmetyczne, fryzjerzy, stylizacja paznokci, makijaż permanentny"
+  },
+  {
+    "id": 2,
+    "name": "CV & Tłumaczenia",
+    "slug": "cv-tlumaczenia",
+    "description": "📝 Pomoc w pisaniu CV, tłumaczenia dokumentów, wsparcie administracyjne"
+  },
+  {
+    "id": 3,
+    "name": "Edukacja",
+    "slug": "edukacja",
+    "description": "📚 Korepetycje, kursy językowe, szkolenia, przedszkola"
+  },
+  {
+    "id": 4,
+    "name": "Fotografia",
+    "slug": "fotografia",
+    "description": "📸 Sesje zdjęciowe, fotografia ślubna, reportaże, studio"
+  },
+  {
+    "id": 5,
+    "name": "Gastronomia",
+    "slug": "gastronomia",
+    "description": "🍽️ Restauracje, catering, food truck, piekarnie, cukiernie"
+  },
+  {
+    "id": 6,
+    "name": "Remont",
+    "slug": "remont",
+    "description": "🔨 Budowa, remonty, wykończenia, malowanie, instalacje"
+  },
+  {
+    "id": 7,
+    "name": "Różne",
+    "slug": "rozne",
+    "description": "🌟 Inne usługi i specjalistyczne branże"
+  },
+  {
+    "id": 8,
+    "name": "Transport",
+    "slug": "transport",
+    "description": "🚚 Przeprowadzki, transport towaru, samochody, logistyka"
+  },
+  {
+    "id": 9,
+    "name": "Sprzątanie",
+    "slug": "sprzatanie",
+    "description": "🧹 Sprzątanie domów, biur, czyszczenie tapicerki, mycie okien"
+  },
+  {
+    "id": 10,
+    "name": "Zdrowie",
+    "slug": "zdrowie",
+    "description": "⚕️ Lekarze, dentyści, fizjoterapia, masaże, wellness"
+  }
+]

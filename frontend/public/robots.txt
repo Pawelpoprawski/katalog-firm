@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /uslugi/
+Disallow: /uslugi/api/
+Disallow: /uslugi/_next/
+
+Sitemap: https://polacyszwajcaria.com/uslugi/sitemap.xml
+

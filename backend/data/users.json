@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "email": "demo@example.com",
+    "hashed_password": "demo",
+    "full_name": "Demo User",
+    "is_admin": false,
+    "created_at": 1765912238.1148744
+  }
+]

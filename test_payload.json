@@ -1,0 +1,9 @@
+{
+    "name": "Curl Test Company",
+    "category_id": null,
+    "description": "Test description from curl",
+    "offer": "Test offer",
+    "address": "Bahnhofstrasse 1, Zurich",
+    "city": "Zurich",
+    "canton": "ZH"
+}

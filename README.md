@@ -1,0 +1,149 @@
+# Katalog Firm Polonijnych w Szwajcarii
+
+Aplikacja do katalogowania polskich usług w Szwajcarii z mapą, recenzjami i panelem administracyjnym.
+
+---
+
+## 🚀 Deployment - Zmienne Środowiskowe
+
+### KRYTYCZNE - Przed wdrożeniem na produkcję ustaw te zmienne!
+
+#### Backend (`backend/.env`)
+
+Utwórz plik `backend/.env` z następującymi zmiennymi:
+
+```env
+# WYMAGANE - Hasło do panelu admin (USTAW SILNE HASŁO!)
+ADMIN_PASSWORD=TwojeSuperbezpieczneHaslo123!
+
+# WYMAGANE - Klucz API Google Maps (do geokodowania i mapy)
+GOOGLE_MAPS_API_KEY=AIzaSy...TwojKluczGoogleMaps
+
+# ZALECANE - Konfiguracja produkcyjna
+DEBUG=False
+CORS_ORIGINS=https://twoja-domena.com,https://www.twoja-domena.com
+
+# OPCJONALNE - Token Mapbox
+MAPBOX_TOKEN=pk.eyJ1...TwojTokenMapbox
+```
+
+#### Frontend (`frontend/.env.local`)
+
+```env
+# URL do backendu (zmień na produkcyjny URL)
+NEXT_PUBLIC_API_URL=https://api.twoja-domena.com
+
+# Klucz Google Maps (UWAGA: nazwa bez "_API" - to jest poprawna nazwa!)
+NEXT_PUBLIC_GOOGLE_MAPS_KEY=AIzaSy...TwojKluczGoogleMaps
+```
+
+> ⚠️ **Ważne**: Zmienne środowiskowe systemu mają priorytet nad plikiem `.env`. Jeśli w terminalu jest ustawiona zmienna (np. poprzez `$env:ADMIN_PASSWORD`), to ona będzie użyta zamiast wartości z pliku.
+
+---
+
+## 🔐 Bezpieczeństwo
+
+### Panel Administratora
+- URL: `/admin`
+- Wymaga hasła ustawionego w `ADMIN_PASSWORD`
+- Hasło przechowywane w sessionStorage (czyści się po zamknięciu przeglądarki)
+
+### Zmienne Środowiskowe na Serwerze
+
+#### Linux/Ubuntu (systemd service)
+```bash
+# W pliku /etc/systemd/system/katalog-backend.service
+[Service]
+Environment="ADMIN_PASSWORD=TwojeHaslo"
+Environment="GOOGLE_MAPS_API_KEY=AIzaSy..."
+Environment="DEBUG=False"
+Environment="CORS_ORIGINS=https://twoja-domena.com"
+```
+
+#### Docker
+```yaml
+# W docker-compose.yml
+services:
+  backend:
+    environment:
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
+      - DEBUG=False
+      - CORS_ORIGINS=https://twoja-domena.com
+```
+
+#### Vercel/Netlify (Frontend)
+Ustaw zmienne w panelu administracyjnym platformy:
+- `NEXT_PUBLIC_API_URL`
+- `NEXT_PUBLIC_GOOGLE_MAPS_KEY`
+
+---
+
+## 🏃 Uruchomienie lokalne
+
+### Backend
+```bash
+cd backend
+pip install -r requirements.txt
+# Ustaw zmienne w .env (skopiuj z .env.example)
+python -m uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### Frontend
+```bash
+cd frontend
+npm install
+# Ustaw zmienne w .env.local
+npm run dev
+```
+
+Backend: `http://localhost:8000`
+Frontend: `http://localhost:3000`
+
+---
+
+## ⚠️ Checklist przed wdrożeniem
+
+- [ ] **ADMIN_PASSWORD** ustawione na silne hasło (min. 12 znaków)
+- [ ] **GOOGLE_MAPS_API_KEY** ustawiony i ograniczony do Twojej domeny
+- [ ] **DEBUG=False** w produkcji
+- [ ] **CORS_ORIGINS** ustawione na konkretne domeny (NIE `*`)
+- [ ] Plik `.env` NIGDY nie jest commitowany do repozytorium
+- [ ] Certyfikat SSL/TLS (HTTPS) skonfigurowany
+- [ ] Rate limiting włączony (już zaimplementowany)
+
+---
+
+## 📁 Struktura projektu
+
+```
+Katalog firm/
+├── backend/
+│   ├── data/              # Dane JSON (companies, reviews, categories)
+│   ├── routers/           # Endpointy API
+│   ├── main.py           # Główny plik FastAPI
+│   ├── settings.py       # Konfiguracja z .env
+│   ├── .env              # ⚠️ NIE COMMITUJ!
+│   └── .env.example      # Szablon zmiennych
+├── frontend/
+│   ├── src/app/          # Strony Next.js
+│   └── .env.local        # ⚠️ NIE COMMITUJ!
+└── .gitignore            # Chroni przed commitowaniem .env
+```
+
+---
+
+## 🔧 API Endpoints
+
+### Publiczne
+- `GET /companies` - Lista firm
+- `GET /categories` - Lista kategorii
+- `POST /companies` - Dodaj firmę
+- `POST /reviews` - Dodaj recenzję
+
+### Admin (wymaga hasła w nagłówku Authorization)
+- `GET /admin/stats` - Statystyki
+- `GET /admin/companies` - Lista firm z tokenami edycji
+- `DELETE /admin/companies/{id}` - Usuń firmę
+- `PATCH /admin/companies/{id}/promote` - Promocja firmy
+- `GET/POST/DELETE /admin/categories` - Zarządzanie kategoriami

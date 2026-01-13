@@ -1,0 +1,426 @@
+[
+  {
+    "id": 1,
+    "author_id": 1,
+    "company_id": 1,
+    "rating": 5,
+    "comment": "Świetna obsługa i terminowość! Polecam.",
+    "created_at": 1765480238.1179478
+  },
+  {
+    "id": 2,
+    "author_id": 1,
+    "company_id": 1,
+    "rating": 4,
+    "comment": "Dobra komunikacja, profesjonalna ekipa.",
+    "created_at": 1765653038.11795
+  },
+  {
+    "id": 3,
+    "author_id": 1,
+    "company_id": 1,
+    "rating": 5,
+    "comment": "Remont wykonany perfekcyjnie, bardzo zadowolony!",
+    "created_at": 1765048238.1179507
+  },
+  {
+    "id": 4,
+    "author_id": 1,
+    "company_id": 2,
+    "rating": 5,
+    "comment": "Bardzo pomocni, szybka reakcja na problemy IT.",
+    "created_at": 1765307438.1179512
+  },
+  {
+    "id": 5,
+    "author_id": 1,
+    "company_id": 2,
+    "rating": 5,
+    "comment": "Profesjonalne podejście, aplikacja działa świetnie!",
+    "created_at": 1765566638.1179516
+  },
+  {
+    "id": 6,
+    "author_id": 1,
+    "company_id": 2,
+    "rating": 4,
+    "comment": "Dobra współpraca, polecam dla firm.",
+    "created_at": 1764875438.1179526
+  },
+  {
+    "id": 7,
+    "author_id": 1,
+    "company_id": 3,
+    "rating": 4,
+    "comment": "Pomogli mi z rozliczeniem podatków CH/PL. Dziękuję!",
+    "created_at": 1765048238.1179528
+  },
+  {
+    "id": 8,
+    "author_id": 1,
+    "company_id": 3,
+    "rating": 5,
+    "comment": "Bardzo kompetentni w sprawach podatkowych.",
+    "created_at": 1765221038.1179533
+  },
+  {
+    "id": 9,
+    "author_id": 1,
+    "company_id": 4,
+    "rating": 5,
+    "comment": "Fantastyczna klinika, miła obsługa i świetne efekty.",
+    "created_at": 1765739438.1179538
+  },
+  {
+    "id": 10,
+    "author_id": 1,
+    "company_id": 4,
+    "rating": 5,
+    "comment": "Najlepszy masaż w mieście! Wrócę na pewno.",
+    "created_at": 1764616238.1179543
+  },
+  {
+    "id": 11,
+    "author_id": 1,
+    "company_id": 4,
+    "rating": 4,
+    "comment": "Profesjonalne zabiegi, miła atmosfera.",
+    "created_at": 1765134638.1179543
+  },
+  {
+    "id": 12,
+    "author_id": 1,
+    "company_id": 5,
+    "rating": 4,
+    "comment": "Przeprowadzka przebiegła sprawnie, polecam!",
+    "created_at": 1765393838.1179547
+  },
+  {
+    "id": 13,
+    "author_id": 1,
+    "company_id": 5,
+    "rating": 5,
+    "comment": "Szybka i bezpieczna usługa, wszystko dotarło w idealnym stanie.",
+    "created_at": 1764961838.1179554
+  },
+  {
+    "id": 14,
+    "author_id": 1,
+    "company_id": 6,
+    "rating": 5,
+    "comment": "Najlepsze pierogi w Szwajcarii! 🥟",
+    "created_at": 1765825838.1179557
+  },
+  {
+    "id": 15,
+    "author_id": 1,
+    "company_id": 6,
+    "rating": 5,
+    "comment": "Autentyczny smak Polski, catering na event był hitem!",
+    "created_at": 1764789038.1179562
+  },
+  {
+    "id": 16,
+    "author_id": 1,
+    "company_id": 6,
+    "rating": 4,
+    "comment": "Dobre jedzenie, szybka dostawa.",
+    "created_at": 1765307438.1179566
+  },
+  {
+    "id": 17,
+    "author_id": 1,
+    "company_id": 7,
+    "rating": 5,
+    "comment": "Świetni nauczyciele, syn poprawił oceny z matematyki!",
+    "created_at": 1764184238.117957
+  },
+  {
+    "id": 18,
+    "author_id": 1,
+    "company_id": 7,
+    "rating": 5,
+    "comment": "Kurs niemieckiego bardzo pomocny, polecam!",
+    "created_at": 1764529838.1179574
+  },
+  {
+    "id": 19,
+    "author_id": 1,
+    "company_id": 7,
+    "rating": 4,
+    "comment": "Dobre przygotowanie do egzaminów.",
+    "created_at": 1764875438.1179578
+  },
+  {
+    "id": 20,
+    "author_id": 1,
+    "company_id": 8,
+    "rating": 5,
+    "comment": "Fantastyczna stylizacja, jestem zachwycona!",
+    "created_at": 1764357038.1179578
+  },
+  {
+    "id": 21,
+    "author_id": 1,
+    "company_id": 8,
+    "rating": 4,
+    "comment": "Profesjonalna obsługa, miła atmosfera.",
+    "created_at": 1764702638.1179583
+  },
+  {
+    "id": 22,
+    "author_id": 1,
+    "company_id": 9,
+    "rating": 5,
+    "comment": "Pomogli znaleźć idealne mieszkanie, bardzo pomocni!",
+    "created_at": 1764443438.117959
+  },
+  {
+    "id": 23,
+    "author_id": 1,
+    "company_id": 9,
+    "rating": 4,
+    "comment": "Profesjonalna obsługa, szybka transakcja.",
+    "created_at": 1764961838.1179593
+  },
+  {
+    "id": 24,
+    "author_id": 1,
+    "company_id": 9,
+    "rating": 5,
+    "comment": "Najlepsza agencja dla Polaków w CH!",
+    "created_at": 1765393838.1179595
+  },
+  {
+    "id": 25,
+    "author_id": 1,
+    "company_id": 10,
+    "rating": 5,
+    "comment": "Pomogli w sprawie imigracyjnej, bardzo kompetentni prawnicy.",
+    "created_at": 1764270638.11796
+  },
+  {
+    "id": 26,
+    "author_id": 1,
+    "company_id": 10,
+    "rating": 4,
+    "comment": "Dobra reprezentacja, sprawa zakończona sukcesem.",
+    "created_at": 1765048238.1179605
+  },
+  {
+    "id": 27,
+    "author_id": 1,
+    "company_id": 11,
+    "rating": 5,
+    "comment": "Szybka naprawa, profesjonalna obsługa, polecam!",
+    "created_at": 1763752238.117961
+  },
+  {
+    "id": 28,
+    "author_id": 1,
+    "company_id": 11,
+    "rating": 4,
+    "comment": "Dobra jakość pracy, uczciwe ceny.",
+    "created_at": 1764097838.1179614
+  },
+  {
+    "id": 29,
+    "author_id": 1,
+    "company_id": 11,
+    "rating": 5,
+    "comment": "Instalacja fotowoltaiczna wykonana perfekcyjnie!",
+    "created_at": 1764702638.1179616
+  },
+  {
+    "id": 30,
+    "author_id": 1,
+    "company_id": 12,
+    "rating": 5,
+    "comment": "Szybka dostawa, świeże produkty, jak w Polsce!",
+    "created_at": 1765221038.117962
+  },
+  {
+    "id": 31,
+    "author_id": 1,
+    "company_id": 12,
+    "rating": 4,
+    "comment": "Dobra jakość, szeroki wybór polskich produktów.",
+    "created_at": 1765480238.1179626
+  },
+  {
+    "id": 32,
+    "author_id": 1,
+    "company_id": 13,
+    "rating": 5,
+    "comment": "Lekarze mówią po polsku, bardzo pomocni i kompetentni!",
+    "created_at": 1763320238.1179628
+  },
+  {
+    "id": 33,
+    "author_id": 1,
+    "company_id": 13,
+    "rating": 5,
+    "comment": "Najlepsza klinika dla Polaków, polecam całej rodzinie!",
+    "created_at": 1764011438.117963
+  },
+  {
+    "id": 34,
+    "author_id": 1,
+    "company_id": 13,
+    "rating": 4,
+    "comment": "Profesjonalna opieka, miła obsługa.",
+    "created_at": 1764529838.1179638
+  },
+  {
+    "id": 35,
+    "author_id": 1,
+    "company_id": 14,
+    "rating": 4,
+    "comment": "Szybka i niezawodna usługa transportowa.",
+    "created_at": 1764789038.117964
+  },
+  {
+    "id": 36,
+    "author_id": 1,
+    "company_id": 14,
+    "rating": 5,
+    "comment": "Paczki dotarły szybko i bezpiecznie, polecam!",
+    "created_at": 1765134638.1179643
+  },
+  {
+    "id": 37,
+    "author_id": 1,
+    "company_id": 15,
+    "rating": 5,
+    "comment": "Naprawili laptop w jeden dzień, super obsługa!",
+    "created_at": 1765393838.1179645
+  },
+  {
+    "id": 38,
+    "author_id": 1,
+    "company_id": 15,
+    "rating": 4,
+    "comment": "Dobra pomoc techniczna, szybka reakcja.",
+    "created_at": 1765653038.1179647
+  },
+  {
+    "id": 39,
+    "author_id": 1,
+    "company_id": 15,
+    "rating": 5,
+    "comment": "Profesjonalne wsparcie IT dla naszej firmy!",
+    "created_at": 1764443438.1179652
+  },
+  {
+    "id": 40,
+    "author_id": 1,
+    "company_id": 4,
+    "rating": 5,
+    "comment": "dzieki!",
+    "created_at": 1765912281.941451
+  },
+  {
+    "id": 41,
+    "author_id": 1,
+    "company_id": 4,
+    "rating": 1,
+    "comment": "Nie polecam!",
+    "created_at": 1766093513.9813604
+  },
+  {
+    "id": 42,
+    "author_id": 1,
+    "company_id": 4,
+    "rating": 5,
+    "comment": "Gowno!",
+    "created_at": 1766093524.9380317
+  },
+  {
+    "id": 43,
+    "author_id": 1,
+    "company_id": 4,
+    "rating": 1,
+    "comment": "aaa",
+    "created_at": 1766093530.4939222
+  },
+  {
+    "id": 44,
+    "author_id": 1,
+    "company_id": 4,
+    "rating": 1,
+    "comment": "aaa",
+    "created_at": 1766093532.529758
+  },
+  {
+    "id": 45,
+    "author_id": 1,
+    "company_id": 4,
+    "rating": 1,
+    "comment": "aaaa",
+    "created_at": 1766093534.6886933
+  },
+  {
+    "id": 46,
+    "author_id": 1,
+    "company_id": 4,
+    "rating": 1,
+    "comment": "aaaa",
+    "created_at": 1766093537.386869
+  },
+  {
+    "id": 47,
+    "author_id": 1,
+    "company_id": 4,
+    "rating": 1,
+    "comment": "aaa",
+    "created_at": 1766093547.528202
+  },
+  {
+    "id": 48,
+    "author_id": 1,
+    "company_id": 4,
+    "rating": 1,
+    "comment": "aaa",
+    "created_at": 1766093549.941371
+  },
+  {
+    "id": 49,
+    "author_id": 1,
+    "company_id": 18,
+    "rating": 5,
+    "comment": "Super!",
+    "created_at": 1766093985.415173
+  },
+  {
+    "id": 50,
+    "author_id": 1,
+    "company_id": 18,
+    "rating": 1,
+    "comment": "gowno",
+    "created_at": 1766093990.4429219
+  },
+  {
+    "id": 51,
+    "author_id": 1,
+    "company_id": 29,
+    "rating": 5,
+    "comment": "asda",
+    "created_at": 1767282214.9896846
+  },
+  {
+    "id": 52,
+    "author_id": 1,
+    "company_id": 29,
+    "rating": 5,
+    "comment": "adasda",
+    "created_at": 1767282227.5651379
+  },
+  {
+    "id": 53,
+    "author_id": 1,
+    "company_id": 6,
+    "rating": 3,
+    "comment": "dobre jedzonko!",
+    "created_at": 1767282754.8767204
+  }
+]
