@@ -135,7 +135,7 @@ export default function AddCompanyPage() {
         } else if (key === "email" && value.trim() && !validateEmail(value)) {
           newErrors.email = "Nieprawidłowy format e-mail.";
         } else if (key === "phone" && value.trim() && !validatePhone(value)) {
-          newErrors.phone = "Nieprawidłowy format telefonu. Użyj formatu: +41 lub +48";
+          newErrors.phone = "Nieprawidłowy format telefonu. Użyj formatu: +41, +48 lub 0";
         } else if (key === "website" && value.trim() && !value.startsWith("http")) {
           newErrors.website = "Podaj pełny link (https://...).";
         } else if (key === "facebook" && value.trim() && !value.startsWith("http")) {
@@ -162,8 +162,9 @@ export default function AddCompanyPage() {
   };
 
   const validatePhone = (phone: string): boolean => {
-    // Swiss phone format: +41 XX XXX XX XX or 0XX XXX XX XX
-    const phoneRegex = /^(\+41|0)[1-9]\d{1,9}$/;
+    // Swiss phone format: +41 or 0 (local)
+    // Polish phone format: +48
+    const phoneRegex = /^(\+41|0|\+48)[1-9]\d{1,12}$/;
     const cleaned = phone.replace(/[\s-]/g, "");
     return phoneRegex.test(cleaned);
   };
@@ -209,7 +210,7 @@ export default function AddCompanyPage() {
   };
 
   const inputClass = (key: string) =>
-    `w-full rounded-lg border px-3 py-2 text-sm focus:border-primary focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${errors[key] ? "border-red-400" : "border-slate-300"
+    `w-full rounded-lg border px-3 py-2 text-base focus:border-primary focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${errors[key] ? "border-red-400" : "border-slate-300"
     }`;
 
   const filteredAddress = form.address.trim().length >= 2

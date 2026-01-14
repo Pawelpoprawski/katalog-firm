@@ -191,7 +191,7 @@ export default function EditCompanyPage() {
                 } else if (key === "email" && value.trim() && !validateEmail(value)) {
                     newErrors.email = "Nieprawidłowy format e-mail.";
                 } else if (key === "phone" && value.trim() && !validatePhone(value)) {
-                    newErrors.phone = "Nieprawidłowy format telefonu. Użyj formatu: +41 lub +48";
+                    newErrors.phone = "Nieprawidłowy format telefonu. Użyj formatu: +41, +48 lub 0";
                 } else if (key === "website" && value.trim() && !value.startsWith("http") && !value.startsWith("www.")) {
                     newErrors.website = "Podaj pełny link (https://... lub www....).";
                 } else if (key === "facebook" && value.trim() && !value.startsWith("http")) {
@@ -218,7 +218,9 @@ export default function EditCompanyPage() {
     };
 
     const validatePhone = (phone: string): boolean => {
-        const phoneRegex = /^(\+41|0)[1-9]\d{1,9}$/;
+        // Swiss phone format: +41 or 0 (local)
+        // Polish phone format: +48
+        const phoneRegex = /^(\+41|0|\+48)[1-9]\d{1,12}$/;
         const cleaned = phone.replace(/[\s-]/g, "");
         return phoneRegex.test(cleaned);
     };
@@ -241,7 +243,7 @@ export default function EditCompanyPage() {
                 newErrors.email = "Nieprawidłowy format e-mail.";
             }
             if (form.phone.trim() && !validatePhone(form.phone)) {
-                newErrors.phone = "Nieprawidłowy format telefonu.";
+                newErrors.phone = "Nieprawidłowy format telefonu. Użyj formatu: +41 lub +48";
             }
         }
         if (current === 3) {
@@ -265,7 +267,7 @@ export default function EditCompanyPage() {
     };
 
     const inputClass = (key: string) =>
-        `w-full rounded-2xl border px-4 py-4 text-sm font-medium transition-all focus:ring-4 focus:ring-primary/10 outline-none ${errors[key]
+        `w-full rounded-2xl border px-4 py-4 text-base font-medium transition-all focus:ring-4 focus:ring-primary/10 outline-none ${errors[key]
             ? "border-red-400 bg-red-50 dark:bg-red-900/10 focus:border-red-500"
             : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:border-primary dark:text-white"
         }`;
@@ -574,7 +576,7 @@ export default function EditCompanyPage() {
                                     <div className="grid gap-8 md:grid-cols-2">
                                         <div className="space-y-3">
                                             <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
-                                                Telefon kontaktowy
+                                                Telefon / WhatsApp
                                             </label>
                                             <input
                                                 type="tel"

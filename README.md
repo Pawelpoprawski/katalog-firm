@@ -181,11 +181,54 @@ git push
 cd "c:\REPO\Katalog firm"; git add .; git commit -m "Update"; git push
 ```
 
+### Rozwiązywanie konfliktów plików danych (stats/companies)
+Jeśli na serwerze wystąpi błąd `Your local changes to the following files would be overwritten by merge`, wykonaj:
+```bash
+git checkout --theirs backend/data/stats.json
+git add backend/data/stats.json backend/data/companies.json
+git commit -m "Zachowanie danych serwera przed pull"
+git pull
+```
+
+---
+
+### 🚀 Deployment - Server-side Fixes (Ubuntu)
+
+If you encounter Git conflicts or "Load failed" (CORS) errors on production, follow these steps:
+
+1. **Resolve Git Conflict (Server Data vs Repo)**:
+   ```bash
+   cd /var/www/katalog-firm
+   # Backup data just in case
+   cp backend/data/companies.json backend/data/companies.json.bak
+   # Overwrite server stat files with repo versions to allow pull
+   git checkout --theirs backend/data/stats.json
+   git add backend/data/stats.json backend/data/companies.json
+   git commit -m "Resolve data conflicts for production"
+   git pull
+   ```
+
+2. **Fix CORS_ORIGINS (Backend)**:
+   ```bash
+   # Edit the backend environment file
+   nano /var/www/katalog-firm/backend/.env
+   ```
+   Ensure the `CORS_ORIGINS` line matches your production domains:
+   ```text
+   CORS_ORIGINS=https://poprawskipawel.com,https://www.poprawskipawel.com
+   ```
+
+3. **Rebuild Frontend & Restart**:
+   ```bash
+   cd /var/www/katalog-firm/frontend && npm run build
+   pm2 restart katalog-api katalog-frontend
+   ```
+
 ---
 
 ## 🌐 Zmiana domeny (PROD deployment)
 
-Przy wdrożeniu na nową domenę produkcyjną, należy zmienić następujące pliki:
+Jeśli zmieniasz domenę (np. z `katalog-firm.com` na `poprawskipawel.com`), musisz zaktualizować poniższe pliki:
 
 ### 1. Backend - `backend/.env`
 ```env

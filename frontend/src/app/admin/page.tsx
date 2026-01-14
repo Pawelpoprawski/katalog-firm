@@ -408,7 +408,7 @@ export default function AdminPage() {
                                     value={passwordInput}
                                     onChange={(e) => setPasswordInput(e.target.value)}
                                     placeholder="••••••••"
-                                    className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                                    className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-base focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none"
                                     autoFocus
                                 />
                             </div>
@@ -709,7 +709,7 @@ export default function AdminPage() {
                                     type="text"
                                     value={newCategory.emoji}
                                     onChange={(e) => setNewCategory(prev => ({ ...prev, emoji: e.target.value }))}
-                                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-2xl text-center"
+                                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-base text-center"
                                     maxLength={4}
                                     placeholder="🏢"
                                 />
@@ -720,7 +720,7 @@ export default function AdminPage() {
                                     type="text"
                                     value={newCategory.name}
                                     onChange={(e) => setNewCategory(prev => ({ ...prev, name: e.target.value, slug: e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') }))}
-                                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm"
+                                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-base"
                                     placeholder="np. IT & Software"
                                 />
                             </div>
@@ -730,7 +730,7 @@ export default function AdminPage() {
                                     type="text"
                                     value={newCategory.description}
                                     onChange={(e) => setNewCategory(prev => ({ ...prev, description: e.target.value }))}
-                                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm"
+                                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-base"
                                     placeholder="Krótki opis kategorii"
                                 />
                             </div>
@@ -795,7 +795,7 @@ export default function AdminPage() {
                                 max={50}
                                 value={newsletterCount}
                                 onChange={(e) => setNewsletterCount(Math.min(50, Math.max(1, parseInt(e.target.value) || 1)))}
-                                className="w-full sm:w-32 px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-center focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                                className="w-full sm:w-32 px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-center text-base focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none"
                             />
                         </div>
                         <button

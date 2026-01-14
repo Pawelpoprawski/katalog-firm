@@ -88,7 +88,21 @@ export default function EditListingPage() {
     setSaving(true);
     setError("");
 
+    const validatePhone = (phone: string): boolean => {
+      // Accept Swiss (+41), local (0), and Polish (+48) numbers
+      const phoneRegex = /^(\+41|0|\+48)[1-9]\d{1,12}$/;
+      const cleaned = phone.replace(/[\s-]/g, "");
+      return phoneRegex.test(cleaned);
+    };
+
     try {
+      if (company.phone && !validatePhone(company.phone)) {
+        throw new Error("Nieprawidłowy format telefonu. Użyj formatu: +41 lub +48");
+      }
+      if (company.whatsapp && !validatePhone(company.whatsapp)) {
+        throw new Error("Nieprawidłowy format telefonu (WhatsApp). Użyj formatu: +41 lub +48");
+      }
+
       const res = await fetch(`${apiUrl}/companies/${company.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -168,7 +182,7 @@ export default function EditListingPage() {
             value={company.name}
             onChange={(e) => setCompany({ ...company, name: e.target.value })}
             required
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>
 
@@ -179,7 +193,7 @@ export default function EditListingPage() {
           <select
             value={company.category_id || ""}
             onChange={(e) => setCompany({ ...company, category_id: e.target.value ? Number(e.target.value) : undefined })}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
             <option value="">Wybierz kategorię</option>
             {categories.map((cat) => (
@@ -198,7 +212,7 @@ export default function EditListingPage() {
             type="text"
             value={company.short_description || ""}
             onChange={(e) => setCompany({ ...company, short_description: e.target.value })}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>
 
@@ -211,7 +225,7 @@ export default function EditListingPage() {
             onChange={(e) => setCompany({ ...company, description: e.target.value })}
             required
             rows={4}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>
 
@@ -225,7 +239,7 @@ export default function EditListingPage() {
               value={company.city}
               onChange={(e) => setCompany({ ...company, city: e.target.value })}
               required
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
           <div>
@@ -237,20 +251,21 @@ export default function EditListingPage() {
               value={company.canton}
               onChange={(e) => setCompany({ ...company, canton: e.target.value })}
               required
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
         </div>
 
         <div>
           <label className="block text-sm font-semibold text-slate-900 mb-1">
-            Telefon
+            Telefon / WhatsApp
           </label>
           <input
             type="tel"
             value={company.phone || ""}
             onChange={(e) => setCompany({ ...company, phone: e.target.value })}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            placeholder="+41 79 123 45 67 lub +48 600 123 456"
           />
         </div>
 
@@ -262,7 +277,8 @@ export default function EditListingPage() {
             type="tel"
             value={company.whatsapp || ""}
             onChange={(e) => setCompany({ ...company, whatsapp: e.target.value })}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            placeholder="+41 79 123 45 67 lub +48 600 123 456"
           />
         </div>
 
@@ -274,7 +290,7 @@ export default function EditListingPage() {
             type="email"
             value={company.email || ""}
             onChange={(e) => setCompany({ ...company, email: e.target.value })}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>
 
@@ -286,7 +302,7 @@ export default function EditListingPage() {
             type="url"
             value={company.website || ""}
             onChange={(e) => setCompany({ ...company, website: e.target.value })}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>
 
@@ -297,7 +313,7 @@ export default function EditListingPage() {
           <select
             value={company.status || "published"}
             onChange={(e) => setCompany({ ...company, status: e.target.value, is_active: e.target.value === "published" })}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
             <option value="published">Opublikowane</option>
             <option value="draft">Szkic</option>
