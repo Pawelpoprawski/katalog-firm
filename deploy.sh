@@ -8,8 +8,13 @@
 # ============================================
 
 APP_DIR="/var/www/katalog-firm"
-GITHUB_TOKEN="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"
-REPO_URL="https://$GITHUB_TOKEN@github.com/Pawelpoprawski/katalog-firm.git"
+# UWAGA: Ustaw GITHUB_TOKEN jako zmienną środowiskową przed uruchomieniem skryptu
+# export GITHUB_TOKEN="ghp_TWOJ_TOKEN"
+if [ -z "$GITHUB_TOKEN" ]; then
+    REPO_URL="https://github.com/Pawelpoprawski/katalog-firm.git"
+else
+    REPO_URL="https://$GITHUB_TOKEN@github.com/Pawelpoprawski/katalog-firm.git"
+fi
 
 echo "=== 🚀 DEPLOY KATALOG FIRM ==="
 
@@ -46,7 +51,7 @@ if [ ! -f ".env" ]; then
     echo "⚠️ Tworzę plik .env - UZUPEŁNIJ WARTOŚCI!"
     cat > .env << 'EOF'
 ADMIN_PASSWORD=ZMIEN_NA_SILNE_HASLO
-GOOGLE_MAPS_API_KEY=AIzaSyDutoIKo3R23WjktVnjj8FvqYMKicCgIuw
+GOOGLE_MAPS_API_KEY=WSTAW_SWOJ_KLUCZ_GOOGLE_MAPS
 DEBUG=False
 CORS_ORIGINS=https://katalog.twoja-domena.com
 EOF
@@ -54,8 +59,8 @@ fi
 
 # Restart backendu przez PM2
 pm2 delete katalog-api 2>/dev/null || true
-cd $APP_DIR
-pm2 start "cd backend && source venv/bin/activate && python -m uvicorn backend.main:app --host 0.0.0.0 --port 8001" --name katalog-api
+cd $APP_DIR/backend
+pm2 start "source venv/bin/activate && python -m uvicorn main:app --host 0.0.0.0 --port 8001" --name katalog-api --cwd $APP_DIR/backend
 
 # === 4) FRONTEND (Next.js) ===
 echo "=== Konfiguruję Frontend ==="
@@ -66,7 +71,7 @@ if [ ! -f ".env.local" ]; then
     echo "⚠️ Tworzę plik .env.local - UZUPEŁNIJ WARTOŚCI!"
     cat > .env.local << 'EOF'
 NEXT_PUBLIC_API_URL=https://api.katalog.twoja-domena.com
-NEXT_PUBLIC_GOOGLE_MAPS_KEY=AIzaSyDutoIKo3R23WjktVnjj8FvqYMKicCgIuw
+NEXT_PUBLIC_GOOGLE_MAPS_KEY=WSTAW_SWOJ_KLUCZ_GOOGLE_MAPS
 EOF
 fi
 
