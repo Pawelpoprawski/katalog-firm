@@ -8,3 +8,4 @@ slowapi==0.1.9
 bleach==6.2.0
 googlemaps==4.10.0
 email-validator==2.1.1
+passlib[bcrypt]==1.7.4
