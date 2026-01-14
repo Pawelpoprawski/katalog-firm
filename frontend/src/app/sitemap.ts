@@ -9,7 +9,9 @@ async function getCompanies() {
       next: { revalidate: 3600 }, // Revalidate every hour
     });
     if (!res.ok) return [];
-    return await res.json();
+    const data = await res.json();
+    // Handle both old array format and new paginated format
+    return Array.isArray(data) ? data : (data.companies || []);
   } catch {
     return [];
   }
