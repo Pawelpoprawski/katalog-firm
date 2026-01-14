@@ -157,7 +157,8 @@ export default function AddCompanyPage() {
   };
 
   const validatePhone = (phone: string): boolean => {
-    const phoneRegex = /^(\+41|0)[1-9]\d{1,9}$/;
+    // Accept Swiss (+41) and Polish (+48) numbers
+    const phoneRegex = /^(\+41|\+48|0)[1-9]\d{1,12}$/;
     const cleaned = phone.replace(/[\s-]/g, "");
     return phoneRegex.test(cleaned);
   };
@@ -205,7 +206,7 @@ export default function AddCompanyPage() {
   };
 
   const inputClass = (key: string) =>
-    `w-full rounded-2xl border px-4 py-4 text-sm font-medium transition-all focus:ring-4 focus:ring-primary/10 outline-none ${errors[key]
+    `w-full rounded-2xl border px-4 py-4 text-base font-medium transition-all focus:ring-4 focus:ring-primary/10 outline-none ${errors[key]
       ? "border-red-400 bg-red-50 dark:bg-red-900/10 focus:border-red-500"
       : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:border-primary dark:text-white"
     }`;
@@ -616,12 +617,12 @@ export default function AddCompanyPage() {
                   <div className="grid gap-8 md:grid-cols-2">
                     <div className="space-y-3">
                       <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
-                        Telefon kontaktowy
+                        Telefon / WhatsApp
                       </label>
                       <input
                         type="tel"
                         className={inputClass("phone")}
-                        placeholder="+41 79 123 45 67"
+                        placeholder="+41 79 123 45 67 lub +48 600 123 456"
                         value={form.phone}
                         onChange={handleChange("phone")}
                       />
