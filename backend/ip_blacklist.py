@@ -51,8 +51,8 @@ async def ip_blacklist_middleware(request: Request, call_next):
     if client_ip in blacklist:
         logger.warning(f"Blocked request from blacklisted IP: {client_ip}")
         return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"detail": "Not Found"}
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={"detail": "Dostęp zablokowany. Skontaktuj się z administratorem."}
         )
     
     response = await call_next(request)
