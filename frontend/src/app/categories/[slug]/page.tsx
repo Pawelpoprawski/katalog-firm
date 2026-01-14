@@ -55,8 +55,10 @@ export default function CategoryPage({ params }: Props) {
         // Fetch companies
         const companiesRes = await fetch(`${apiUrl}/companies/`);
         if (!companiesRes.ok) throw new Error(`HTTP error! status: ${companiesRes.status}`);
-        const allCompanies: Company[] = await companiesRes.json();
-        
+        const companiesData = await companiesRes.json();
+        // Handle both old array format and new paginated format
+        const allCompanies: Company[] = Array.isArray(companiesData) ? companiesData : (companiesData.companies || []);
+
         // Filter by category_id
         const filtered = allCompanies.filter((c) => c.category_id === found.id);
         setCompanies(filtered);
@@ -281,11 +283,11 @@ export default function CategoryPage({ params }: Props) {
             >
               <div className="flex gap-3">
                 <div className="h-20 w-28 overflow-hidden rounded-xl bg-slate-100">
-                  <img 
-                    src={item.img || "https://via.placeholder.com/112x80?text=Brak+zdjęcia"} 
-                    alt={item.name} 
-                    className="h-full w-full object-cover" 
-                    loading="lazy" 
+                  <img
+                    src={item.img || "https://via.placeholder.com/112x80?text=Brak+zdjęcia"}
+                    alt={item.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
                   />
                 </div>
                 <div className="flex-1 space-y-1">

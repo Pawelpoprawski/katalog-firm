@@ -69,24 +69,26 @@ export default function CompanyPage({ params }: Props) {
   const [favorites, setFavorites] = useState<number[]>([]);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
   const COMMENT_LIMIT = 500;
-  
+
   // Try to parse slug as ID (number)
   const companyId = parseInt(params.slug, 10);
-  
+
   // Fetch company
   useEffect(() => {
     if (isNaN(companyId)) {
       setLoading(false);
       return;
     }
-    
+
     const fetchCompany = async () => {
       try {
         const res = await fetch(`${apiUrl}/companies/`);
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
-        const companies: Company[] = await res.json();
+        const data = await res.json();
+        // Handle both old array format and new paginated format
+        const companies: Company[] = Array.isArray(data) ? data : (data.companies || []);
         const found = companies.find((c) => c.id === companyId);
         if (found) {
           setCompany(found);
@@ -97,7 +99,7 @@ export default function CompanyPage({ params }: Props) {
         setLoading(false);
       }
     };
-    
+
     fetchCompany();
   }, [companyId, apiUrl]);
 
@@ -126,7 +128,7 @@ export default function CompanyPage({ params }: Props) {
 
   useEffect(() => {
     if (!company) return;
-    
+
     const fetchReviews = async () => {
       setLoadingReviews(true);
       setLoadError("");
@@ -183,7 +185,7 @@ export default function CompanyPage({ params }: Props) {
       </div>
     );
   }
-  
+
   if (!company) return notFound();
 
   const cantonCoords = CANTON_COORDS[company.canton as keyof typeof CANTON_COORDS] || DEFAULT_COORDS;
@@ -258,10 +260,10 @@ export default function CompanyPage({ params }: Props) {
         <div className="grid gap-8 md:grid-cols-[1.5fr,1fr]">
           <div className="space-y-4">
             <div className="h-64 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
-              <img 
-                src={company.img || "https://via.placeholder.com/600x400?text=Brak+zdjęcia"} 
-                alt={company.name} 
-                className="h-full w-full object-cover" 
+              <img
+                src={company.img || "https://via.placeholder.com/600x400?text=Brak+zdjęcia"}
+                alt={company.name}
+                className="h-full w-full object-cover"
               />
             </div>
             <h1 className="text-2xl font-bold text-slate-900">{company.name}</h1>
@@ -358,28 +360,28 @@ export default function CompanyPage({ params }: Props) {
               {(company.facebook || company.instagram) && (
                 <div className="flex gap-2 pt-2">
                   {company.facebook && (
-                    <a 
-                      href={company.facebook} 
-                      target="_blank" 
+                    <a
+                      href={company.facebook}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-200"
                     >
                       <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" fill="#1877F2">
-                        <path d="M22 12.07C22 6.48 17.52 2 11.93 2 6.34 2 1.86 6.48 1.86 12.07c0 4.97 3.65 9.09 8.42 9.93v-7.02H7.9v-2.91h2.38v-2.22c0-2.35 1.4-3.65 3.54-3.65 1.03 0 2.1.18 2.1.18v2.31h-1.18c-1.16 0-1.52.72-1.52 1.46v1.92h2.59l-.41 2.91h-2.18V22c4.77-.84 8.42-4.96 8.42-9.93z"/>
+                        <path d="M22 12.07C22 6.48 17.52 2 11.93 2 6.34 2 1.86 6.48 1.86 12.07c0 4.97 3.65 9.09 8.42 9.93v-7.02H7.9v-2.91h2.38v-2.22c0-2.35 1.4-3.65 3.54-3.65 1.03 0 2.1.18 2.1.18v2.31h-1.18c-1.16 0-1.52.72-1.52 1.46v1.92h2.59l-.41 2.91h-2.18V22c4.77-.84 8.42-4.96 8.42-9.93z" />
                       </svg>
                       Facebook
                     </a>
                   )}
                   {company.instagram && (
-                    <a 
-                      href={company.instagram} 
-                      target="_blank" 
+                    <a
+                      href={company.instagram}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-200"
                     >
                       <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" fill="#E1306C">
-                        <path d="M7.75 2h8.5C19.55 2 22 4.45 22 7.75v8.5C22 19.55 19.55 22 16.25 22h-8.5C4.45 22 2 19.55 2 16.25v-8.5C2 4.45 4.45 2 7.75 2zm0 2C5.68 4 4 5.68 4 7.75v8.5C4 18.32 5.68 20 7.75 20h8.5C18.32 20 20 18.32 20 16.25v-8.5C20 5.68 18.32 4 16.25 4h-8.5z"/>
-                        <path d="M12 7.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zM17 6.25a1 1 0 1 1-1 1 1 1 0 0 1 1-1z"/>
+                        <path d="M7.75 2h8.5C19.55 2 22 4.45 22 7.75v8.5C22 19.55 19.55 22 16.25 22h-8.5C4.45 22 2 19.55 2 16.25v-8.5C2 4.45 4.45 2 7.75 2zm0 2C5.68 4 4 5.68 4 7.75v8.5C4 18.32 5.68 20 7.75 20h8.5C18.32 20 20 18.32 20 16.25v-8.5C20 5.68 18.32 4 16.25 4h-8.5z" />
+                        <path d="M12 7.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zM17 6.25a1 1 0 1 1-1 1 1 1 0 0 1 1-1z" />
                       </svg>
                       Instagram
                     </a>
@@ -393,7 +395,7 @@ export default function CompanyPage({ params }: Props) {
             >
               Skontaktuj się
             </button>
-            
+
             {/* Quick contact buttons */}
             {company.phone && (
               <a
@@ -560,7 +562,7 @@ export default function CompanyPage({ params }: Props) {
                     const now = new Date();
                     const diffMs = now.getTime() - date.getTime();
                     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-                    
+
                     if (diffDays === 0) return "Dzisiaj";
                     if (diffDays === 1) return "Wczoraj";
                     if (diffDays < 7) return `${diffDays} dni temu`;
@@ -568,43 +570,43 @@ export default function CompanyPage({ params }: Props) {
                     if (diffDays < 365) return `${Math.floor(diffDays / 30)} miesięcy temu`;
                     return date.toLocaleDateString("pl-PL", { year: "numeric", month: "long", day: "numeric" });
                   };
-                  
+
                   return (
                     <div key={r.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="text-sm font-semibold text-slate-900 truncate">{r.author}</div>
-                    {r.created_at && (
-                      <div className="text-xs text-slate-500 mt-0.5">{formatDate(r.created_at)}</div>
-                    )}
-                  </div>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="text-sm font-semibold text-slate-900 truncate">{r.author}</div>
+                          {r.created_at && (
+                            <div className="text-xs text-slate-500 mt-0.5">{formatDate(r.created_at)}</div>
+                          )}
+                        </div>
                         <div className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
                           ★ {r.rating}
                         </div>
                       </div>
-                <p className="mt-2 text-sm text-slate-700">{r.comment}</p>
-                <div className="mt-2 flex justify-end">
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      try {
-                        const reason = prompt("Dlaczego zgłaszasz tę recenzję?");
-                        if (!reason) return;
-                        await fetch(`${apiUrl}/reports/`, {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ review_id: r.id, reason })
-                        });
-                        alert("Dziękujemy za zgłoszenie. Zostanie ono przeanalizowane.");
-                      } catch (e) {
-                        alert("Nie udało się zgłosić recenzji. Spróbuj ponownie później.");
-                      }
-                    }}
-                    className="text-[11px] font-medium text-slate-500 hover:text-red-600"
-                  >
-                    Zgłoś recenzję
-                  </button>
-                </div>
+                      <p className="mt-2 text-sm text-slate-700">{r.comment}</p>
+                      <div className="mt-2 flex justify-end">
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            try {
+                              const reason = prompt("Dlaczego zgłaszasz tę recenzję?");
+                              if (!reason) return;
+                              await fetch(`${apiUrl}/reports/`, {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ review_id: r.id, reason })
+                              });
+                              alert("Dziękujemy za zgłoszenie. Zostanie ono przeanalizowane.");
+                            } catch (e) {
+                              alert("Nie udało się zgłosić recenzji. Spróbuj ponownie później.");
+                            }
+                          }}
+                          className="text-[11px] font-medium text-slate-500 hover:text-red-600"
+                        >
+                          Zgłoś recenzję
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
@@ -682,7 +684,7 @@ export default function CompanyPage({ params }: Props) {
                   className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                 >
                   <svg className="w-5 h-5" fill="#1877F2" viewBox="0 0 24 24">
-                    <path d="M22 12.07C22 6.48 17.52 2 11.93 2 6.34 2 1.86 6.48 1.86 12.07c0 4.97 3.65 9.09 8.42 9.93v-7.02H7.9v-2.91h2.38v-2.22c0-2.35 1.4-3.65 3.54-3.65 1.03 0 2.1.18 2.1.18v2.31h-1.18c-1.16 0-1.52.72-1.52 1.46v1.92h2.59l-.41 2.91h-2.18V22c4.77-.84 8.42-4.96 8.42-9.93z"/>
+                    <path d="M22 12.07C22 6.48 17.52 2 11.93 2 6.34 2 1.86 6.48 1.86 12.07c0 4.97 3.65 9.09 8.42 9.93v-7.02H7.9v-2.91h2.38v-2.22c0-2.35 1.4-3.65 3.54-3.65 1.03 0 2.1.18 2.1.18v2.31h-1.18c-1.16 0-1.52.72-1.52 1.46v1.92h2.59l-.41 2.91h-2.18V22c4.77-.84 8.42-4.96 8.42-9.93z" />
                   </svg>
                   Facebook
                 </a>
@@ -693,7 +695,7 @@ export default function CompanyPage({ params }: Props) {
                   className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                 >
                   <svg className="w-5 h-5" fill="#1DA1F2" viewBox="0 0 24 24">
-                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
                   </svg>
                   Twitter
                 </a>

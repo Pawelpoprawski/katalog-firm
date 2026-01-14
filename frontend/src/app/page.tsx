@@ -230,9 +230,11 @@ export default function HomePage() {
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
-        const data: Company[] = await res.json();
-        setCompanies(data);
-        setFilteredCompanies(data);
+        const data = await res.json();
+        // Handle both old array format and new paginated format
+        const companiesList: Company[] = Array.isArray(data) ? data : (data.companies || []);
+        setCompanies(companiesList);
+        setFilteredCompanies(companiesList);
       } catch (e: any) {
         setError(e.message);
       } finally {

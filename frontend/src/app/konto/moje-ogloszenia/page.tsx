@@ -33,11 +33,13 @@ export default function MyListingsPage() {
     try {
       const userData = JSON.parse(storedUser);
       setUser(userData);
-      
+
       // Fetch user's companies
       fetch(`${apiUrl}/companies/`)
         .then((res) => res.json())
-        .then((data) => {
+        .then((response) => {
+          // Handle both old array format and new paginated format
+          const data = Array.isArray(response) ? response : (response.companies || []);
           // Filter by owner_id (in production, backend should filter this)
           const userCompanies = data.filter((c: any) => c.owner_id === userData.id);
           setCompanies(userCompanies);
@@ -116,11 +118,10 @@ export default function MyListingsPage() {
                   </p>
                   <div className="flex items-center gap-2 mt-3">
                     <span
-                      className={`rounded-full px-2 py-1 text-xs font-semibold ${
-                        company.is_active && company.status === "published"
+                      className={`rounded-full px-2 py-1 text-xs font-semibold ${company.is_active && company.status === "published"
                           ? "bg-green-100 text-green-800"
                           : "bg-yellow-100 text-yellow-800"
-                      }`}
+                        }`}
                     >
                       {company.is_active && company.status === "published"
                         ? "Opublikowane"

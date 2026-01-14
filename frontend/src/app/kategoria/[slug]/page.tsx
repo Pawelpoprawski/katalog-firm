@@ -57,7 +57,9 @@ export default function CategoryPage({ params }: Props) {
         // Fetch companies
         const companiesRes = await fetch(`${apiUrl}/companies/`);
         if (!companiesRes.ok) throw new Error(`HTTP error! status: ${companiesRes.status}`);
-        const allCompanies: Company[] = await companiesRes.json();
+        const companiesData = await companiesRes.json();
+        // Handle both old array format and new paginated format
+        const allCompanies: Company[] = Array.isArray(companiesData) ? companiesData : (companiesData.companies || []);
 
         // Filter by category_id - also check if company is active
         const filtered = allCompanies.filter((c) => {

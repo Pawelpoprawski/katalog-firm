@@ -59,12 +59,39 @@ def get_random_companies(count: int = Query(None, ge=1, le=50, description="Numb
     return [_enrich_company(c.copy()) for c in selected]
 
 
-@router.get("/", response_model=list[CompanyRead])
-def list_companies():
+@router.get("/")
+def list_companies(
+    limit: int = Query(50, ge=1, le=200, description="Number of companies per page"),
+    offset: int = Query(0, ge=0, description="Number of companies to skip")
+):
+    """
+    Get list of published companies (without images for performance).
+    Images are loaded only when viewing individual company details.
+    Supports pagination with limit/offset.
+    """
     companies = storage_list_companies()
-    # ✨ NEW: Filter out draft companies from public listing
+    # Filter only published companies
     published_companies = [c for c in companies if c.get("status") == "published"]
-    return [_enrich_company(c.copy()) for c in published_companies]
+    
+    # Apply pagination
+    total = len(published_companies)
+    paginated = published_companies[offset:offset + limit]
+    
+    # Strip heavy image data for list view (keep main img, remove gallery)
+    lightweight_companies = []
+    for c in paginated:
+        company = _enrich_company(c.copy())
+        # Keep main img for thumbnails, remove photos gallery
+        company.pop("photos", None)  # Gallery loaded only on detail page
+        lightweight_companies.append(company)
+    
+    return {
+        "companies": lightweight_companies,
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+        "has_more": offset + limit < total
+    }
 
 
 @router.post("/", response_model=CompanyReadWithToken, status_code=status.HTTP_201_CREATED)

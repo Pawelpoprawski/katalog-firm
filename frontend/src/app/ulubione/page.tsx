@@ -28,7 +28,9 @@ export default function FavoritesPage() {
             try {
                 const res = await fetch(`${apiUrl}/companies/`);
                 if (res.ok) {
-                    const all = await res.json();
+                    const data = await res.json();
+                    // Handle both old array format and new paginated format
+                    const all = Array.isArray(data) ? data : (data.companies || []);
                     setCompanies(all);
                 }
             } catch (e) {
