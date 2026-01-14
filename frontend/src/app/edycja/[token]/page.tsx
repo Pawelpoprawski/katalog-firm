@@ -191,7 +191,7 @@ export default function EditCompanyPage() {
                 } else if (key === "email" && value.trim() && !validateEmail(value)) {
                     newErrors.email = "Nieprawidłowy format e-mail.";
                 } else if (key === "phone" && value.trim() && !validatePhone(value)) {
-                    newErrors.phone = "Nieprawidłowy format telefonu. Użyj formatu: +41 XX XXX XX XX";
+                    newErrors.phone = "Nieprawidłowy format telefonu. Użyj formatu: +41 lub +48";
                 } else if (key === "website" && value.trim() && !value.startsWith("http") && !value.startsWith("www.")) {
                     newErrors.website = "Podaj pełny link (https://... lub www....).";
                 } else if (key === "facebook" && value.trim() && !value.startsWith("http")) {

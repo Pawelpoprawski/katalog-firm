@@ -116,44 +116,44 @@ export default function AddCompanyPage() {
 
   const handleChange =
     (key: keyof typeof form) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-      const value = e.target.value;
-      setForm((prev) => ({ ...prev, [key]: value }));
-      
-      // Real-time validation
-      const newErrors: Record<string, string> = {};
-      if (key === "name" && !value.trim()) {
-        newErrors.name = "Podaj nazwę firmy.";
-      } else if (key === "category" && !value.trim()) {
-        newErrors.category = "Wybierz kategorię.";
-      } else if (key === "address" && !value.trim()) {
-        newErrors.address = "Podaj adres/miasto.";
-      } else if (key === "desc" && value.trim().length > 0 && value.trim().length < 20) {
-        newErrors.desc = `Opis min. 20 znaków (obecnie ${value.trim().length}).`;
-      } else if (key === "offer" && value.trim().length > 0 && value.trim().length < 10) {
-        newErrors.offer = `Oferta min. 10 znaków (obecnie ${value.trim().length}).`;
-      } else if (key === "email" && value.trim() && !validateEmail(value)) {
-        newErrors.email = "Nieprawidłowy format e-mail.";
-      } else if (key === "phone" && value.trim() && !validatePhone(value)) {
-        newErrors.phone = "Nieprawidłowy format telefonu. Użyj formatu: +41 XX XXX XX XX";
-      } else if (key === "website" && value.trim() && !value.startsWith("http")) {
-        newErrors.website = "Podaj pełny link (https://...).";
-      } else if (key === "facebook" && value.trim() && !value.startsWith("http")) {
-        newErrors.facebook = "Podaj pełny link (https://...).";
-      } else if (key === "instagram" && value.trim() && !value.startsWith("http")) {
-        newErrors.instagram = "Podaj pełny link (https://...).";
-      }
-      
-      setErrors((prev) => {
-        const updated = { ...prev };
-        if (Object.keys(newErrors).length > 0) {
-          Object.assign(updated, newErrors);
-        } else {
-          delete updated[key];
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const value = e.target.value;
+        setForm((prev) => ({ ...prev, [key]: value }));
+
+        // Real-time validation
+        const newErrors: Record<string, string> = {};
+        if (key === "name" && !value.trim()) {
+          newErrors.name = "Podaj nazwę firmy.";
+        } else if (key === "category" && !value.trim()) {
+          newErrors.category = "Wybierz kategorię.";
+        } else if (key === "address" && !value.trim()) {
+          newErrors.address = "Podaj adres/miasto.";
+        } else if (key === "desc" && value.trim().length > 0 && value.trim().length < 20) {
+          newErrors.desc = `Opis min. 20 znaków (obecnie ${value.trim().length}).`;
+        } else if (key === "offer" && value.trim().length > 0 && value.trim().length < 10) {
+          newErrors.offer = `Oferta min. 10 znaków (obecnie ${value.trim().length}).`;
+        } else if (key === "email" && value.trim() && !validateEmail(value)) {
+          newErrors.email = "Nieprawidłowy format e-mail.";
+        } else if (key === "phone" && value.trim() && !validatePhone(value)) {
+          newErrors.phone = "Nieprawidłowy format telefonu. Użyj formatu: +41 lub +48";
+        } else if (key === "website" && value.trim() && !value.startsWith("http")) {
+          newErrors.website = "Podaj pełny link (https://...).";
+        } else if (key === "facebook" && value.trim() && !value.startsWith("http")) {
+          newErrors.facebook = "Podaj pełny link (https://...).";
+        } else if (key === "instagram" && value.trim() && !value.startsWith("http")) {
+          newErrors.instagram = "Podaj pełny link (https://...).";
         }
-        return updated;
-      });
-    };
+
+        setErrors((prev) => {
+          const updated = { ...prev };
+          if (Object.keys(newErrors).length > 0) {
+            Object.assign(updated, newErrors);
+          } else {
+            delete updated[key];
+          }
+          return updated;
+        });
+      };
 
   // Validation helpers
   const validateEmail = (email: string): boolean => {
@@ -185,7 +185,7 @@ export default function AddCompanyPage() {
         newErrors.email = "Podaj telefon lub e-mail.";
       }
       if (form.phone.trim() && !validatePhone(form.phone)) {
-        newErrors.phone = "Nieprawidłowy format telefonu. Użyj formatu: +41 XX XXX XX XX lub 0XX XXX XX XX";
+        newErrors.phone = "Nieprawidłowy format telefonu. Użyj formatu: +41 lub +48";
       }
       if (form.email.trim() && !validateEmail(form.email)) {
         newErrors.email = "Nieprawidłowy format e-mail.";
@@ -209,14 +209,13 @@ export default function AddCompanyPage() {
   };
 
   const inputClass = (key: string) =>
-    `w-full rounded-lg border px-3 py-2 text-sm focus:border-primary focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
-      errors[key] ? "border-red-400" : "border-slate-300"
+    `w-full rounded-lg border px-3 py-2 text-sm focus:border-primary focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${errors[key] ? "border-red-400" : "border-slate-300"
     }`;
 
   const filteredAddress = form.address.trim().length >= 2
     ? ADDRESS_SUGGESTIONS.filter((s) =>
-        s.label.toLowerCase().includes(form.address.toLowerCase())
-      ).slice(0, 5)
+      s.label.toLowerCase().includes(form.address.toLowerCase())
+    ).slice(0, 5)
     : [];
 
   const handleFiles = (files: FileList | null) => {
@@ -339,12 +338,12 @@ export default function AddCompanyPage() {
     ac.addListener("place_changed", () => {
       const place = ac.getPlace() as any;
       const addr = place.formatted_address || "";
-      
+
       // Parse address components
       let city = "";
       let canton = "";
       let postal_code = "";
-      
+
       if (place.address_components) {
         for (const component of place.address_components) {
           const types = component.types;
@@ -359,7 +358,7 @@ export default function AddCompanyPage() {
           }
         }
       }
-      
+
       setForm((prev) => ({ ...prev, address: addr, city, canton, postal_code }));
       setErrors((prev) => {
         const { address, ...rest } = prev;
@@ -418,13 +417,12 @@ export default function AddCompanyPage() {
                   setStep(i);
                 }
               }}
-              className={`rounded-full px-3 py-1 transition-colors ${
-                i === step
-                  ? "bg-primary text-white"
-                  : i < step
+              className={`rounded-full px-3 py-1 transition-colors ${i === step
+                ? "bg-primary text-white"
+                : i < step
                   ? "bg-slate-200 text-slate-700 hover:bg-slate-300 cursor-pointer"
                   : "bg-slate-100 text-slate-500 cursor-not-allowed"
-              }`}
+                }`}
               disabled={i > step}
               aria-label={`Krok ${i + 1}: ${s}`}
             >
@@ -634,7 +632,7 @@ export default function AddCompanyPage() {
                   <label className="space-y-1 text-sm text-slate-700">
                     <span className="flex items-center gap-2 font-semibold text-slate-900">
                       <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" fill="#1877F2">
-                        <path d="M22 12.07C22 6.48 17.52 2 11.93 2 6.34 2 1.86 6.48 1.86 12.07c0 4.97 3.65 9.09 8.42 9.93v-7.02H7.9v-2.91h2.38v-2.22c0-2.35 1.4-3.65 3.54-3.65 1.03 0 2.1.18 2.1.18v2.31h-1.18c-1.16 0-1.52.72-1.52 1.46v1.92h2.59l-.41 2.91h-2.18V22c4.77-.84 8.42-4.96 8.42-9.93z"/>
+                        <path d="M22 12.07C22 6.48 17.52 2 11.93 2 6.34 2 1.86 6.48 1.86 12.07c0 4.97 3.65 9.09 8.42 9.93v-7.02H7.9v-2.91h2.38v-2.22c0-2.35 1.4-3.65 3.54-3.65 1.03 0 2.1.18 2.1.18v2.31h-1.18c-1.16 0-1.52.72-1.52 1.46v1.92h2.59l-.41 2.91h-2.18V22c4.77-.84 8.42-4.96 8.42-9.93z" />
                       </svg>
                       Facebook
                     </span>
@@ -649,8 +647,8 @@ export default function AddCompanyPage() {
                   <label className="space-y-1 text-sm text-slate-700">
                     <span className="flex items-center gap-2 font-semibold text-slate-900">
                       <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" fill="#E1306C">
-                        <path d="M7.75 2h8.5C19.55 2 22 4.45 22 7.75v8.5C22 19.55 19.55 22 16.25 22h-8.5C4.45 22 2 19.55 2 16.25v-8.5C2 4.45 4.45 2 7.75 2zm0 2C5.68 4 4 5.68 4 7.75v8.5C4 18.32 5.68 20 7.75 20h8.5C18.32 20 20 18.32 20 16.25v-8.5C20 5.68 18.32 4 16.25 4h-8.5z"/>
-                        <path d="M12 7.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zM17 6.25a1 1 0 1 1-1 1 1 1 0 0 1 1-1z"/>
+                        <path d="M7.75 2h8.5C19.55 2 22 4.45 22 7.75v8.5C22 19.55 19.55 22 16.25 22h-8.5C4.45 22 2 19.55 2 16.25v-8.5C2 4.45 4.45 2 7.75 2zm0 2C5.68 4 4 5.68 4 7.75v8.5C4 18.32 5.68 20 7.75 20h8.5C18.32 20 20 18.32 20 16.25v-8.5C20 5.68 18.32 4 16.25 4h-8.5z" />
+                        <path d="M12 7.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zM17 6.25a1 1 0 1 1-1 1 1 1 0 0 1 1-1z" />
                       </svg>
                       Instagram
                     </span>
@@ -727,9 +725,8 @@ export default function AddCompanyPage() {
                   {previews.map((src) => (
                     <div
                       key={src}
-                      className={`relative h-20 w-28 overflow-hidden rounded-lg border bg-white shadow-sm ${
-                        src === mainPhoto ? "border-primary ring-2 ring-primary/40" : "border-slate-200"
-                      }`}
+                      className={`relative h-20 w-28 overflow-hidden rounded-lg border bg-white shadow-sm ${src === mainPhoto ? "border-primary ring-2 ring-primary/40" : "border-slate-200"
+                        }`}
                       onClick={() => setMainPhoto(src)}
                     >
                       <img src={src} alt="podgląd" className="h-full w-full object-cover" loading="lazy" />
@@ -782,7 +779,7 @@ export default function AddCompanyPage() {
               </div>
               <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6">
                 <h3 className="text-lg font-semibold text-slate-900">Sprawdź dane przed zapisem</h3>
-                
+
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
                     <h4 className="text-sm font-semibold text-slate-900 mb-2">Dane podstawowe</h4>
@@ -794,7 +791,7 @@ export default function AddCompanyPage() {
                       {form.canton && <p><strong>Kanton:</strong> {form.canton}</p>}
                     </div>
                   </div>
-                  
+
                   <div>
                     <h4 className="text-sm font-semibold text-slate-900 mb-2">Kontakt</h4>
                     <div className="space-y-1 text-sm text-slate-700">
