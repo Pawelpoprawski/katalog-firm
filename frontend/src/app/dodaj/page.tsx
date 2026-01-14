@@ -444,7 +444,7 @@ export default function AddCompanyPage() {
               <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
                 Nowe ogłoszenie
               </span>
-              <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white sm:text-4xl">Dodaj swoją firmę</h1>
+              <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white sm:text-4xl">Dodaj swoje usługi</h1>
               <p className="text-slate-600 dark:text-slate-400 text-lg">
                 Pokaż się tysiącom klientów w Szwajcarii.
               </p>

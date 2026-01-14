@@ -698,7 +698,7 @@ export default function HomePage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Szukaj..."
-              className="w-full pl-10 pr-4 py-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-medium focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none dark:text-white"
+              className="w-full pl-10 pr-4 py-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-base font-medium focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none dark:text-white"
             />
           </div>
 
@@ -807,7 +807,7 @@ export default function HomePage() {
               <div className="flex items-center justify-center gap-2 pt-8">
                 <button
                   type="button"
-                  onClick={() => { setCurrentPage((p) => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  onClick={() => { setCurrentPage((p) => Math.max(1, p - 1)); document.getElementById('oferty')?.scrollIntoView({ behavior: 'smooth' }); }}
                   disabled={currentPage === 1}
                   className="p-3 rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-30 transition-all"
                 >
@@ -817,7 +817,7 @@ export default function HomePage() {
                   {[...Array(totalPages)].map((_, i) => (
                     <button
                       key={i}
-                      onClick={() => { setCurrentPage(i + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      onClick={() => { setCurrentPage(i + 1); document.getElementById('oferty')?.scrollIntoView({ behavior: 'smooth' }); }}
                       className={`h-11 w-11 rounded-2xl font-bold transition-all ${currentPage === i + 1 ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-110' : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-primary/50'}`}
                     >
                       {i + 1}
@@ -826,7 +826,7 @@ export default function HomePage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => { setCurrentPage((p) => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  onClick={() => { setCurrentPage((p) => Math.min(totalPages, p + 1)); document.getElementById('oferty')?.scrollIntoView({ behavior: 'smooth' }); }}
                   disabled={currentPage === totalPages}
                   className="p-3 rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-30 transition-all"
                 >

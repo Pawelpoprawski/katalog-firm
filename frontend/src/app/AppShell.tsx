@@ -83,7 +83,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                   Polskie usługi <span className="text-primary">w Szwajcarii</span>
                 </span>
                 <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                  część portalu PolacySzwajcaria.com
+                  część portalu <a href="https://polacyszwajcaria.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">PolacySzwajcaria.com</a>
                 </span>
               </span>
             </Link>
@@ -131,7 +131,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="mt-16 pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-xs text-slate-500 dark:text-slate-500">
-              © {new Date().getFullYear()} Polskie usługi w Szwajcarii. Projekt częścią platformy PolacySzwajcaria.com
+              © {new Date().getFullYear()} Polskie usługi w Szwajcarii. Projekt częścią platformy <a href="https://polacyszwajcaria.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">PolacySzwajcaria.com</a>
             </p>
             {isMounted && (
               <div className="flex gap-4">
