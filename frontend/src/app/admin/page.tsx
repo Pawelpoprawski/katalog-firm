@@ -613,6 +613,7 @@ export default function AdminPage() {
                                         <th className="px-6 py-4">Ocena</th>
                                         <th className="px-6 py-4">Komentarz</th>
                                         <th className="px-6 py-4">IP Address</th>
+                                        <th className="px-6 py-4">Data</th>
                                         <th className="px-6 py-4 text-right">Akcje</th>
                                     </tr>
                                 </thead>
@@ -645,6 +646,11 @@ export default function AdminPage() {
                                             <td className="px-6 py-4">
                                                 <div className="font-mono text-xs text-slate-600 dark:text-slate-400">{r.ip_address || "unknown"}</div>
                                                 <div className="text-[10px] text-slate-400">User #{r.author_id}</div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="text-xs text-slate-600 dark:text-slate-400">
+                                                    {r.created_at ? new Date(r.created_at * 1000).toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-'}
+                                                </div>
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex items-center justify-end gap-2">

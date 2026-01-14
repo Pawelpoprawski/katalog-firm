@@ -805,6 +805,7 @@ def create_review(payload: dict) -> dict:
                 "company_id": int(company["id"]),
                 "rating": int(payload.get("rating") or 0),
                 "comment": payload.get("comment"),
+                "ip_address": payload.get("ip_address", "unknown"),
                 "created_at": _now_ts(),
             }
             logger.info("Created review object: %s", review)
