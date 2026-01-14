@@ -3,18 +3,32 @@ import "./globals.css";
 import AppShell from "./AppShell";
 
 export const metadata: Metadata = {
-  title: "Polskie usługi w Szwajcarii | PolacySzwajcaria",
+  metadataBase: new URL('https://poprawskipawel.com'),
+  title: "Polskie usługi w Szwajcarii | Katalog Firm",
   description: "Katalog polskich firm i usług w Szwajcarii. Znajdź sprawdzone firmy polonijne – budownictwo, transport, gastronomia, IT i więcej.",
+  keywords: ["polskie usługi", "Szwajcaria", "firmy polskie", "Polonia", "katalog firm", "usługi polonijne"],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
   openGraph: {
-    title: "Polskie usługi w Szwajcarii | PolacySzwajcaria",
+    title: "Polskie usługi w Szwajcarii | Katalog Firm",
     description: "Katalog polskich firm i usług w Szwajcarii",
     type: "website",
-    url: "https://polacyszwajcaria.com/uslugi",
+    url: "https://poprawskipawel.com",
+    siteName: "Polskie Usługi w Szwajcarii",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Polskie usługi w Szwajcarii | PolacySzwajcaria",
+    title: "Polskie usługi w Szwajcarii | Katalog Firm",
     description: "Katalog polskich firm i usług w Szwajcarii",
+  },
+  alternates: {
+    canonical: "https://poprawskipawel.com",
   },
 };
 

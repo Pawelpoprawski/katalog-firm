@@ -1,7 +1,11 @@
+# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Allow: /uslugi/
-Disallow: /uslugi/api/
-Disallow: /uslugi/_next/
+Allow: /
 
-Sitemap: https://polacyszwajcaria.com/uslugi/sitemap.xml
+# Disallow private/admin sections
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
 
+# Sitemap
+Sitemap: https://poprawskipawel.com/sitemap.xml

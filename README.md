@@ -180,3 +180,61 @@ git push
 # Wyślij wszystkie zmiany na GitHub
 cd "c:\REPO\Katalog firm"; git add .; git commit -m "Update"; git push
 ```
+
+---
+
+## 🌐 Zmiana domeny (PROD deployment)
+
+Przy wdrożeniu na nową domenę produkcyjną, należy zmienić następujące pliki:
+
+### 1. Backend - `backend/.env`
+```env
+CORS_ORIGINS=https://TWOJA-DOMENA.com,https://www.TWOJA-DOMENA.com
+```
+
+### 2. Frontend - `frontend/.env.local`
+```env
+NEXT_PUBLIC_API_URL=https://api.TWOJA-DOMENA.com
+```
+
+### 3. SEO/Robots - `frontend/public/robots.txt`
+```txt
+Sitemap: https://TWOJA-DOMENA.com/sitemap.xml
+```
+
+### 4. Sitemap - `frontend/src/app/sitemap.ts`
+Linia 4:
+```typescript
+const baseUrl = "https://TWOJA-DOMENA.com";
+```
+
+### 5. Metadata SEO - `frontend/src/app/layout.tsx`
+Zmień wszystkie wystąpienia URL w obiekcie `metadata`:
+```typescript
+metadataBase: new URL('https://TWOJA-DOMENA.com'),
+// ...
+url: "https://TWOJA-DOMENA.com",
+// ...
+canonical: "https://TWOJA-DOMENA.com",
+```
+
+### 6. (Opcjonalnie) AppShell - `frontend/src/app/AppShell.tsx`
+Jeśli link do PolacySzwajcaria.com ma być inny.
+
+### Checklist przy zmianie domeny:
+- [ ] `backend/.env` - CORS_ORIGINS
+- [ ] `frontend/.env.local` - NEXT_PUBLIC_API_URL
+- [ ] `frontend/public/robots.txt` - Sitemap URL
+- [ ] `frontend/src/app/sitemap.ts` - baseUrl
+- [ ] `frontend/src/app/layout.tsx` - metadataBase, url, canonical
+- [ ] Nginx - konfiguracja domen
+- [ ] SSL certyfikaty (Certbot)
+- [ ] DNS rekordy (A, CNAME dla www i api)
+
+### Komendy na serwerze po zmianach:
+```bash
+cd /var/www/katalog-firm
+git pull
+cd frontend && npm run build
+pm2 restart katalog-api katalog-frontend
+```
