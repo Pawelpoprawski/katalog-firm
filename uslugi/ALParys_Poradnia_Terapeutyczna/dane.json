@@ -1,0 +1,85 @@
+{
+  "id": 77011,
+  "title": "ALParys Poradnia Terapeutyczna",
+  "slug": "alparys-poradnia-terapeutyczna",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<h4>Terapia psychologiczna dzieci, młodzieży i dorosłych. Diagnoza i terapia SI ( Integracji Sensorycznej), Logopedia, Terapia Uzależnień, Zajęcia grupowe TUS, Wczesne Wsparcie Rozwoju Dziecka WWR, Warsztaty rozwojowe, Grupa wsparcia dla rodziców dzieci neuroatypowych, Dietoterapia.</h4>\n",
+  "short_description": "",
+  "author": 135,
+  "featured_media_id": 0,
+  "phone": "+410767399406",
+  "phone_2": "",
+  "fax": "",
+  "email": "kontakt@poradniaterapeutyczna.ch",
+  "website": "http://www.alparys.ch",
+  "address": "Badenerstrasse, Zurych, Szwajcaria",
+  "latitude": "47.3828666",
+  "longitude": "8.5003487",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/alparys__poradniaterapeutyczna?igsh=dmQ3OGN6bXFqY3I0&utm_source=qr"
+    }
+  ],
+  "views_count": 0,
+  "yoast_og_image": [
+    {
+      "width": 1552,
+      "height": 2560,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2026/01/poprawione-scaled.jpg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "Terapia psychologiczna dzieci, młodzieży i dorosłych. Diagnoza i terapia SI ( Integracji Sensorycznej), Logopedia, Terapia Uzależnień, Zajęcia grupowe TUS, Wczesne Wsparcie Rozwoju Dziecka WWR, Warsztaty rozwojowe, Grupa wsparcia dla rodziców...",
+  "categories": [
+    {
+      "id": 290,
+      "name": "Zdrowie",
+      "slug": "zdrowie",
+      "icon": "fas fa-hospital-user"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\ALParys_Poradnia_Terapeutyczna\\zdjecie_glowne\\poprawione-scaled_jpg.jpg",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\ALParys_Poradnia_Terapeutyczna\\reszta_zdjec\\120e1393-c106-4cd5-9188-efe02333535a_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2026/01/120e1393-c106-4cd5-9188-efe02333535a.jpeg",
+        "id": 77013,
+        "name": "120e1393-c106-4cd5-9188-efe02333535a",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\ALParys_Poradnia_Terapeutyczna\\reszta_zdjec\\IMG_0411-1-scaled_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2026/01/IMG_0411-1-scaled.jpeg",
+        "id": 77014,
+        "name": "IMG_0411-1",
+        "alt": "",
+        "position": 2
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\ALParys_Poradnia_Terapeutyczna\\reszta_zdjec\\99BD3763-A0C6-4062-A652-731E3CEE2543_png.png",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2026/01/99BD3763-A0C6-4062-A652-731E3CEE2543.png",
+        "id": 77015,
+        "name": "99BD3763-A0C6-4062-A652-731E3CEE2543",
+        "alt": "",
+        "position": 3
+      }
+    ]
+  },
+  "images_count": 4
+}

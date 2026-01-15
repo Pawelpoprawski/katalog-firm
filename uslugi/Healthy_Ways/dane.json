@@ -1,0 +1,98 @@
+{
+  "id": 2256,
+  "title": "Healthy Ways",
+  "slug": "healthy-ways",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p id=\"foo\" class=\"AnlR0 mimQI\" data-pm-slice=\"1 1 []\">Jestem naturoterapeutką ze Szwajcarii z polskimi korzeniami, uznaną przez kasy chorych, dzięki czemu Twoje ubezpieczenie pokryje co najmniej 50% kosztów moich usług.<br id=\"\" /><br id=\"\" />Oferuję różnorodne terapie, a moją specjalizacją jest odtruwanie i detoksykacja organizmu, leczenie problemów trawiennych, wsparcie przy long COVID, boreliozie oraz moje najskuteczniejsze terapie w problemach reumatycznych i hormonalnych. Prowadze rowniez holistyczna terapia wypadania włosów.</p>\n<p id=\"6nuhr3055\" class=\"AnlR0 mimQI\">Naturterapia w Szwajcarii obejmuje szeroki zakres usług, które w Polsce są jeszcze mało popularne, a przynoszą niesamowite rezultaty.</p>\n<p id=\"c7aee3057\" class=\"AnlR0 mimQI\">Dodatkowo oferuję Face Sculpting, czyli dogłębny masaż twarzy z relaksacją mięśni szczęki (bukalną). Jest to bardziej zaawansowana, holistyczna wersja znanego w Polsce Facemodelingu.</p>\n<p id=\"7rhgr3059\" class=\"AnlR0 mimQI\">Zapraszam do kontaktu!</p>\n",
+  "short_description": "",
+  "author": 2,
+  "featured_media_id": 0,
+  "phone": "+41 787449117",
+  "phone_2": "",
+  "fax": "",
+  "email": "info@healthyways.ch",
+  "website": "www.healthyways.ch",
+  "address": "Audika, 41, Stadthausstrasse, Inneres Lind, Stadt, Winterthur, Bezirk Winterthur, Zurych, 8400, Szwajcaria",
+  "latitude": "47.5002708",
+  "longitude": "8.7306158",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "facebook",
+      "url": "https://www.facebook.com/Healthyways.ch"
+    },
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/healthyways.ch/"
+    }
+  ],
+  "views_count": 18,
+  "yoast_og_image": [
+    {
+      "width": 688,
+      "height": 688,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/Healthy-Ways-5.png",
+      "type": "image/png"
+    }
+  ],
+  "yoast_description": "Jestem naturoterapeutką ze Szwajcarii z polskimi korzeniami, uznaną przez kasy chorych, dzięki czemu Twoje ubezpieczenie pokryje co najmniej 50% kosztów moich usług.Oferuję różnorodne terapie, a moją specjalizacją jest odtruwanie i...",
+  "categories": [
+    {
+      "id": 290,
+      "name": "Zdrowie",
+      "slug": "zdrowie",
+      "icon": "fas fa-hospital-user"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Healthy_Ways\\zdjecie_glowne\\Healthy-Ways-5_png.png",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Healthy_Ways\\reszta_zdjec\\Kopie-von-Pink-Feminin-Selbstliebe-Instagram-Beitrag-12-1_png.png",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/Kopie-von-Pink-Feminin-Selbstliebe-Instagram-Beitrag-12-1.png",
+        "id": 2274,
+        "name": "Kopie von Pink Feminin Selbstliebe Instagram Beitrag (12)",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Healthy_Ways\\reszta_zdjec\\Kopie-von-Kopie-von-Kopie-von-Pink-Feminin-Selbstliebe-Instagram-Beitrag-2-1_png.png",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/Kopie-von-Kopie-von-Kopie-von-Pink-Feminin-Selbstliebe-Instagram-Beitrag-2-1.png",
+        "id": 2273,
+        "name": "Kopie von Kopie von Kopie von Pink Feminin Selbstliebe Instagram Beitrag (2)",
+        "alt": "",
+        "position": 2
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Healthy_Ways\\reszta_zdjec\\Healthy-Ways-5_png.png",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/Healthy-Ways-5.png",
+        "id": 2272,
+        "name": "Healthy Ways (5)",
+        "alt": "",
+        "position": 3
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Healthy_Ways\\reszta_zdjec\\Kopie-von-Pink-Feminin-Selbstliebe-Instagram-Beitrag-13_png.png",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/Kopie-von-Pink-Feminin-Selbstliebe-Instagram-Beitrag-13.png",
+        "id": 2271,
+        "name": "Kopie von Pink Feminin Selbstliebe Instagram Beitrag (13)",
+        "alt": "",
+        "position": 4
+      }
+    ]
+  },
+  "images_count": 5
+}

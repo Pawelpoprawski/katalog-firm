@@ -60,6 +60,7 @@ type Company = {
   rating?: number;
   img?: string;
   is_promoted?: boolean;
+  created_at?: number;
 };
 
 type Category = {
@@ -86,6 +87,7 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [minRating] = useState<number>(0);
   const [favorites, setFavorites] = useState<number[]>([]);
+  const [sortOrder, setSortOrder] = useState<'newest' | 'random' | 'alphabetical'>('random');
   const [currentPage, setCurrentPage] = useState(1);
   const [mapsReady, setMapsReady] = useState(false);
   const [mapBounds, setMapBounds] = useState<MapBounds | null>(DEFAULT_CH_BOUNDS);
@@ -253,6 +255,17 @@ export default function HomePage() {
         console.error("Failed to fetch categories:", e);
       } finally {
         setLoadingCategories(false);
+      }
+
+      // Fetch sort order setting
+      try {
+        const res = await fetch(`${apiUrl}/settings`);
+        if (res.ok) {
+          const settings = await res.json();
+          setSortOrder(settings.sort_order || 'random');
+        }
+      } catch (e) {
+        console.error("Failed to fetch settings:", e);
       }
     };
 
@@ -541,7 +554,36 @@ export default function HomePage() {
   }, [companies, searchQuery, selectedCanton, selectedCategory, minRating, mapBounds, mapsReady]);
 
   const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / PAGE_SIZE));
-  const paginatedCompanies = filteredCompanies.slice(
+
+  // Apply sorting based on admin settings
+  // Separate promoted and non-promoted companies
+  const promotedCompanies = filteredCompanies.filter(c => c.is_promoted);
+  const regularCompanies = filteredCompanies.filter(c => !c.is_promoted);
+
+  // Apply sorting to each group separately
+  if (sortOrder === 'newest') {
+    promotedCompanies.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+    regularCompanies.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+  } else if (sortOrder === 'alphabetical') {
+    promotedCompanies.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
+    regularCompanies.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
+  } else if (sortOrder === 'random') {
+    // Fisher-Yates shuffle for promoted companies
+    for (let i = promotedCompanies.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [promotedCompanies[i], promotedCompanies[j]] = [promotedCompanies[j], promotedCompanies[i]];
+    }
+    // Fisher-Yates shuffle for regular companies
+    for (let i = regularCompanies.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [regularCompanies[i], regularCompanies[j]] = [regularCompanies[j], regularCompanies[i]];
+    }
+  }
+
+  // Combine: promoted companies first, then regular companies
+  const sortedCompanies = [...promotedCompanies, ...regularCompanies];
+
+  const paginatedCompanies = sortedCompanies.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE
   );
@@ -559,7 +601,7 @@ export default function HomePage() {
               Znajdź <span className="bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">sprawdzone</span> firmy w Szwajcarii
             </h1>
             <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl">
-              <span className="font-bold text-primary">{companies.length} polskich usług</span> w bazie. Przeglądaj na mapie i filtruj po branży. Dołącz do największej społeczności polskich przedsiębiorców w Szwajcarii.
+              <span className="font-bold text-primary">{filteredCompanies.length} polskich usług</span> w bazie. Przeglądaj na mapie i filtruj po branży. Dołącz do największej społeczności polskich przedsiębiorców w Szwajcarii.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
@@ -747,7 +789,7 @@ export default function HomePage() {
                   >
                     <div className="relative h-60 overflow-hidden">
                       <img
-                        src={item.img || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"}
+                        src={item.img || "/default-company.png"}
                         alt={item.name}
                         className="h-full w-full object-contain transition-transform duration-700 group-hover:scale-110"
                         loading="lazy"
@@ -787,7 +829,7 @@ export default function HomePage() {
                         {item.city}, {item.canton}
                       </div>
                       <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                        {item.description || "Brak opisu firmy w katalogu."}
+                        {(item as any).short_description || item.description?.replace(/<[^>]*>/g, '') || "Brak opisu firmy w katalogu."}
                       </p>
 
                       <div className="pt-4 mt-auto border-t border-slate-100 dark:border-slate-800 flex justify-between items-center group/btn">

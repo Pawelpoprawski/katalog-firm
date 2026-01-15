@@ -1,0 +1,98 @@
+{
+  "id": 50687,
+  "title": "Bogdan Bau GmbH",
+  "slug": "bogdan-bau-gmbh",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p data-start=\"145\" data-end=\"180\">🔨 <strong data-start=\"148\" data-end=\"178\">Usługi remontowo-budowlane</strong></p>\n<p data-start=\"182\" data-end=\"268\">Zajmujemy się kompleksowymi pracami wykończeniowymi i remontowymi. Specjalizujemy się w:</p>\n<ol data-start=\"269\" data-end=\"544\">\n<li data-start=\"269\" data-end=\"377\">\n<p data-start=\"271\" data-end=\"377\">montażu <strong data-start=\"279\" data-end=\"298\">suchych zabudów</strong> – ścianki działowe, sufity podwieszane, zabudowy z płyt gipsowo-kartonowych,</p>\n</li>\n<li data-start=\"378\" data-end=\"469\">\n<p data-start=\"380\" data-end=\"469\">pracach remontowych – malowanie, szpachlowanie, wygładzanie ścian, modernizacje wnętrz,</p>\n</li>\n<li data-start=\"470\" data-end=\"544\">\n<p data-start=\"472\" data-end=\"544\">układaniu <strong data-start=\"482\" data-end=\"492\">płytek</strong> – łazienki, kuchnie, podłogi i inne powierzchnie.</p>\n<p>i wiele innych.</li>\n</ol>\n<p data-start=\"546\" data-end=\"635\">Gwarantuję solidne wykonanie, terminowość i indywidualne podejście do każdego zlecenia.</p>\n<p data-start=\"637\" data-end=\"702\">📞 Zapraszam do kontaktu – chętnie doradzę i przygotuję darmową wycenę.</p>\n",
+  "short_description": "",
+  "author": 103,
+  "featured_media_id": 0,
+  "phone": "+41 77 947 51 77",
+  "phone_2": "",
+  "fax": "",
+  "email": "info@bogdan-bau.ch",
+  "website": "http://www.bogdan-bau.ch",
+  "address": "Bremgarten, Szwajcaria",
+  "latitude": "46.7985624",
+  "longitude": "8.2319736",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": null,
+  "views_count": 15,
+  "yoast_og_image": [
+    {
+      "width": 276,
+      "height": 233,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/08/logo-dark-png.png",
+      "type": "image/png"
+    }
+  ],
+  "yoast_description": "🔨 Usługi remontowo-budowlane Zajmujemy się kompleksowymi pracami wykończeniowymi i remontowymi. Specjalizujemy się w: montażu suchych zabudów – ścianki działowe, sufity podwieszane, zabudowy z płyt gipsowo-kartonowych, pracach remontowych – malowanie, szpachlowanie,...",
+  "categories": [
+    {
+      "id": 285,
+      "name": "Remont",
+      "slug": "remont",
+      "icon": "fas fa-house-damage"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Bogdan_Bau_GmbH\\zdjecie_glowne\\logo-dark-png_png.png",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Bogdan_Bau_GmbH\\reszta_zdjec\\slider-img-8_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/08/slider-img-8.jpg",
+        "id": 50689,
+        "name": "slider-img-8",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Bogdan_Bau_GmbH\\reszta_zdjec\\slider-img-5_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/08/slider-img-5.jpg",
+        "id": 50688,
+        "name": "slider-img-5",
+        "alt": "",
+        "position": 2
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Bogdan_Bau_GmbH\\reszta_zdjec\\slider-img-15_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/08/slider-img-15.jpg",
+        "id": 50690,
+        "name": "slider-img-15",
+        "alt": "",
+        "position": 3
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Bogdan_Bau_GmbH\\reszta_zdjec\\slider-img-6_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/08/slider-img-6.jpg",
+        "id": 50691,
+        "name": "slider-img-6",
+        "alt": "",
+        "position": 4
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Bogdan_Bau_GmbH\\reszta_zdjec\\d63ae723-46a1-4e3b-b411-320f94cd5ec1_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/08/d63ae723-46a1-4e3b-b411-320f94cd5ec1.jpg",
+        "id": 50692,
+        "name": "d63ae723-46a1-4e3b-b411-320f94cd5ec1",
+        "alt": "",
+        "position": 5
+      }
+    ]
+  },
+  "images_count": 6
+}

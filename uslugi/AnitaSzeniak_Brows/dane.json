@@ -1,0 +1,52 @@
+{
+  "id": 56203,
+  "title": "AnitaSzeniak_Brows",
+  "slug": "anitaszeniak_brows",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p>Stylizacja brwi laminacja|farbka|regulcja</p>\n",
+  "short_description": "",
+  "author": 150,
+  "featured_media_id": 0,
+  "phone": "+41 76 837 07 67",
+  "phone_2": "",
+  "fax": "",
+  "email": "anita.szeniak99@gmail.com",
+  "website": "https://www.instagram.com/anitaszeniak_brows?igsh=MWZ1ZmxpcjRocjc0NA%3D%3D&utm_source=qr",
+  "address": "Schönenberg, Kradolf-Schönenberg, Szwajcaria",
+  "latitude": "47.52095",
+  "longitude": "9.19853",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": null,
+  "views_count": 1,
+  "yoast_og_image": [
+    {
+      "width": 1024,
+      "height": 1024,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/10/01EFA776-A037-4BEA-A242-BC58531E5E3F.png",
+      "type": "image/png"
+    }
+  ],
+  "yoast_description": "Stylizacja brwi laminacja|farbka|regulcja",
+  "categories": [
+    {
+      "id": 280,
+      "name": "Beauty",
+      "slug": "beauty",
+      "icon": "fas fa-female"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\AnitaSzeniak_Brows\\zdjecie_glowne\\01EFA776-A037-4BEA-A242-BC58531E5E3F_png.png",
+    "other": []
+  },
+  "images_count": 1
+}

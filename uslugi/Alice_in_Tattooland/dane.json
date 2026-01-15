@@ -1,0 +1,94 @@
+{
+  "id": 75548,
+  "title": "Alice in Tattooland",
+  "slug": "alice-in-tattooland",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p>Artystyczne tatuaże &amp; makijaż permanentny — tworzone z pasją i dbałością o każdy detal.</p>\n<p>Specjalizuję się w tworzeniu autorskich, artystycznych tatuaży, w których łączę kreatywność, precyzję i indywidualne podejście do każdej osoby. Każdy projekt powstaje w oparciu o Twoją historię, estetykę i oczekiwania — tak, aby finalny tatuaż był nie tylko ozdobą, ale także wyjątkową formą ekspresji.</p>\n<p>Oferuję również makijaż permanentny brwi i ust, który podkreśla naturalne rysy twarzy, zachowując subtelność i harmonię. Pracuję technikami zapewniającymi delikatny, dopasowany do Ciebie, naturalny efekt.</p>\n<p>Dodatkowo wykonuję naturalne piegi permanentne, które dodają twarzy świeżości, młodzieńczej lekkości i unikatowego charakteru.</p>\n<p>Każda usługa realizowana jest w atmosferze spokoju, profesjonalizmu i pełnego szacunku dla Twojej wizji oraz komfortu. Dbam o najwyższe standardy higieny, bezpieczeństwa i estetyki — abyś mogła czuć się pewnie, pięknie i wyjątkowo.</p>\n",
+  "short_description": "",
+  "author": 32,
+  "featured_media_id": 0,
+  "phone": "+41779130392",
+  "phone_2": "",
+  "fax": "",
+  "email": "rabenda.alicja@gmail.com",
+  "website": "http://www.aliceintattooland.ch",
+  "address": "Sihltalstrasse 82, Langnau am Albis, Szwajcaria",
+  "latitude": "47.2891981",
+  "longitude": "8.543240899999999",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/alice.in.tattooland.zurich?igsh=MWNyd3AyaXRlNTVzZQ%3D%3D&utm_source=qr"
+    }
+  ],
+  "views_count": 3,
+  "yoast_og_image": [
+    {
+      "width": 2048,
+      "height": 2048,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/12/IMG_0250.jpeg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "Artystyczne tatuaże &amp; makijaż permanentny — tworzone z pasją i dbałością o każdy detal. Specjalizuję się w tworzeniu autorskich, artystycznych tatuaży, w których łączę kreatywność, precyzję i indywidualne podejście do...",
+  "categories": [
+    {
+      "id": 280,
+      "name": "Beauty",
+      "slug": "beauty",
+      "icon": "fas fa-female"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Alice_in_Tattooland\\zdjecie_glowne\\IMG_0250_jpeg.jpeg",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Alice_in_Tattooland\\reszta_zdjec\\IMG_0643_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/12/IMG_0643.jpeg",
+        "id": 75550,
+        "name": "IMG_0643",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Alice_in_Tattooland\\reszta_zdjec\\IMG_7775-scaled_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/12/IMG_7775-scaled.jpeg",
+        "id": 75551,
+        "name": "IMG_7775",
+        "alt": "",
+        "position": 2
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Alice_in_Tattooland\\reszta_zdjec\\IMG_2626-scaled_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/12/IMG_2626-scaled.jpeg",
+        "id": 75552,
+        "name": "IMG_2626",
+        "alt": "",
+        "position": 3
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Alice_in_Tattooland\\reszta_zdjec\\IMG_5658-scaled_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/12/IMG_5658-scaled.jpeg",
+        "id": 75553,
+        "name": "IMG_5658",
+        "alt": "",
+        "position": 4
+      }
+    ]
+  },
+  "images_count": 5
+}

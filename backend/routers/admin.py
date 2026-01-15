@@ -126,6 +126,19 @@ def toggle_promotion(
     except KeyError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
 
+@router.patch("/companies/{company_id}/category")
+def update_company_category(
+    company_id: int,
+    category_id: int = Body(..., embed=True)
+):
+    """Update company category. Admin only."""
+    try:
+        updated = storage_update_company(company_id, {"category_id": category_id})
+        return {"message": "Category updated", "company": updated}
+    except KeyError:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
+
+
 @router.delete("/companies/{company_id}")
 def delete_company(company_id: int):
     """Delete a company. Admin only."""
@@ -176,6 +189,15 @@ def update_newsletter_count_endpoint(count: int = Body(..., embed=True)):
         raise HTTPException(status_code=400, detail="Count must be between 1 and 50")
     settings = update_newsletter_count(count)
     return {"message": f"Newsletter count updated to {settings.get('newsletter_count')}", "settings": settings}
+
+@router.put("/settings/sort-order")
+def update_sort_order_endpoint(sort_order: str = Body(..., embed=True)):
+    """Update the sort order for homepage company display."""
+    from ..storage import update_sort_order
+    if sort_order not in ['newest', 'random', 'alphabetical']:
+        raise HTTPException(status_code=400, detail="Sort order must be 'newest', 'random', or 'alphabetical'")
+    settings = update_sort_order(sort_order)
+    return {"message": f"Sort order updated to {sort_order}", "settings": settings}
 
 @router.post("/ip-blacklist/add")
 def add_ip_blacklist(ip_address: str = Body(..., embed=True)):

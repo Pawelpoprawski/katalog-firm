@@ -1,0 +1,76 @@
+{
+  "id": 54232,
+  "title": "Passion Hair by Paulina Smyl",
+  "slug": "passion-hair-by-paulina-smyl",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p>*Przedłużanie i zagęszczanie włosów (metoda keratynowa)<br />\n* Nanoplastia, bioplastia, botoks na włosy, regeneracja włosów na zimno, keratynowe prostowanie włosów</p>\n",
+  "short_description": "",
+  "author": 123,
+  "featured_media_id": 0,
+  "phone": "+41786677596",
+  "phone_2": "",
+  "fax": "",
+  "email": "paulina.smyl30@gmail.com",
+  "website": "https://www.instagram.com/passionhair_paulina_smyl?igsh=OGVwOXloeWQ2Ymdr&utm_source=qr",
+  "address": "Schmitterstrasse 77, Diepoldsau, Szwajcaria",
+  "latitude": "47.3897542",
+  "longitude": "9.6507145",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/passionhair_paulina_smyl?igsh=OGVwOXloeWQ2Ymdr&utm_source=qr"
+    }
+  ],
+  "views_count": 9,
+  "yoast_og_image": [
+    {
+      "width": 500,
+      "height": 500,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/09/Passion-hair.png",
+      "type": "image/png"
+    }
+  ],
+  "yoast_description": "*Przedłużanie i zagęszczanie włosów (metoda keratynowa) * Nanoplastia, bioplastia, botoks na włosy, regeneracja włosów na zimno, keratynowe prostowanie włosów",
+  "categories": [
+    {
+      "id": 280,
+      "name": "Beauty",
+      "slug": "beauty",
+      "icon": "fas fa-female"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Passion_Hair_by_Paulina_Smyl\\zdjecie_glowne\\Passion-hair_png.png",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Passion_Hair_by_Paulina_Smyl\\reszta_zdjec\\Vorher_png.png",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/09/Vorher.png",
+        "id": 54234,
+        "name": "Vorher",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Passion_Hair_by_Paulina_Smyl\\reszta_zdjec\\IMG_5793-scaled_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/09/IMG_5793-scaled.jpeg",
+        "id": 54235,
+        "name": "IMG_5793",
+        "alt": "",
+        "position": 2
+      }
+    ]
+  },
+  "images_count": 3
+}

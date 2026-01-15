@@ -1,0 +1,62 @@
+{
+  "id": 47417,
+  "title": "Grafikdesign Natalia Visuals",
+  "slug": "grafikdesign-natalia-visuals",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p data-start=\"265\" data-end=\"376\">Pomagam markom i osobom prywatnym wyróżnić się poprzez przemyślane, estetyczne i spójne projekty graficzne.</p>\n<ul>\n<li><strong data-start=\"395\" data-end=\"403\">Logo</strong> – unikalne projekty z jedną rundą poprawek</li>\n<li><strong data-start=\"451\" data-end=\"474\">Materiały drukowane</strong> – plakaty, ulotki, wizytówki</li>\n<li><strong data-start=\"508\" data-end=\"530\">Projekty produktów</strong> – etykiety, opakowania, nadruki na tekstylia</li>\n<li><strong data-start=\"580\" data-end=\"606\">Identyfikacja wizualna</strong> – kolorystyka, typografia, mini-styleguide</li>\n<li><strong data-start=\"654\" data-end=\"682\">Grafiki do social mediów</strong> – zestawy grafik dopasowane do Twojej marki</li>\n<li><strong data-start=\"731\" data-end=\"760\">CV, portfolio, ilustracje</strong> – indywidualne i stylowe projekty</li>\n</ul>\n<p data-start=\"796\" data-end=\"890\">Każdy projekt tworzę z myślą o Twoich potrzebach, marce i odbiorcach.<br />\n<strong>Dlatego wycena jest indywidualna – zależy od zakresu i charakteru projektu.</strong></p>\n",
+  "short_description": "",
+  "author": 95,
+  "featured_media_id": 0,
+  "phone": "+41783101440",
+  "phone_2": "",
+  "fax": "",
+  "email": "natalia.grafikdesign@gmail.com",
+  "website": "https://nataliamichalinabr61.myportfolio.com/welcome",
+  "address": "Zürich, Switzerland",
+  "latitude": "47.3768866",
+  "longitude": "8.541694",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": null,
+  "views_count": 4,
+  "yoast_og_image": [
+    {
+      "width": 8334,
+      "height": 8334,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/07/Natalia-Visuals-01-1.png",
+      "type": "image/png"
+    }
+  ],
+  "yoast_description": "Pomagam markom i osobom prywatnym wyróżnić się poprzez przemyślane, estetyczne i spójne projekty graficzne. Logo – unikalne projekty z jedną rundą poprawek Materiały drukowane – plakaty, ulotki, wizytówki Projekty produktów...",
+  "categories": [
+    {
+      "id": 286,
+      "name": "Różne",
+      "slug": "rozne",
+      "icon": "fas fa-align-justify"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Grafikdesign_Natalia_Visuals\\zdjecie_glowne\\Natalia-Visuals-01-1_png.png",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Grafikdesign_Natalia_Visuals\\reszta_zdjec\\Untitled-3-01-1_png.png",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/07/Untitled-3-01-1.png",
+        "id": 47419,
+        "name": "Untitled-3-01-1",
+        "alt": "",
+        "position": 1
+      }
+    ]
+  },
+  "images_count": 2
+}

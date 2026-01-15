@@ -1,9 +1,10 @@
 {
-    "social_media": {
-        "facebook": "https://www.facebook.com/PolacySzwajcaria2024",
-        "youtube": "https://www.youtube.com/@PolacySzwajcaria",
-        "instagram": "https://www.instagram.com/polacyszwajcaria/",
-        "tiktok": "https://www.tiktok.com/@polacyszwajcaria",
-        "facebook_group": "https://www.facebook.com/groups/swissjobs"
-    }
+  "social_media": {
+    "facebook": "https://www.facebook.com/PolacySzwajcaria2024",
+    "youtube": "https://www.youtube.com/@PolacySzwajcaria",
+    "instagram": "https://www.instagram.com/polacyszwajcaria/",
+    "tiktok": "https://www.tiktok.com/@polacyszwajcaria",
+    "facebook_group": "https://www.facebook.com/groups/swissjobs"
+  },
+  "sort_order": "random"
 }

@@ -1,0 +1,71 @@
+{
+  "id": 28176,
+  "title": "Holistic Beauty Swiss",
+  "slug": "holistic-beauty-swiss",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p>Holistic Beauty Swiss – Paulina Ziółek</p>\n<p>Witaj w Holistic Beauty Swiss – miejscu, gdzie łączę wiedzę kosmetologiczną i fizjoterapeutyczną, aby w holistyczny sposób zadbać o Twoje piękno i dobre samopoczucie.</p>\n<p>Jako licencjonowany kosmetolog i magister fizjoterapii oferuję profesjonalne zabiegi na twarz i ciało, zawsze indywidualnie dopasowane do Twoich potrzeb.</p>\n<p>Zakres usług:</p>\n<p>- Masaże liftingujące i terapeutyczne: Kobido, transbukalny, stymulacja nerwu błędnego, masaż bańkami chińskimi, masaż płytką Gua Sha, kinesiotaping estetyczny, masaż rękawicami z mikroprądami.</p>\n<p>- Profesjonalne zabiegi na twarz: oczyszczanie wodorowe, infuzja tlenowa, mezoterapia mikroigłowa (Dermapen, Dr Pen), terapie EstGen i Gen Factor (inżynieria tkankowa)</p>\n<p>- Specjalistyczne peelingi: TCA, migdałowy, Jessnera, salicylowy, azelainowy, Yellow Peel, peelingi biostymulujące PRX/BioRePeel</p>\n<p>- Odmładzanie i regeneracja skóry: mikrodermabrazja, peeling kawitacyjny z sonoforezą, peeling enzymatyczny, terapia lampą medyczną Celluma PRO</p>\n<p>- Modelowanie i lifting: Roll&amp;Lift LPG (twarz i ciało)</p>\n<p>- Terapie blizn i rozstępów: potrądzikowe, pooperacyjne, po cesarskim cięciu</p>\n<p>- Zabiegi wyszczuplające i ujędrniające: bandaże Arosha, presoterapia</p>\n<p>Każda wizyta to indywidualnie dobrany plan działania, który wydobędzie Twoje naturalne piękno i zadba o zdrowie Twojej skóry.</p>\n<p>Pozwól sobie na chwilę luksusu i profesjonalnej troski w Holistic Beauty Swiss!</p>\n<p>Rezerwacja: wiadomość prywatna lub telefonicznie: 076 334 76 48.</p>\n<p>CHE-430.596.597</p>\n<p>&nbsp;</p>\n",
+  "short_description": "",
+  "author": 47,
+  "featured_media_id": 0,
+  "phone": "+41763347648",
+  "phone_2": "",
+  "fax": "",
+  "email": "holisticbeautyswiss@gmail.com",
+  "website": "",
+  "address": "Im Kehl 4, Baden, Schweiz",
+  "latitude": "47.4658785",
+  "longitude": "8.2870841",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/holistic_beauty_swiss/"
+    },
+    {
+      "id": "facebook",
+      "url": "https://www.facebook.com/share/12JejwHUze3/"
+    }
+  ],
+  "views_count": 183,
+  "yoast_og_image": [
+    {
+      "width": 1080,
+      "height": 1349,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/04/IMG_20250313_212241_884.jpg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "Holistic Beauty Swiss – Paulina Ziółek Witaj w Holistic Beauty Swiss – miejscu, gdzie łączę wiedzę kosmetologiczną i fizjoterapeutyczną, aby w holistyczny sposób zadbać o Twoje piękno i dobre samopoczucie....",
+  "categories": [
+    {
+      "id": 280,
+      "name": "Beauty",
+      "slug": "beauty",
+      "icon": "fas fa-female"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Holistic_Beauty_Swiss\\zdjecie_glowne\\IMG_20250313_212241_884_jpg.jpg",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Holistic_Beauty_Swiss\\reszta_zdjec\\posty-paula_20250218_120301_0011_png.png",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/04/posty-paula_20250218_120301_0011.png",
+        "id": 28178,
+        "name": "posty-paula_20250218_120301_0011",
+        "alt": "",
+        "position": 1
+      }
+    ]
+  },
+  "images_count": 2
+}

@@ -1,0 +1,57 @@
+{
+  "id": 25808,
+  "title": "Der Schrauber",
+  "slug": "der-schrauber",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p>DER SCHRAUBER – montaż mebli IKEA i nie tylko!</p>\n<p>Masz do złożenia łóżko, szafę, komodę czy całe mieszkanie z IKEA?<br />\nNie masz czasu, narzędzi albo po prostu chcesz, by ktoś zrobił to szybko i porządnie?</p>\n<p>Der Schrauber pomoże Ci w każdej części Szwajcarii!</p>\n<p>Oferuję:<br />\n• Montaż mebli IKEA i innych marek<br />\n• Demontaż i ponowny montaż przy przeprowadzkach<br />\n• Szybkie terminy i elastyczne godziny (również weekendy)<br />\n• Profesjonalne podejście i dokładność</p>\n",
+  "short_description": "",
+  "author": 43,
+  "featured_media_id": 0,
+  "phone": "",
+  "phone_2": "",
+  "fax": "",
+  "email": "kontakt.derschrauber@gmail.com",
+  "website": "",
+  "address": "Berno, Szwajcaria",
+  "latitude": "46.9479739",
+  "longitude": "7.4474468",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "facebook",
+      "url": "https://facebook.com/derschrauber"
+    }
+  ],
+  "views_count": 12,
+  "yoast_og_image": [
+    {
+      "width": 1080,
+      "height": 1080,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/04/Pink-and-White-Healthy-Drinks-Facebook-Feed-Ad.png",
+      "type": "image/png"
+    }
+  ],
+  "yoast_description": "DER SCHRAUBER – montaż mebli IKEA i nie tylko! Masz do złożenia łóżko, szafę, komodę czy całe mieszkanie z IKEA? Nie masz czasu, narzędzi albo po prostu chcesz, by ktoś...",
+  "categories": [
+    {
+      "id": 285,
+      "name": "Remont",
+      "slug": "remont",
+      "icon": "fas fa-house-damage"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Der_Schrauber\\zdjecie_glowne\\Pink-and-White-Healthy-Drinks-Facebook-Feed-Ad_png.png",
+    "other": []
+  },
+  "images_count": 1
+}

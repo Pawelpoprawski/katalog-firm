@@ -1,0 +1,107 @@
+{
+  "id": 41618,
+  "title": "Tradycja",
+  "slug": "tradycja",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p>&nbsp;</p>\n<p>Serdecznie witamy w naszym polskim sklepie zlokalizowanym przy ul. Könizstrasse 253, 3097 Liebefeld, niedaleko Bernie w Szwajcarii. Naszym głównym celem jest wspieranie i rozwój polskich biznesów oraz kultury w Szwajcarii.</p>\n<p>Nasz sklep to miejsce, które łączy polską społeczność i promuje polską kulturę poprzez szeroki asortyment polskich produktów. Jesteśmy elastyczni i otwarci na potrzeby naszych klientów, dlatego nasza oferta jest dostosowywana do zmieniających się trendów i oczekiwań.</p>\n<p>Dodatkowo, oferujemy unikalną możliwość wymiany książek w języku polskim, co czyni naszą ofertę jeszcze bardziej dostosowaną do pasji czytelników i miłośników polskiej literatury. Zapraszamy do odwiedzin i dołączenia do naszej społeczności!</p>\n",
+  "short_description": "",
+  "author": 77,
+  "featured_media_id": 0,
+  "phone": "031 317 90 31",
+  "phone_2": "",
+  "fax": "",
+  "email": "tradycja.ch@gmail.com",
+  "website": "http://www.tradycja.ch",
+  "address": "Könizstrasse 253, 3097 Liebefeld, Switzerland",
+  "latitude": "46.9284712",
+  "longitude": "7.416773600000002",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "facebook",
+      "url": "https://www.facebook.com/share/1G1NdsCtUg/?mibextid=wwXIfr"
+    },
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/tradycja.ch?igsh=a3A1ejdqZXlub2xk"
+    }
+  ],
+  "views_count": 14,
+  "yoast_og_image": [
+    {
+      "width": 1600,
+      "height": 1600,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/06/10e6d5b3-8850-44c6-b292-df27b82ebcc7.jpeg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "&nbsp; Serdecznie witamy w naszym polskim sklepie zlokalizowanym przy ul. Könizstrasse 253, 3097 Liebefeld, niedaleko Bernie w Szwajcarii. Naszym głównym celem jest wspieranie i rozwój polskich biznesów oraz kultury w...",
+  "categories": [
+    {
+      "id": 284,
+      "name": "Gastronomia",
+      "slug": "gastronomia",
+      "icon": "fas fa-birthday-cake"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Tradycja\\zdjecie_glowne\\10e6d5b3-8850-44c6-b292-df27b82ebcc7_jpeg.jpeg",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Tradycja\\reszta_zdjec\\b0525f5a-a76b-487a-87f7-307b02c57aa1_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/06/b0525f5a-a76b-487a-87f7-307b02c57aa1.jpeg",
+        "id": 41620,
+        "name": "b0525f5a-a76b-487a-87f7-307b02c57aa1",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Tradycja\\reszta_zdjec\\58288FAC-4A8C-4D37-B153-F1A0E8CF1D88-scaled_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/06/58288FAC-4A8C-4D37-B153-F1A0E8CF1D88-scaled.jpeg",
+        "id": 41621,
+        "name": "58288FAC-4A8C-4D37-B153-F1A0E8CF1D88",
+        "alt": "",
+        "position": 2
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Tradycja\\reszta_zdjec\\EC76A118-A417-49A6-AE6E-BAB307329DAC-scaled_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/06/EC76A118-A417-49A6-AE6E-BAB307329DAC-scaled.jpeg",
+        "id": 41622,
+        "name": "EC76A118-A417-49A6-AE6E-BAB307329DAC",
+        "alt": "",
+        "position": 3
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Tradycja\\reszta_zdjec\\C7C6B4B5-8483-4044-96F6-A45ED6A2E90A-scaled_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/06/C7C6B4B5-8483-4044-96F6-A45ED6A2E90A-scaled.jpeg",
+        "id": 41623,
+        "name": "C7C6B4B5-8483-4044-96F6-A45ED6A2E90A",
+        "alt": "",
+        "position": 4
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Tradycja\\reszta_zdjec\\8ABBAA3A-A657-4CB4-82CD-79E6486A7060-scaled_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/06/8ABBAA3A-A657-4CB4-82CD-79E6486A7060-scaled.jpeg",
+        "id": 41624,
+        "name": "8ABBAA3A-A657-4CB4-82CD-79E6486A7060",
+        "alt": "",
+        "position": 5
+      }
+    ]
+  },
+  "images_count": 6
+}

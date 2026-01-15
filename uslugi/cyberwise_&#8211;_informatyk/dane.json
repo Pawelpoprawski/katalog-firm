@@ -1,0 +1,52 @@
+{
+  "id": 55375,
+  "title": "cyberwise &#8211; informatyk",
+  "slug": "cyberwise",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<h1>Usługi IT – Informatyk</h1>\n<p>Kompetentna pomoc IT, naprawa i doradztwo dla klientów indywidualnych.</p>\n<ul>\n<li>Naprawa laptopów i komputerów</li>\n<li><i class=\"fas fa-cogs\"></i>Instalacja i konfiguracja oprogramowania</li>\n<li><i class=\"fas fa-database\"></i>Pomoc przy tworzeniu kopii zapasowych i odzyskiwaniu danych</li>\n<li><i class=\"fas fa-shield-alt\"></i>Usuwanie wirusów i zabezpieczanie systemu</li>\n<li><i class=\"fas fa-user-shield\"></i>Doradztwo w zakresie bezpieczeństwa danych</li>\n<li><i class=\"fas fa-network-wired\"></i>Konfiguracja sieci LAN i WiFi</li>\n<li><i class=\"fas fa-headset\"></i>Zdalna pomoc i wsparcie</li>\n<li><i class=\"fas fa-home\"></i>SmartHome i wiele więcej</li>\n</ul>\n",
+  "short_description": "",
+  "author": 68,
+  "featured_media_id": 0,
+  "phone": "+41 76 717 0700",
+  "phone_2": "",
+  "fax": "",
+  "email": "info@cyberwise.ch",
+  "website": "https://cyberwise.ch",
+  "address": "Bern, Szwajcaria",
+  "latitude": "46.9479739",
+  "longitude": "7.4474468",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": null,
+  "views_count": 5,
+  "yoast_og_image": [
+    {
+      "width": 1024,
+      "height": 1024,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/09/final_cyberwise_red_blue_black.png",
+      "type": "image/png"
+    }
+  ],
+  "yoast_description": "Usługi IT – Informatyk Kompetentna pomoc IT, naprawa i doradztwo dla klientów indywidualnych. Naprawa laptopów i komputerów Instalacja i konfiguracja oprogramowania Pomoc przy tworzeniu kopii zapasowych i odzyskiwaniu danych Usuwanie...",
+  "categories": [
+    {
+      "id": 286,
+      "name": "Różne",
+      "slug": "rozne",
+      "icon": "fas fa-align-justify"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\cyberwise_&#8211;_informatyk\\zdjecie_glowne\\final_cyberwise_red_blue_black_png.png",
+    "other": []
+  },
+  "images_count": 1
+}

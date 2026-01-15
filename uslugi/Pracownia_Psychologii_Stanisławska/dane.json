@@ -1,0 +1,52 @@
+{
+  "id": 25048,
+  "title": "Pracownia Psychologii Stanisławska",
+  "slug": "pracownia-psychologii-stanislawska",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p>Pracownia Psychologiczna Stanisławska oferuje pełne empatii i profesjonalizmu wsparcie psychologiczne w języku polskim i angielskim. Specjalizuję się w neuroatypowości, interwencji kryzysowej, diagnozie psychologicznej oraz wspieraniu dobrostanu emocjonalnego dzieci i dorosłych. Gabinet znajduje się w pobliżu Zugu w Szwajcarii. Możliwe konsultacje osobiście lub online.</p>\n",
+  "short_description": "",
+  "author": 40,
+  "featured_media_id": 0,
+  "phone": "",
+  "phone_2": "",
+  "fax": "",
+  "email": "contact@stanislawska.ch",
+  "website": "http://stanislawska.ch",
+  "address": "Zug, Szwajcaria",
+  "latitude": "46.7985624",
+  "longitude": "8.2319736",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": null,
+  "views_count": 28,
+  "yoast_og_image": [
+    {
+      "width": 3000,
+      "height": 3000,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/04/Original.png",
+      "type": "image/png"
+    }
+  ],
+  "yoast_description": "Pracownia Psychologiczna Stanisławska oferuje pełne empatii i profesjonalizmu wsparcie psychologiczne w języku polskim i angielskim. Specjalizuję się w neuroatypowości, interwencji kryzysowej, diagnozie psychologicznej oraz wspieraniu dobrostanu emocjonalnego dzieci i dorosłych....",
+  "categories": [
+    {
+      "id": 290,
+      "name": "Zdrowie",
+      "slug": "zdrowie",
+      "icon": "fas fa-hospital-user"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Pracownia_Psychologii_Stanisławska\\zdjecie_glowne\\Original_png.png",
+    "other": []
+  },
+  "images_count": 1
+}

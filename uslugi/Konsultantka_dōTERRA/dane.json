@@ -1,0 +1,57 @@
+{
+  "id": 55380,
+  "title": "Konsultantka dōTERRA",
+  "slug": "konsultantka-doterra",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p style=\"text-align: center\">Hej tu Marzena - konsultantka olejków eterycznych dōTERRA pomagam odkrywać naturalne sposoby na wsparcie zdrowia, dobrego samopoczucia i harmonii w codziennym życiu. Prowadzę warsztaty, podczas których dzielę się praktyczną wiedzą, oraz konsultacje online, aby każdy mógł znaleźć rozwiązania dopasowane do swoich potrzeb. Oferuję również możliwość zakupu produktów dōTERRA – sprawdzonych, wysokiej jakości olejków eterycznych.</p>\n",
+  "short_description": "",
+  "author": 138,
+  "featured_media_id": 0,
+  "phone": "",
+  "phone_2": "",
+  "fax": "",
+  "email": "marzenanossak@gmail.com",
+  "website": "",
+  "address": "Eschenbach, SG, Szwajcaria",
+  "latitude": "47.2406093",
+  "longitude": "8.9220805",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/aromania_eu/"
+    }
+  ],
+  "views_count": 4,
+  "yoast_og_image": [
+    {
+      "width": 2560,
+      "height": 1920,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/09/IMG20250317201011-scaled.jpg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "Hej tu Marzena &#8211; konsultantka olejków eterycznych dōTERRA pomagam odkrywać naturalne sposoby na wsparcie zdrowia, dobrego samopoczucia i harmonii w codziennym życiu. Prowadzę warsztaty, podczas których dzielę się praktyczną wiedzą,...",
+  "categories": [
+    {
+      "id": 437,
+      "name": "Aromaterapia",
+      "slug": "aromaterapia",
+      "icon": ""
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Konsultantka_dōTERRA\\zdjecie_glowne\\IMG20250317201011-scaled_jpg.jpg",
+    "other": []
+  },
+  "images_count": 1
+}

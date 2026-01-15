@@ -1,0 +1,89 @@
+{
+  "id": 2229,
+  "title": "Victoria Beauty",
+  "slug": "victoria-beauty",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p>Witajcie!<br id=\"\" />Oferuję zabiegi z zakresu <strong>medycyny estetycznej i kosmetologii.</strong><br id=\"\" />W naszej ofercie znajdziecie:</p>\n<p id=\"zuqzc697\" class=\"AnlR0 mimQI\">-peelingi medyczne</p>\n<p id=\"ju1ar699\" class=\"AnlR0 mimQI\">-mezoterapie mikroiglowe</p>\n<p id=\"0eh4o701\" class=\"AnlR0 mimQI\">-mezoterapie igłowe</p>\n<p id=\"gfyp0703\" class=\"AnlR0 mimQI\">-makijaż permanentny</p>\n<p id=\"omngm705\" class=\"AnlR0 mimQI\">-mikropigmentacje medyczne</p>\n<p id=\"rc28u708\" class=\"AnlR0 mimQI\">-wypełniacze nieusieciowane</p>\n<p id=\"ut81v710\" class=\"AnlR0 mimQI\">-kwas hialuronowy</p>\n<p id=\"zf8v6712\" class=\"AnlR0 mimQI\">-stymulatory tkankowe</p>\n<p id=\"gkhnf714\" class=\"AnlR0 mimQI\">-botox</p>\n<p id=\"nzaib716\" class=\"AnlR0 mimQI\">-lipoliza iniekcyjna</p>\n<p id=\"2i5or719\" class=\"AnlR0 mimQI\">-nici PDO</p>\n<p id=\"xp4iv721\" class=\"AnlR0 mimQI\">-osocze i  fibryna</p>\n<p id=\"n7tx0723\" class=\"AnlR0 mimQI\">-kroplówki witaminowe</p>\n<p id=\"gx37w725\" class=\"AnlR0 mimQI\">-szkolenia i kursy</p>\n<p><strong>Zapraszamy do kontaktu!</strong></p>\n",
+  "short_description": "",
+  "author": 2,
+  "featured_media_id": 0,
+  "phone": "+41 795 400 050",
+  "phone_2": "",
+  "fax": "",
+  "email": "",
+  "website": "https://victoria-beauty.localo.site/#",
+  "address": "5, Taleggstrasse, Stelzenacker, Dietikon, Bezirk Dietikon, Zurych, 8953, Szwajcaria",
+  "latitude": "47.4077553",
+  "longitude": "8.3993027",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": null,
+  "views_count": 24,
+  "yoast_og_image": [
+    {
+      "width": 1127,
+      "height": 1600,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/image0-1.jpeg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "Witajcie!Oferuję zabiegi z zakresu medycyny estetycznej i kosmetologii.W naszej ofercie znajdziecie: -peelingi medyczne -mezoterapie mikroiglowe -mezoterapie igłowe -makijaż permanentny -mikropigmentacje medyczne -wypełniacze nieusieciowane -kwas hialuronowy -stymulatory tkankowe -botox -lipoliza iniekcyjna...",
+  "categories": [
+    {
+      "id": 280,
+      "name": "Beauty",
+      "slug": "beauty",
+      "icon": "fas fa-female"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Victoria_Beauty\\zdjecie_glowne\\image0-1_jpeg.jpeg",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Victoria_Beauty\\reszta_zdjec\\image1_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/image1.jpeg",
+        "id": 2444,
+        "name": "image1",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Victoria_Beauty\\reszta_zdjec\\image4_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/image4.jpeg",
+        "id": 2447,
+        "name": "image4",
+        "alt": "",
+        "position": 2
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Victoria_Beauty\\reszta_zdjec\\image3_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/image3.jpeg",
+        "id": 2446,
+        "name": "image3",
+        "alt": "",
+        "position": 3
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Victoria_Beauty\\reszta_zdjec\\image2_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/image2.jpeg",
+        "id": 2445,
+        "name": "image2",
+        "alt": "",
+        "position": 4
+      }
+    ]
+  },
+  "images_count": 5
+}

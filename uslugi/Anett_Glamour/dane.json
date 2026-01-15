@@ -1,0 +1,61 @@
+{
+  "id": 16779,
+  "title": "Anett Glamour",
+  "slug": "anett-glamour",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p dir=\"auto\" data-removefontsize=\"true\" data-originalcomputedfontsize=\"16\">Anett Glamour to szwajcarski sklep internetowy specjalizujący się w sprzedaży profesjonalnych kosmetyków w atrakcyjnych cenach. W ofercie znajdują się produkty do makijażu, pielęgnacji skóry oraz włosów, pochodzące od renomowanych marek, takich jak Hean, Wibo, Lovely, OnlyBio oraz Stars from the Stars.</p>\n<p data-removefontsize=\"true\" data-originalcomputedfontsize=\"16\">Asortyment sklepu obejmuje:</p>\n<p data-removefontsize=\"true\" data-originalcomputedfontsize=\"16\">• Makijaż: Podkłady, korektory, pudry, cienie do powiek, eyelinery, tusze do rzęs, pomadki i błyszczyki.</p>\n<p data-removefontsize=\"true\" data-originalcomputedfontsize=\"16\">• Pielęgnacja: Kremy do twarzy, sera, maseczki, balsamy do ciała oraz produkty do pielęgnacji ust.</p>\n<p dir=\"auto\" data-removefontsize=\"true\" data-originalcomputedfontsize=\"16\">• Włosy: Szampony, odżywki, maski oraz inne produkty do pielęgnacji włosów.</p>\n<p dir=\"auto\" data-removefontsize=\"true\" data-originalcomputedfontsize=\"16\">Sklep regularnie wprowadza nowe produkty, umożliwiając klientom zakup wysokiej jakości kosmetyków w konkurencyjnych cenach. Dodatkowo, Anett Glamour oferuje darmową wysyłkę dla zamówień powyżej 100 CHF, zapewniając szybką i bezpieczną dostawę na terenie Szwajcarii.</p>\n<p data-removefontsize=\"true\" data-originalcomputedfontsize=\"16\">Strona internetowa sklepu jest dostępna w trzech językach: angielskim, niemieckim i polskim, co ułatwia zakupy szerokiemu gronu klientów. Dzięki intuicyjnemu interfejsowi oraz szczegółowym opisom produktów, użytkownicy mogą łatwo znaleźć i zamówić kosmetyki dopasowane do ich potrzeb.</p>\n<p data-removefontsize=\"true\" data-originalcomputedfontsize=\"16\">Anett Glamour dba o satysfakcję swoich klientów, oferując profesjonalną obsługę oraz wysokiej jakości produkty, które spełniają oczekiwania nawet najbardziej wymagających użytkowników.</p>\n",
+  "short_description": "",
+  "author": 19,
+  "featured_media_id": 0,
+  "phone": "+41 76-566-23-50",
+  "phone_2": "",
+  "fax": "",
+  "email": "info@anettglamour.ch",
+  "website": "https://anettglamour.ch/",
+  "address": "Widnau, Szwajcaria",
+  "latitude": "47.4055145",
+  "longitude": "9.6375563",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/anett.glamour?igsh=MWJsczU2cWNpN3NvNQ=="
+    },
+    {
+      "id": "facebook",
+      "url": "https://www.facebook.com/share/188mVnavDe/?mibextid=wwXIfr"
+    }
+  ],
+  "views_count": 23,
+  "yoast_og_image": [
+    {
+      "width": 1250,
+      "height": 1250,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/02/da7f85d0-9f2f-4644-a6df-0caf56f9d63e.jpeg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "Anett Glamour to szwajcarski sklep internetowy specjalizujący się w sprzedaży profesjonalnych kosmetyków w atrakcyjnych cenach. W ofercie znajdują się produkty do makijażu, pielęgnacji skóry oraz włosów, pochodzące od renomowanych marek,...",
+  "categories": [
+    {
+      "id": 280,
+      "name": "Beauty",
+      "slug": "beauty",
+      "icon": "fas fa-female"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Anett_Glamour\\zdjecie_glowne\\da7f85d0-9f2f-4644-a6df-0caf56f9d63e_jpeg.jpeg",
+    "other": []
+  },
+  "images_count": 1
+}

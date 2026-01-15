@@ -1,0 +1,134 @@
+{
+  "id": 2222,
+  "title": "Out of The Box",
+  "slug": "out-of-the-box",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p><strong>Zestawy kooperacyjnych zagadek logicznych dla dzieci z dostawą do domu.</strong></p>\n<p id=\"foo\" class=\"AnlR0 mimQI\" data-pm-slice=\"1 1 []\"><span data-hook=\"BACKGROUND_COLOR\">Witajcie!</span><br id=\"\" /><span data-hook=\"BACKGROUND_COLOR\">Jako fanka i designerka escape roomów postanowiłam po narodzinach mojego syna przekuć moje doświadczenie w produkt, który pozwala dzieciom poczuć podobne emocje.</span><br id=\"\" /><span data-hook=\"BACKGROUND_COLOR\">Kooperacja, zagadki logiczne, fizyczne obiekty oddziałujące na różne zmysły - a wszystko to zamknięte w pudełku (ok, pudle... ;)), które możesz wypożyczyć! </span><br id=\"\" /><br id=\"\" /><span data-hook=\"BACKGROUND_COLOR\">Dostawa na terenie całej Szwajcarii albo odbiór osobisty w Zurychu. </span><br id=\"\" /><span data-hook=\"BACKGROUND_COLOR\">Zajrzyj na moje social media, żeby zobaczyć zabawę w akcji!</span><u></u></p>\n",
+  "short_description": "",
+  "author": 2,
+  "featured_media_id": 0,
+  "phone": "+41 754 171 442",
+  "phone_2": "",
+  "fax": "",
+  "email": "olga@outof.ch",
+  "website": "https://outof.ch",
+  "address": "Leimbachstrasse, Leimbach, Kreis 2, Zurych, District Zurich, Zurych, 8041, Szwajcaria",
+  "latitude": "47.3350280105402",
+  "longitude": "8.519293095154781",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "facebook",
+      "url": "https://www.facebook.com/profile.php?id=61557901183401"
+    },
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/outof_ch"
+    }
+  ],
+  "views_count": 26,
+  "yoast_og_image": [
+    {
+      "width": 586,
+      "height": 586,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/logoProfilePicSquare.png",
+      "type": "image/png"
+    }
+  ],
+  "yoast_description": "Zestawy kooperacyjnych zagadek logicznych dla dzieci z dostawą do domu. Witajcie!Jako fanka i designerka escape roomów postanowiłam po narodzinach mojego syna przekuć moje doświadczenie w produkt, który pozwala dzieciom poczuć...",
+  "categories": [
+    {
+      "id": 282,
+      "name": "Edukacja",
+      "slug": "edukacja",
+      "icon": "fas fa-book"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Out_of_The_Box\\zdjecie_glowne\\logoProfilePicSquare_png.png",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Out_of_The_Box\\reszta_zdjec\\IMG5-scaled_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/IMG5-scaled.jpeg",
+        "id": 2395,
+        "name": "IMG5",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Out_of_The_Box\\reszta_zdjec\\IMG4-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/IMG4-scaled.jpg",
+        "id": 2394,
+        "name": "IMG4",
+        "alt": "",
+        "position": 2
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Out_of_The_Box\\reszta_zdjec\\img004-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/img004-scaled.jpg",
+        "id": 2393,
+        "name": "img004",
+        "alt": "",
+        "position": 3
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Out_of_The_Box\\reszta_zdjec\\IMG3-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/IMG3-scaled.jpg",
+        "id": 2392,
+        "name": "IMG3",
+        "alt": "",
+        "position": 4
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Out_of_The_Box\\reszta_zdjec\\img003-scaled_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/img003-scaled.jpeg",
+        "id": 2391,
+        "name": "img003",
+        "alt": "",
+        "position": 5
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Out_of_The_Box\\reszta_zdjec\\img002-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/img002-scaled.jpg",
+        "id": 2389,
+        "name": "img002",
+        "alt": "",
+        "position": 6
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Out_of_The_Box\\reszta_zdjec\\IMG2-scaled_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/IMG2-scaled.jpeg",
+        "id": 2390,
+        "name": "IMG2",
+        "alt": "",
+        "position": 7
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Out_of_The_Box\\reszta_zdjec\\IMG1-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/IMG1-scaled.jpg",
+        "id": 2388,
+        "name": "IMG1",
+        "alt": "",
+        "position": 8
+      }
+    ]
+  },
+  "images_count": 9
+}

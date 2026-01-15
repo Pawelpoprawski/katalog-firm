@@ -14,6 +14,7 @@ type Company = {
     status: string;
     created_at: number;
     is_promoted?: boolean;
+    category_id?: number;
 };
 
 type Review = {
@@ -55,8 +56,11 @@ export default function AdminPage() {
     const [blockingIP, setBlockingIP] = useState<string | null>(null);
     const [updatingStatus, setUpdatingStatus] = useState<number | null>(null);
     const [updatingPromotion, setUpdatingPromotion] = useState<number | null>(null);
+    const [updatingCategory, setUpdatingCategory] = useState<number | null>(null);
     const [newsletterCount, setNewsletterCount] = useState(5);
     const [savingNewsletter, setSavingNewsletter] = useState(false);
+    const [sortOrder, setSortOrder] = useState<'newest' | 'random' | 'alphabetical'>('random');
+    const [savingSortOrder, setSavingSortOrder] = useState(false);
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
     // Admin authentication state
@@ -138,6 +142,7 @@ export default function AdminPage() {
                 if (settingsRes.ok) {
                     const settingsData = await settingsRes.json();
                     setNewsletterCount(settingsData.newsletter_count || 5);
+                    setSortOrder(settingsData.sort_order || 'newest');
                 }
             } catch (e) {
                 console.error("Failed to fetch admin data", e);
@@ -378,6 +383,56 @@ export default function AdminPage() {
         }
     };
 
+    const saveSortOrder = async () => {
+        setSavingSortOrder(true);
+        try {
+            const res = await fetch(`${apiUrl}/admin/settings/sort-order`, {
+                method: "PUT",
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ sort_order: sortOrder })
+            });
+            if (res.ok) {
+                const labels = {
+                    newest: 'Od najnowszych',
+                    random: 'Losowo',
+                    alphabetical: 'Alfabetycznie A-Z'
+                };
+                toast.success(`Sortowanie zmienione: ${labels[sortOrder]}`);
+            } else {
+                toast.error("Błąd podczas zapisywania");
+            }
+        } catch (e) {
+            toast.error("Błąd połączenia");
+        } finally {
+            setSavingSortOrder(false);
+        }
+    };
+
+    const updateCategory = async (company: Company, newCategoryId: number) => {
+        setUpdatingCategory(company.id);
+        const originalCompanies = companies;
+
+        try {
+            const res = await fetch(`${apiUrl}/admin/companies/${company.id}/category`, {
+                method: "PATCH",
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ category_id: newCategoryId })
+            });
+            if (res.ok) {
+                setCompanies(prev => prev.map(c => c.id === company.id ? { ...c, category_id: newCategoryId } : c));
+                const catName = categories.find(c => c.id === newCategoryId)?.name || "";
+                toast.success(`Kategoria zmieniona na: ${catName}`);
+            } else {
+                toast.error("Błąd podczas zmiany kategorii");
+            }
+        } catch (e) {
+            console.error("Failed to update category", e);
+            toast.error("Błąd połączenia");
+        } finally {
+            setUpdatingCategory(null);
+        }
+    };
+
     // Prepare chart data (last 30 days from history, or empty if no history)
     const chartData = (stats?.history || []).slice(-30).map(d => d.views + d.clicks);
     const maxVal = Math.max(...chartData, 1);
@@ -484,10 +539,9 @@ export default function AdminPage() {
                     </header>
 
                     {/* Stats Cards */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                         <StatCard title="Firmy" value={stats?.total_companies || 0} icon="building" color="blue" />
                         <StatCard title="Wyświetlenia" value={stats?.total_views || 0} icon="eye" color="green" />
-                        <StatCard title="Kliknięcia" value={stats?.total_clicks || 0} icon="cursor" color="purple" />
                         <StatCard title="Opinie" value={stats?.total_reviews || 0} icon="chat" color="orange" />
                     </div>
 
@@ -524,20 +578,37 @@ export default function AdminPage() {
                             <table className="w-full text-sm text-left">
                                 <thead className="bg-slate-50 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 font-bold uppercase text-xs">
                                     <tr>
+                                        <th className="px-6 py-4">#</th>
                                         <th className="px-6 py-4">Firma</th>
+                                        <th className="px-6 py-4">Kategoria</th>
                                         <th className="px-6 py-4">Status</th>
                                         <th className="px-6 py-4 text-center">Promocja</th>
                                         <th className="px-6 py-4 text-center">Widoki</th>
-                                        <th className="px-6 py-4 text-center">Kliknięcia</th>
                                         <th className="px-6 py-4 text-right">Akcje</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-                                    {companies.map((c) => (
+                                    {companies.map((c, idx) => (
                                         <tr key={c.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
+                                            <td className="px-6 py-4 text-center font-mono text-slate-400 font-semibold">#{idx + 1}</td>
                                             <td className="px-6 py-4">
                                                 <div className="font-bold text-slate-900 dark:text-white">{c.name}</div>
                                                 <div className="text-xs text-slate-500">{c.email || "Brak emaila"}</div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <select
+                                                    value={(c as any).category_id || ""}
+                                                    onChange={(e) => updateCategory(c, parseInt(e.target.value))}
+                                                    disabled={updatingCategory === c.id}
+                                                    className="text-xs px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-medium hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all disabled:opacity-50"
+                                                >
+                                                    <option value="">Brak kategorii</option>
+                                                    {categories.map(cat => (
+                                                        <option key={cat.id} value={cat.id}>
+                                                            {cat.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <button
@@ -563,19 +634,28 @@ export default function AdminPage() {
                                             <td className="px-6 py-4 text-center font-mono text-slate-600 dark:text-slate-400">
                                                 {c.views}
                                             </td>
-                                            <td className="px-6 py-4 text-center font-mono text-slate-600 dark:text-slate-400">
-                                                {c.clicks}
-                                            </td>
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex items-center justify-end gap-2">
                                                     {c.edit_token && (
-                                                        <button
-                                                            onClick={() => copyLink(c.edit_token!)}
-                                                            className="text-xs font-bold text-primary hover:text-primary-dark bg-primary/10 hover:bg-primary/20 px-2 py-1 rounded-lg transition-colors"
-                                                            title="Kopiuj link do edycji"
-                                                        >
-                                                            Link
-                                                        </button>
+                                                        <>
+                                                            <Link
+                                                                href={`/edycja/${c.edit_token}?admin=true`}
+                                                                className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 px-2 py-1 rounded-lg transition-colors inline-flex items-center gap-1"
+                                                                title="Edytuj ogłoszenie"
+                                                            >
+                                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                                </svg>
+                                                                Edytuj
+                                                            </Link>
+                                                            <button
+                                                                onClick={() => copyLink(c.edit_token!)}
+                                                                className="text-xs font-bold text-primary hover:text-primary-dark bg-primary/10 hover:bg-primary/20 px-2 py-1 rounded-lg transition-colors"
+                                                                title="Kopiuj link do edycji"
+                                                            >
+                                                                Link
+                                                            </button>
+                                                        </>
                                                     )}
                                                     <button
                                                         onClick={() => deleteCompany(c.id)}
@@ -784,6 +864,32 @@ export default function AdminPage() {
                     <p className="text-sm text-slate-500 mt-1">Konfiguracja endpointu /companies/random dla newslettera</p>
                 </div>
                 <div className="p-6 space-y-6">
+                    {/* Sort Order */}
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 pb-6 border-b border-slate-200 dark:border-slate-700">
+                        <div className="flex-1">
+                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                                🔄 Kolejność wyświetlania ogłoszeń na stronie głównej
+                            </label>
+                            <select
+                                value={sortOrder}
+                                onChange={(e) => setSortOrder(e.target.value as 'newest' | 'random' | 'alphabetical')}
+                                className="w-full sm:w-64 px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-base focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                            >
+                                <option value="newest">📅 Od najnowszych do najstarszych</option>
+                                <option value="random">🎲 Losowo</option>
+                                <option value="alphabetical">🔤 Alfabetycznie (A-Z)</option>
+                            </select>
+                        </div>
+                        <button
+                            onClick={saveSortOrder}
+                            disabled={savingSortOrder}
+                            className="px-6 py-3 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition-colors disabled:opacity-50"
+                        >
+                            {savingSortOrder ? 'Zapisuję...' : 'Zapisz'}
+                        </button>
+                    </div>
+
+                    {/* Newsletter Count */}
                     <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                         <div className="flex-1">
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">

@@ -61,7 +61,7 @@ def get_random_companies(count: int = Query(None, ge=1, le=50, description="Numb
 
 @router.get("/")
 def list_companies(
-    limit: int = Query(50, ge=1, le=200, description="Number of companies per page"),
+    limit: int = Query(200, ge=1, le=500, description="Number of companies per page"),
     offset: int = Query(0, ge=0, description="Number of companies to skip")
 ):
     """
@@ -150,6 +150,17 @@ def verify_edit_access(token: str = Body(..., embed=True), email: str = Body(...
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
     return {"status": "ok", "company": _enrich_company(company.copy())}
 
+
+@router.get("/by-token/{token}")
+def get_company_by_token(token: str):
+    """Get company by edit token (for admin access without email verification)."""
+    companies = storage_list_companies()
+    company = next((c for c in companies if c.get("edit_token") == token), None)
+    
+    if not company:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
+    
+    return _enrich_company(company.copy())
 
 @router.put("/by-token/{token}", response_model=CompanyRead)
 def update_company_by_token(

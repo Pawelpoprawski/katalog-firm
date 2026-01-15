@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 const steps = ["Dane firmy", "Kontakt", "Oferta", "Zdjęcia", "Podsumowanie"];
 const DESC_LIMIT = 500;
@@ -16,6 +16,8 @@ type Category = {
 export default function EditCompanyPage() {
     const { token } = useParams<{ token: string }>();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const isAdminMode = searchParams.get('admin') === 'true';
 
     // Auth State
     const [isVerified, setIsVerified] = useState(false);
@@ -119,6 +121,50 @@ export default function EditCompanyPage() {
             });
         });
     }, [placesReady, isVerified]); // Re-attach when verified
+
+    // Auto-verify for admin mode
+    useEffect(() => {
+        if (!isAdminMode || isVerified) return;
+
+        const autoVerify = async () => {
+            setVerifying(true);
+            try {
+                const res = await fetch(`${apiUrl}/companies/by-token/${token}`);
+                if (!res.ok) throw new Error("Invalid token");
+                const c = await res.json();
+
+                setCompanyId(c.id);
+                setIsVerified(true);
+
+                const catName = categories.find(cat => cat.id === c.category_id)?.name || "";
+
+                setForm({
+                    name: c.name || "",
+                    category: catName,
+                    address: c.address || "",
+                    city: c.city || "",
+                    canton: c.canton || "",
+                    postal_code: c.postal_code || "",
+                    desc: c.description || "",
+                    offer: c.offer || "",
+                    phone: c.phone || "",
+                    email: c.email || "",
+                    website: c.website || "",
+                    facebook: c.facebook || "",
+                    instagram: c.instagram || ""
+                });
+
+                if (c.img) setMainPhoto(c.img);
+                if (Array.isArray(c.photos)) setPreviews(c.photos);
+            } catch (err) {
+                setAuthError("Błąd ładowania danych firmy");
+            } finally {
+                setVerifying(false);
+            }
+        };
+
+        autoVerify();
+    }, [isAdminMode, token, apiUrl, categories, isVerified]);
 
     const verifyAccess = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -228,15 +274,13 @@ export default function EditCompanyPage() {
     const validateStep = (current: number) => {
         const newErrors: Record<string, string> = {};
         if (current === 0) {
+            // Step 0: "Dane firmy"
             if (!form.name.trim()) newErrors.name = "Podaj nazwę firmy.";
             if (!form.category.trim()) newErrors.category = "Wybierz kategorię.";
             if (!form.address.trim()) newErrors.address = "Podaj adres/miasto.";
         }
         if (current === 1) {
-            if (form.desc.trim().length < 20) newErrors.desc = "Opis min. 20 znaków.";
-            if (form.offer.trim().length < 10) newErrors.offer = "Podaj ofertę/usługi.";
-        }
-        if (current === 2) {
+            // Step 1: "Kontakt" - validate email/phone
             if (!form.email.trim()) {
                 newErrors.email = "Adres e-mail jest wymagany.";
             } else if (!validateEmail(form.email)) {
@@ -246,7 +290,13 @@ export default function EditCompanyPage() {
                 newErrors.phone = "Nieprawidłowy format telefonu. Użyj formatu: +41 lub +48";
             }
         }
+        if (current === 2) {
+            // Step 2: "Oferta" - validate description/offer
+            if (form.desc.trim().length < 20) newErrors.desc = "Opis min. 20 znaków.";
+            if (form.offer.trim().length < 10) newErrors.offer = "Podaj ofertę/usługi.";
+        }
         if (current === 3) {
+            // Step 3: "Zdjęcia" - validate main photo
             if (!mainPhoto) {
                 setUploadError("Zdjęcie główne jest wymagane.");
                 return { mainPhoto: "Wymagane" };

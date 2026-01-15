@@ -1,0 +1,116 @@
+{
+  "id": 2227,
+  "title": "MSFotostudio.ch",
+  "slug": "msfotostudio-ch",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p id=\"foo\" class=\"AnlR0 mimQI\" data-pm-slice=\"1 1 []\">Cześć!<br id=\"\" />Jesteśmy Marcin i Aga!</p>\n<p id=\"pyrqk1461\" class=\"AnlR0 mimQI\">Aga zrobi Cię na bóstwo poprzez swoje umiejętności makijażu, a Marcin uwieczni ten moment swoim aparatem. Obydwoje pomożemy Ci przy pozowaniu, puścimy klimatyczną muzykę dla relaksu. A jak będzie trzeba, otrzymasz też kieliszek prosecco na start.</p>\n<p id=\"vth231463\" class=\"AnlR0 mimQI\">Wszystko po to, żebyś za parę/kilkanaście lat mogła wrócić do tych pięknie wydrukowanych zdjęć na specjalnym, grubym papierze i przypomnieć sobie te piękne chwile w Twoim życiu.</p>\n<p id=\"3you91465\" class=\"AnlR0 mimQI\">Zrobimy Ci sesję boudoir, biznesową i ciążową.</p>\n<p id=\"vlitf1469\" class=\"AnlR0 mimQI\">Jeśli masz inne fotograficzne życzenia – napisz do nas :)<u></u></p>\n",
+  "short_description": "",
+  "author": 2,
+  "featured_media_id": 0,
+  "phone": "0 77 953 26 80",
+  "phone_2": "",
+  "fax": "",
+  "email": "info@msfotostudio.ch",
+  "website": "www.msfotostudio.ch",
+  "address": "Else-Züblin-Strasse, Neuhegi, Oberwinterthur, Winterthur, Bezirk Winterthur, Zurych, 8404, Szwajcaria",
+  "latitude": "47.50346894283816",
+  "longitude": "8.763788630321413",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "facebook",
+      "url": "https://www.facebook.com/MSFotostudio.ch"
+    },
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/msfotostudio.ch/"
+    }
+  ],
+  "views_count": 9,
+  "yoast_og_image": [
+    {
+      "width": 1800,
+      "height": 900,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/logo-biale.jpg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "Cześć!Jesteśmy Marcin i Aga! Aga zrobi Cię na bóstwo poprzez swoje umiejętności makijażu, a Marcin uwieczni ten moment swoim aparatem. Obydwoje pomożemy Ci przy pozowaniu, puścimy klimatyczną muzykę dla relaksu....",
+  "categories": [
+    {
+      "id": 283,
+      "name": "Fotograf",
+      "slug": "fotograf",
+      "icon": "fas fa-camera"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\MSFotostudio.ch\\zdjecie_glowne\\logo-biale_jpg.jpg",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\MSFotostudio.ch\\reszta_zdjec\\33-06374-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/33-06374-scaled.jpg",
+        "id": 2404,
+        "name": "Evoto",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\MSFotostudio.ch\\reszta_zdjec\\57-08294-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/57-08294-scaled.jpg",
+        "id": 2405,
+        "name": "Evoto",
+        "alt": "",
+        "position": 2
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\MSFotostudio.ch\\reszta_zdjec\\31-03284-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/31-03284-scaled.jpg",
+        "id": 2402,
+        "name": "Evoto",
+        "alt": "",
+        "position": 3
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\MSFotostudio.ch\\reszta_zdjec\\65-02565-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/65-02565-scaled.jpg",
+        "id": 2406,
+        "name": "Evoto",
+        "alt": "",
+        "position": 4
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\MSFotostudio.ch\\reszta_zdjec\\2024_03_08_ALINA-A-4-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/2024.03_08_ALINA-A-4-scaled.jpg",
+        "id": 2407,
+        "name": "Evoto",
+        "alt": "",
+        "position": 5
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\MSFotostudio.ch\\reszta_zdjec\\2024_03_11_PAULINA-B-6-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/2024.03_11_PAULINA-B-6-scaled.jpg",
+        "id": 2408,
+        "name": "Evoto",
+        "alt": "",
+        "position": 6
+      }
+    ]
+  },
+  "images_count": 7
+}

@@ -1,0 +1,98 @@
+{
+  "id": 2269,
+  "title": "Flex Massage",
+  "slug": "flex-massage",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p id=\"foo\" class=\"AnlR0 mimQI\" data-pm-slice=\"1 1 []\"><span data-hook=\"BACKGROUND_COLOR\">Witajcie!</span><br id=\"\" /><span data-hook=\"BACKGROUND_COLOR\">Nazywam się Tomasz Garbacz i jestem certyfikowanym masażystą z Frauenfeld, cieszącym się uznaniem wśród Szwajcarskich kas chorych.</span><br id=\"\" /><br id=\"\" />W ramach mojej kompleksowej terapii ukierunkowanej na układ ruchu oferuję:</p>\n<div>\n<p id=\"p4gln8446\" class=\"AnlR0 mimQI\"><span data-hook=\"FOREGROUND_COLOR\">-Pełną diagnostykę ciała</span></p>\n<p id=\"9g6l38449\" class=\"AnlR0 mimQI\"><span data-hook=\"FOREGROUND_COLOR\">-Poprawę postawy ciała</span></p>\n<p id=\"1dh6a8452\" class=\"AnlR0 mimQI\"><span data-hook=\"FOREGROUND_COLOR\">-Mobilizację stawów i mięśni poprzez masaż funkcjonalny</span></p>\n<p id=\"acpds8455\" class=\"AnlR0 mimQI\"><span data-hook=\"FOREGROUND_COLOR\">-Dostosowanie do indywidualnych potrzeb - zarówno terapeutyczne, jak i masaże relaksacyjne</span></p>\n<p id=\"u8awj8458\" class=\"AnlR0 mimQI\"><span data-hook=\"FOREGROUND_COLOR\">-Wzmocnienie mięśni i mobilizację stawów poprzez gimnastykę korekcyjną w celu zapobiegania nawrotom dolegliwości.</span></p>\n</div>\n<p id=\"63xzr8460\" class=\"AnlR0 mimQI\">Jeśli odczuwasz zmęczenie, stres lub cierpisz na różnorodne dolegliwości, jestem tutaj, aby Cię wesprzeć i przynieść ulgę.<br id=\"\" />Z niecierpliwością czekam na możliwość powitania Cię w wybranym przez Ciebie miejscu.<br id=\"\" />Możesz skorzystać z mojego gabinetu we Frauenfeld lub mogę przyjechać do Ciebie, obsługując obszary Kantonu Thurgau (TG), Zurychu (ZH) oraz Sankt Gallen (SG).<br id=\"\" /><br id=\"\" />Zapraszam do kontaktu!<br id=\"\" /><br id=\"\" /><u></u></p>\n",
+  "short_description": "",
+  "author": 2,
+  "featured_media_id": 0,
+  "phone": "077 957 43 12",
+  "phone_2": "",
+  "fax": "",
+  "email": "info@flexmassage.ch",
+  "website": "www.flexmassage.ch",
+  "address": "34, Zürcherstrasse, Hasebüel, Frauenfeld, Neunforn, Bezirk Frauenfeld, Thurgau, 8500, Szwajcaria",
+  "latitude": "47.5520152",
+  "longitude": "8.8792086",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "facebook",
+      "url": "https://www.facebook.com/FlexMasseur"
+    },
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/flexmassage.ch/"
+    }
+  ],
+  "views_count": 51,
+  "yoast_og_image": [
+    {
+      "width": 1078,
+      "height": 1020,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/zdjecie-glowne-008.jpg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "Witajcie!Nazywam się Tomasz Garbacz i jestem certyfikowanym masażystą z Frauenfeld, cieszącym się uznaniem wśród Szwajcarskich kas chorych.W ramach mojej kompleksowej terapii ukierunkowanej na układ ruchu oferuję: -Pełną diagnostykę ciała -Poprawę...",
+  "categories": [
+    {
+      "id": 290,
+      "name": "Zdrowie",
+      "slug": "zdrowie",
+      "icon": "fas fa-hospital-user"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Flex_Massage\\zdjecie_glowne\\zdjecie-glowne-008_jpg.jpg",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Flex_Massage\\reszta_zdjec\\20240229_1040482-1-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/20240229_1040482-1-scaled.jpg",
+        "id": 2675,
+        "name": "20240229_104048~2 (1)",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Flex_Massage\\reszta_zdjec\\20240320_104843-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/20240320_104843-scaled.jpg",
+        "id": 2676,
+        "name": "20240320_104843",
+        "alt": "",
+        "position": 2
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Flex_Massage\\reszta_zdjec\\Zdjecie-WhatsApp-2024-02-24-o-18_04_19_b7019af9-1_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/Zdjecie-WhatsApp-2024-02-24-o-18.04.19_b7019af9-1.jpg",
+        "id": 2674,
+        "name": "Zdjęcie WhatsApp 2024-02-24 o 18.04.19_b7019af9 (1)",
+        "alt": "",
+        "position": 3
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Flex_Massage\\reszta_zdjec\\materac-1_png.png",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/materac-1.png",
+        "id": 2677,
+        "name": "materac (1)",
+        "alt": "",
+        "position": 4
+      }
+    ]
+  },
+  "images_count": 5
+}

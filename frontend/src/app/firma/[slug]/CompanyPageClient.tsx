@@ -273,25 +273,23 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
 
         <div className="grid gap-8 md:grid-cols-[1.5fr,1fr]">
           <div className="space-y-4">
-            {company.img && (
-              <div
-                className="h-64 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 cursor-pointer hover:opacity-90 transition-opacity flex items-center justify-center"
-                onClick={() => {
-                  const images = [company.img, ...(company.photos || [])].filter(Boolean) as string[];
-                  if (images.length > 0) {
-                    setLightboxImage(images[0]);
-                    setLightboxIndex(0);
-                  }
-                }}
-              >
-                <img
-                  src={company.img}
-                  alt={company.name}
-                  className="max-h-full max-w-full object-contain"
-                  loading="lazy"
-                />
-              </div>
-            )}
+            <div
+              className="h-64 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 cursor-pointer hover:opacity-90 transition-opacity flex items-center justify-center"
+              onClick={() => {
+                const images = [company.img, ...(company.photos || [])].filter(Boolean) as string[];
+                if (images.length > 0) {
+                  setLightboxImage(images[0]);
+                  setLightboxIndex(0);
+                }
+              }}
+            >
+              <img
+                src={company.img || "/default-company.png"}
+                alt={company.name}
+                className="max-h-full max-w-full object-contain"
+                loading="lazy"
+              />
+            </div>
             {/* Company Header with Heart */}
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -320,11 +318,17 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
                 </button>
               )}
             </div>
-            <p className="text-base text-slate-700">{company.description || "Brak opisu"}</p>
+            <div
+              className="prose prose-slate prose-sm max-w-none text-base text-slate-700"
+              dangerouslySetInnerHTML={{ __html: company.description || "Brak opisu" }}
+            />
             {company.offer && (
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                 <h3 className="text-sm font-semibold text-slate-900 mb-2">Oferta</h3>
-                <p className="text-sm text-slate-700">{company.offer}</p>
+                <div
+                  className="prose prose-slate prose-sm max-w-none text-sm text-slate-700"
+                  dangerouslySetInnerHTML={{ __html: company.offer || "" }}
+                />
               </div>
             )}
             {company.photos && company.photos.length > 0 && (() => {

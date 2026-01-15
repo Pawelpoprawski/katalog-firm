@@ -1,0 +1,89 @@
+{
+  "id": 2237,
+  "title": "Annas&#8217;Win",
+  "slug": "annaswin",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p id=\"foo\" class=\"AnlR0 mimQI\" data-pm-slice=\"1 1 []\"><span data-hook=\"FOREGROUND_COLOR\"><strong>Uszyjemy dla Ciebie Wszystko!</strong></span></p>\n<p id=\"2ikie523\" class=\"AnlR0 mimQI\">Zapraszamy do skorzystania z usług naszej dobrze wyposażonej szwalni, gdzie profesjonalizm łączy się z pasją do szycia. Specjalizujemy się w tworzeniu na miarę firan oraz szerokiej gamie odzieży. Nasza oferta obejmuje:</p>\n<div>\n<p id=\"ocs10527\" class=\"AnlR0 mimQI\"><span data-hook=\"FOREGROUND_COLOR\"><strong>-Firany na wymiar</strong></span>: Tworzymy eleganckie firany, idealnie dopasowane do każdego wnętrza.</p>\n<p id=\"7635s531\" class=\"AnlR0 mimQI\"><span data-hook=\"FOREGROUND_COLOR\"><strong>-Usługi krawieckie</strong></span>: Przeróbki i naprawy odzieży, dzięki czemu Twoje ulubione ubrania będą służyć Ci jeszcze dłużej.</p>\n<p id=\"o8mg4535\" class=\"AnlR0 mimQI\"><span data-hook=\"FOREGROUND_COLOR\"><strong>-Realizacja zleceń przemysłowych</strong></span>: Nasze doświadczenie rozciąga się również na zlecenia przemysłowe, gdzie wymagana jest precyzja i efektywność w produkcji większych partii odzieży.</p>\n<p id=\"k3gei539\" class=\"AnlR0 mimQI\"><span data-hook=\"FOREGROUND_COLOR\"><strong>-Realizacja zleceń dekoracyjnych</strong></span>: Zrealizujemy każde, nawet najbardziej nietypowe zamówienie związane z dekoracjami wnętrz.</p>\n<p id=\"29cwj543\" class=\"AnlR0 mimQI\"><span data-hook=\"FOREGROUND_COLOR\"><strong>-Suknie ślubne i wieczorowe</strong></span>: Posiadamy bogatą ofertę sukien na sprzedaż i wynajem. Znajdziesz u nas kreacje na każdą wyjątkową okazję.</p>\n<p id=\"auauo547\" class=\"AnlR0 mimQI\"><span data-hook=\"FOREGROUND_COLOR\"><strong>-Dodatki</strong></span>: Kompletujemy stylizacje dzięki eleganckim dodatkom, które podkreślą charakter każdej sukni.</p>\n<p id=\"pou10551\" class=\"AnlR0 mimQI\"><span data-hook=\"FOREGROUND_COLOR\"><strong>-Bielizna nocna i wieczorowa damska</strong></span>: Oferujemy szeroki wybór bielizny, która łączy w sobie komfort i klasę.</p>\n</div>\n<p id=\"gbl2v554\" class=\"AnlR0 mimQI\">Zapewniamy wysoką jakość usług oraz indywidualne podejście do każdego klienta. Niezależnie od tego, czy potrzebujesz wyjątkowej sukni, czy eleganckich firan – jesteśmy do Twojej dyspozycji.</p>\n<p id=\"936vc556\" class=\"AnlR0 mimQI\"><span data-hook=\"FOREGROUND_COLOR\"><strong>Skontaktuj się z nami już dziś i przekonaj się, jak możemy Ci pomóc!</strong></span><br id=\"\" /><u></u><u></u></p>\n<p>&nbsp;</p>\n",
+  "short_description": "",
+  "author": 2,
+  "featured_media_id": 0,
+  "phone": "+41 76 207 35 75",
+  "phone_2": "",
+  "fax": "",
+  "email": "office@annaswin.ch",
+  "website": "www.annaswin.ch",
+  "address": "2, Sandbühlstrasse, Hägglingen, Bezirk Bremgarten, Aargau, 5607, Szwajcaria",
+  "latitude": "47.3887905",
+  "longitude": "8.2545808",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "facebook",
+      "url": "https://www.facebook.com/annasshop.dudka"
+    },
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/annas.win/"
+    }
+  ],
+  "views_count": 24,
+  "yoast_og_image": [
+    {
+      "width": 2000,
+      "height": 1600,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/433634111_416849040892895_2368291870664533888_n.jpg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "Uszyjemy dla Ciebie Wszystko! Zapraszamy do skorzystania z usług naszej dobrze wyposażonej szwalni, gdzie profesjonalizm łączy się z pasją do szycia. Specjalizujemy się w tworzeniu na miarę firan oraz szerokiej...",
+  "categories": [
+    {
+      "id": 286,
+      "name": "Różne",
+      "slug": "rozne",
+      "icon": "fas fa-align-justify"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Annas&#8217;Win\\zdjecie_glowne\\433634111_416849040892895_2368291870664533888_n_jpg.jpg",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Annas&#8217;Win\\reszta_zdjec\\3b23862a-2fba-4e88-ac62-03ebd86f6aeb-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/3b23862a-2fba-4e88-ac62-03ebd86f6aeb-scaled.jpg",
+        "id": 2754,
+        "name": "Woman near heaps of white clean linen",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Annas&#8217;Win\\reszta_zdjec\\02-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/02-scaled.jpg",
+        "id": 2753,
+        "name": "02",
+        "alt": "",
+        "position": 2
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Annas&#8217;Win\\reszta_zdjec\\01-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/01-scaled.jpg",
+        "id": 2752,
+        "name": "Fashion designer working on her designs in the studio",
+        "alt": "",
+        "position": 3
+      }
+    ]
+  },
+  "images_count": 4
+}

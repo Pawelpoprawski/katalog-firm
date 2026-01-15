@@ -1,0 +1,229 @@
+{
+  "id": 2224,
+  "title": "AMR Beauty &#038; Nagel Studio",
+  "slug": "amr-beauty-nagel-studio",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p id=\"foo\" class=\"AnlR0 mimQI\" data-pm-slice=\"1 1 []\">Witajcie!</p>\n<p id=\"9jpdw16951\" class=\"AnlR0 mimQI\">Zakres usług:</p>\n<div>\n<p id=\"u9iiq368\" class=\"AnlR0 mimQI\">-Stylizacje paznokci (żel, hybryda, manicure klasyczny)</p>\n<p id=\"wkzy1371\" class=\"AnlR0 mimQI\">-Pedicure</p>\n<p id=\"lpo89374\" class=\"AnlR0 mimQI\">-Laminacje brwi i rzęs z regulacją woskiem oraz farbką</p>\n<p id=\"077hb377\" class=\"AnlR0 mimQI\">-Makijaż okolicznościowy, wieczorowy oraz ślubny (możliwy dojazd do klientki)</p>\n</div>\n<p id=\"ixp8s16921\" class=\"AnlR0 mimQI\">\n",
+  "short_description": "",
+  "author": 2,
+  "featured_media_id": 0,
+  "phone": "+41 764731669",
+  "phone_2": "",
+  "fax": "",
+  "email": "",
+  "website": "",
+  "address": "53, Dorfstrasse, Bollodingen, Bettenhausen, Oberaargau administrative district, Emmental-Oberaargau administrative region, Berno, 3366, Szwajcaria",
+  "latitude": "47.1719274",
+  "longitude": "7.718522158552858",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "instagram",
+      "url": "https://www.facebook.com/profile.php?id=61550039433150"
+    }
+  ],
+  "views_count": 12,
+  "yoast_og_image": [
+    {
+      "width": 699,
+      "height": 783,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/IMG_2238.jpg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "Witajcie! Zakres usług: -Stylizacje paznokci (żel, hybryda, manicure klasyczny) -Pedicure -Laminacje brwi i rzęs z regulacją woskiem oraz farbką -Makijaż okolicznościowy, wieczorowy oraz ślubny (możliwy dojazd do klientki)",
+  "categories": [
+    {
+      "id": 280,
+      "name": "Beauty",
+      "slug": "beauty",
+      "icon": "fas fa-female"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\zdjecie_glowne\\IMG_2238_jpg.jpg",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\zdj1_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/zdj1.jpg",
+        "id": 2714,
+        "name": "zdj1",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\zdj2_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/zdj2.jpg",
+        "id": 2715,
+        "name": "zdj2",
+        "alt": "",
+        "position": 2
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\IMG_2237_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/IMG_2237.jpg",
+        "id": 2712,
+        "name": "IMG_2237",
+        "alt": "",
+        "position": 3
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\zdj3_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/zdj3.jpg",
+        "id": 2716,
+        "name": "zdj3",
+        "alt": "",
+        "position": 4
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\16_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/16.jpg",
+        "id": 2711,
+        "name": "16",
+        "alt": "",
+        "position": 5
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\15-2_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/15-2.jpg",
+        "id": 2710,
+        "name": "15",
+        "alt": "",
+        "position": 6
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\14-2_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/14-2.jpg",
+        "id": 2709,
+        "name": "14",
+        "alt": "",
+        "position": 7
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\6-6_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/6-6.jpg",
+        "id": 2701,
+        "name": "6",
+        "alt": "",
+        "position": 8
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\10-1_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/10-1.jpg",
+        "id": 2705,
+        "name": "10",
+        "alt": "",
+        "position": 9
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\11-3_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/11-3.jpg",
+        "id": 2706,
+        "name": "11",
+        "alt": "",
+        "position": 10
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\12-1_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/12-1.jpg",
+        "id": 2707,
+        "name": "12",
+        "alt": "",
+        "position": 11
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\13-2-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/13-2-scaled.jpg",
+        "id": 2708,
+        "name": "13",
+        "alt": "",
+        "position": 12
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\9-1_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/9-1.jpg",
+        "id": 2704,
+        "name": "9",
+        "alt": "",
+        "position": 13
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\7-1_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/7-1.jpg",
+        "id": 2702,
+        "name": "7",
+        "alt": "",
+        "position": 14
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\8-1_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/8-1.jpg",
+        "id": 2703,
+        "name": "8",
+        "alt": "",
+        "position": 15
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\1-10_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/1-10.jpg",
+        "id": 2696,
+        "name": "1",
+        "alt": "",
+        "position": 16
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\2-5_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/2-5.jpg",
+        "id": 2697,
+        "name": "2",
+        "alt": "",
+        "position": 17
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\3-8_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/3-8.jpg",
+        "id": 2698,
+        "name": "3",
+        "alt": "",
+        "position": 18
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AMR_Beauty_&#038;_Nagel_Studio\\reszta_zdjec\\5-7_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/5-7.jpg",
+        "id": 2700,
+        "name": "5",
+        "alt": "",
+        "position": 19
+      }
+    ]
+  },
+  "images_count": 20
+}

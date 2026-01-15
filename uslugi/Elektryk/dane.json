@@ -1,0 +1,44 @@
+{
+  "id": 51796,
+  "title": "Elektryk",
+  "slug": "elektryk",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p>Usługi elektryczne od A do Z.</p>\n",
+  "short_description": "",
+  "author": 110,
+  "featured_media_id": 0,
+  "phone": "+41779436822",
+  "phone_2": "",
+  "fax": "",
+  "email": "chorazak.jacek@gmail.com",
+  "website": "",
+  "address": "Hochdorf, Szwajcaria",
+  "latitude": "47.1665813",
+  "longitude": "8.292067099999999",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": null,
+  "views_count": 6,
+  "yoast_description": "Usługi elektryczne od A do Z.",
+  "categories": [
+    {
+      "id": 285,
+      "name": "Remont",
+      "slug": "remont",
+      "icon": "fas fa-house-damage"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": null,
+    "other": []
+  },
+  "images_count": 0
+}

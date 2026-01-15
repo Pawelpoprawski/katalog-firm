@@ -1,0 +1,112 @@
+{
+  "id": 2265,
+  "title": "AUTOLAND KAMIL KOBAK",
+  "slug": "autoland-kamil-kobak",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p>Firma \"AUTOLAND\" oferuje:</p>\n<p>-🚘 transport samochodów, motorów oraz maszyn rolniczych na lawecie bezpośrednio ze Szwajcarii do Polski (samochody oraz inne rzeczy przywozimy pod wskazany adres w przeciągu dwóch dni od daty załadunku)<br />\n-💶 odprawę celną ze zwolnieniem z CŁA dla samochodów oraz motocykli wyprodukowanych w UE<br />\n-💶 zapłatę podatku Akcyzowego w Polsce z opinią rzeczoznawcy<br />\n-🤔 doradztwo w sprawie zakupu samochodu</p>\n<p>&nbsp;</p>\n",
+  "short_description": "",
+  "author": 2,
+  "featured_media_id": 0,
+  "phone": "+48 502 306 663",
+  "phone_2": "",
+  "fax": "",
+  "email": "",
+  "website": "",
+  "address": "Vor Moos, Kerzers, See District, Fryburg, 3210, Szwajcaria",
+  "latitude": "46.9828787",
+  "longitude": "7.1862312",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "facebook",
+      "url": "https://www.facebook.com/szwajcaria/"
+    }
+  ],
+  "views_count": 92,
+  "yoast_og_image": [
+    {
+      "width": 2000,
+      "height": 1500,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/2-7.jpg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "Firma &#8220;AUTOLAND&#8221; oferuje: -🚘 transport samochodów, motorów oraz maszyn rolniczych na lawecie bezpośrednio ze Szwajcarii do Polski (samochody oraz inne rzeczy przywozimy pod wskazany adres w przeciągu dwóch dni od...",
+  "categories": [
+    {
+      "id": 287,
+      "name": "Samochód / Transport",
+      "slug": "samochod-transport",
+      "icon": "fas fa-car-alt"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\AUTOLAND_KAMIL_KOBAK\\zdjecie_glowne\\2-7_jpg.jpg",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AUTOLAND_KAMIL_KOBAK\\reszta_zdjec\\7-3-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/7-3-scaled.jpg",
+        "id": 2807,
+        "name": "7",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AUTOLAND_KAMIL_KOBAK\\reszta_zdjec\\6-8-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/6-8-scaled.jpg",
+        "id": 2806,
+        "name": "6",
+        "alt": "",
+        "position": 2
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AUTOLAND_KAMIL_KOBAK\\reszta_zdjec\\5-9-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/5-9-scaled.jpg",
+        "id": 2805,
+        "name": "5",
+        "alt": "",
+        "position": 3
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AUTOLAND_KAMIL_KOBAK\\reszta_zdjec\\4-5_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/4-5.jpg",
+        "id": 2804,
+        "name": "4",
+        "alt": "",
+        "position": 4
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AUTOLAND_KAMIL_KOBAK\\reszta_zdjec\\3-10_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/3-10.jpg",
+        "id": 2803,
+        "name": "3",
+        "alt": "",
+        "position": 5
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\AUTOLAND_KAMIL_KOBAK\\reszta_zdjec\\1-12-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/1-12-scaled.jpg",
+        "id": 2801,
+        "name": "1",
+        "alt": "",
+        "position": 6
+      }
+    ]
+  },
+  "images_count": 7
+}

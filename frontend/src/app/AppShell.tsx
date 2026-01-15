@@ -83,7 +83,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                   Polskie usługi <span className="text-primary">w Szwajcarii</span>
                 </span>
                 <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                  część portalu <a href="https://polacyszwajcaria.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">PolacySzwajcaria.com</a>
+                  część portalu <span className="text-primary">PolacySzwajcaria.com</span>
                 </span>
               </span>
             </Link>

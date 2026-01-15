@@ -918,3 +918,13 @@ def update_newsletter_count(count: int) -> dict:
         json.dump(settings, f, indent=2, ensure_ascii=False)
     
     return settings
+
+def update_sort_order(sort_order: str) -> dict:
+    """Update the sort order for homepage company display."""
+    settings = get_settings()
+    settings["sort_order"] = sort_order
+    
+    with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
+        json.dump(settings, f, indent=2, ensure_ascii=False)
+    
+    return settings

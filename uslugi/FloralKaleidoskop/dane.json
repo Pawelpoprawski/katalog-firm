@@ -1,0 +1,71 @@
+{
+  "id": 54349,
+  "title": "FloralKaleidoskop",
+  "slug": "floralkaleidoskop",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p><b>FloralKaleidoskop - Ręcznie robione dekoracje ze sztucznych kwiatów.</b></p>\n<p>Tworzę z pasją unikalne dekoracje, które nie więdną! W ofercie <b>FloralKaleidoskop</b> znajdziesz piękne, ręcznie wykonane wianki, bukiety, obręcze z napisem (możliwa personalizacja) i inne dekoracje ze sztucznych kwiatów. To idealny sposób na dodanie uroku Twojemu wnętrzu lub sprawienie oryginalnego prezentu. Przyjmuję także zamówienia indywidualne. Zapraszam!</p>\n",
+  "short_description": "",
+  "author": 126,
+  "featured_media_id": 0,
+  "phone": "",
+  "phone_2": "",
+  "fax": "",
+  "email": "",
+  "website": "https://floralkaleidoskop.ch/",
+  "address": "Winterthur, Szwajcaria",
+  "latitude": "47.4988196",
+  "longitude": "8.723688899999999",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/floralkaleidoskop?igsh=eDJmbWduNnJrY3Nw"
+    },
+    {
+      "id": "facebook",
+      "url": "https://www.facebook.com/profile.php?id=61577579506956"
+    }
+  ],
+  "views_count": 7,
+  "yoast_og_image": [
+    {
+      "width": 2560,
+      "height": 2560,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/09/20250917_104331-COLLAGE-scaled.jpg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "FloralKaleidoskop &#8211; Ręcznie robione dekoracje ze sztucznych kwiatów. Tworzę z pasją unikalne dekoracje, które nie więdną! W ofercie FloralKaleidoskop znajdziesz piękne, ręcznie wykonane wianki, bukiety, obręcze z napisem (możliwa personalizacja)...",
+  "categories": [
+    {
+      "id": 286,
+      "name": "Różne",
+      "slug": "rozne",
+      "icon": "fas fa-align-justify"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\FloralKaleidoskop\\zdjecie_glowne\\20250917_104331-COLLAGE-scaled_jpg.jpg",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\FloralKaleidoskop\\reszta_zdjec\\20250914_1505592-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/09/20250914_1505592-scaled.jpg",
+        "id": 54351,
+        "name": "20250914_1505592",
+        "alt": "",
+        "position": 1
+      }
+    ]
+  },
+  "images_count": 2
+}

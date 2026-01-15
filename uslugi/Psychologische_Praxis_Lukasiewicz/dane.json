@@ -1,0 +1,57 @@
+{
+  "id": 56084,
+  "title": "Psychologische Praxis Lukasiewicz",
+  "slug": "psychologische-praxis-lukasiewicz",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p>Każdy z nas od czasu do czasu staje przed wyzwaniami, które wydają się trudne do pokonania. Towarzyszę <strong>dzieciom, młodzieży i dorosłym</strong> – szczególnie osobom z doświadczeniem migracji – w odkrywaniu własnych zasobów, radzeniu sobie z codziennymi trudnościami i odnajdywaniu się w nowych sytuacjach życiowych.<br />\nWięcej o mnie i usługach, które oferuję: lukasiewicz.ch</p>\n",
+  "short_description": "",
+  "author": 146,
+  "featured_media_id": 0,
+  "phone": "",
+  "phone_2": "",
+  "fax": "",
+  "email": "info@psycholog.ch",
+  "website": "http://lukasiewicz.ch",
+  "address": "Luzern, Szwajcaria",
+  "latitude": "47.05016819999999",
+  "longitude": "8.3093072",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "facebook",
+      "url": "https://www.facebook.com/profile.php?id=61578905229501"
+    }
+  ],
+  "views_count": 4,
+  "yoast_og_image": [
+    {
+      "width": 231,
+      "height": 230,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/10/Beige-Minimal-Beauty-Company-logo2.png",
+      "type": "image/png"
+    }
+  ],
+  "yoast_description": "Każdy z nas od czasu do czasu staje przed wyzwaniami, które wydają się trudne do pokonania. Towarzyszę dzieciom, młodzieży i dorosłym – szczególnie osobom z doświadczeniem migracji – w odkrywaniu...",
+  "categories": [
+    {
+      "id": 290,
+      "name": "Zdrowie",
+      "slug": "zdrowie",
+      "icon": "fas fa-hospital-user"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Psychologische_Praxis_Lukasiewicz\\zdjecie_glowne\\Beige-Minimal-Beauty-Company-logo2_png.png",
+    "other": []
+  },
+  "images_count": 1
+}

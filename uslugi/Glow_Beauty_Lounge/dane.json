@@ -1,0 +1,76 @@
+{
+  "id": 2254,
+  "title": "Glow Beauty Lounge",
+  "slug": "glow-beauty-lounge",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p id=\"foo\" class=\"AnlR0 mimQI\" data-pm-slice=\"1 1 []\">W mojej ofercie znajdą państwo szereg usług z branży Beauty:</p>\n<p id=\"so4cj1182\" class=\"AnlR0 mimQI\">Przedłużanie rzęs wszystkimi metodami</p>\n<p id=\"ltxu71184\" class=\"AnlR0 mimQI\">Makijaż permanentny brwi jak również usta</p>\n<p id=\"o89nf1186\" class=\"AnlR0 mimQI\">Zabiegi na twarz : Oczyszanie wodorowe, microneedling, manualne oczyszczanie jak również mikrodermabrazja</p>\n<p id=\"70bw21188\" class=\"AnlR0 mimQI\">Przedłużanie rzęs to popularna usługa w branży beauty, która pozwala uzyskać efekt dłuższych, gęstszych i bardziej podkreślonych rzęs. Istnieje kilka metod przedłużania rzęs, które różnią się techniką aplikacji, rodzajem używanych materiałów oraz trwałością efektu.</p>\n<p id=\"l438s1190\" class=\"AnlR0 mimQI\">Oto najpopularniejsze z nich:</p>\n<p id=\"wj8cl1192\" class=\"AnlR0 mimQI\"> 1. Metoda 1:1</p>\n<p id=\"49eo21194\" class=\"AnlR0 mimQI\">  2. Metoda objętościowa (Volume)</p>\n<p id=\"bke941198\" class=\"AnlR0 mimQI\">  3. Metoda “Russian Volume”</p>\n<p id=\"frws61202\" class=\"AnlR0 mimQI\">  4. Metoda “Hybrid”</p>\n<p id=\"jwnn51206\" class=\"AnlR0 mimQI\">  “Lash Lifting” (Lifting rzęs)</p>\n<p id=\"2taaq1208\" class=\"AnlR0 mimQI\"> • Opis: Choć nie jest to klasyczne przedłużanie rzęs, jest to metoda podkręcania i unoszenia naturalnych rzęs, która daje efekt dłuższych i bardziej podkreślonych rzęs bez użycia sztucznych. Zabieg polega na trwałym podkręceniu rzęs przy użyciu specjalnych preparatów.</p>\n<p id=\"66j7v1210\" class=\"AnlR0 mimQI\"> • Efekt: Podkręcone, uniesione i naturalnie wydłużone rzęsy.</p>\n<p id=\"o78hl1212\" class=\"AnlR0 mimQI\">Permanent make-up (PMU)</p>\n<p id=\"5l9gw1214\" class=\"AnlR0 mimQI\">czyli makijaż permanentny, to zabieg kosmetyczny, który polega na wprowadzeniu pigmentu pod skórę w celu uzyskania trwałego efektu makijażu. Jest to alternatywa dla codziennego nakładania kosmetyków, takich jak kredka do brwi, eyeliner czy pomadka, a także idealne rozwiązanie dla osób, które chcą zaoszczędzić czas lub mają trudności z precyzyjnym wykonaniem makijażu.</p>\n",
+  "short_description": "",
+  "author": 2,
+  "featured_media_id": 0,
+  "phone": "+41 0762223277",
+  "phone_2": "",
+  "fax": "",
+  "email": "glowbeautylounge46@gmail.com",
+  "website": "",
+  "address": "46, Obere Bahnhofstrasse, Rapperswil, Rapperswil-Jona, Wahlkreis See-Gaster, St. Gallen, 8640, Szwajcaria",
+  "latitude": "47.2274699",
+  "longitude": "8.819377762758954",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/glow_rapperswil/"
+    }
+  ],
+  "views_count": 18,
+  "yoast_og_image": [
+    {
+      "width": 1004,
+      "height": 591,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/fafa1a08-221d-44ff-a66b-74b57e1882de.jpeg",
+      "type": "image/jpeg"
+    }
+  ],
+  "yoast_description": "W mojej ofercie znajdą państwo szereg usług z branży Beauty: Przedłużanie rzęs wszystkimi metodami Makijaż permanentny brwi jak również usta Zabiegi na twarz : Oczyszanie wodorowe, microneedling, manualne oczyszczanie jak...",
+  "categories": [
+    {
+      "id": 280,
+      "name": "Beauty",
+      "slug": "beauty",
+      "icon": "fas fa-female"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Glow_Beauty_Lounge\\zdjecie_glowne\\fafa1a08-221d-44ff-a66b-74b57e1882de_jpeg.jpeg",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Glow_Beauty_Lounge\\reszta_zdjec\\8182195f-fc94-466f-9192-69b593d7f90e_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/8182195f-fc94-466f-9192-69b593d7f90e.jpeg",
+        "id": 2299,
+        "name": "8182195f-fc94-466f-9192-69b593d7f90e",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Glow_Beauty_Lounge\\reszta_zdjec\\EF0DA9F7-7CCA-4445-8A08-6F9BB67C9033_jpeg.jpeg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2024/12/EF0DA9F7-7CCA-4445-8A08-6F9BB67C9033.jpeg",
+        "id": 2300,
+        "name": "EF0DA9F7-7CCA-4445-8A08-6F9BB67C9033",
+        "alt": "",
+        "position": 2
+      }
+    ]
+  },
+  "images_count": 3
+}

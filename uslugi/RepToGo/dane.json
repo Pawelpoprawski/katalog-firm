@@ -1,0 +1,61 @@
+{
+  "id": 22552,
+  "title": "RepToGo",
+  "slug": "reptogo",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p>Witam,<br />\nzajmuje sie naprawa sprzetow elektronicznych i w sumie jesli masz z czyms problem to doradze co zrobic, jesli nie bedziesz wiedzial jak i cos to zorganizuje.<br />\nDoradztwo w naprawach Gwarancyjnych i Pogwarancyjnych.</p>\n<p>Mam wielu partnerow w PL i tu w CH wiec jestem doradzca jak i wykonuje roznego typu naprawy.</p>\n<p>Komputery, Telefony, Konsole, Sprzed AGD, RTV, Radia Samochodowe, montaze roznego rodzaju.<br />\nRegeneracja wielu rzeczy (to robie w PL, ale jak nie jedziesz do PL, lub nie masz dobrych warsztatow, to podaj mi, ja wspolpracuje ze specjalistami)</p>\n<p>Zapraszam na FB - https://www.facebook.com/RepToGo.Schweiz/<br />\nlub bezposrednio na strone - www.reptogo.ch</p>\n",
+  "short_description": "",
+  "author": 31,
+  "featured_media_id": 0,
+  "phone": "+41767350700",
+  "phone_2": "",
+  "fax": "",
+  "email": "reptogo.schweiz@gmail.com",
+  "website": "http://www.reptogo.ch",
+  "address": "Zweidlen, Glattfelden, Szwajcaria",
+  "latitude": "47.56163979999999",
+  "longitude": "8.4699844",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "facebook",
+      "url": "https://www.facebook.com/RepToGo.Schweiz/"
+    },
+    {
+      "id": "youtube",
+      "url": "https://www.youtube.com/@RepToGo-TechnicalConsulting"
+    }
+  ],
+  "views_count": 9,
+  "yoast_og_image": [
+    {
+      "width": 1200,
+      "height": 1200,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/03/Logo-maker-project-1.png",
+      "type": "image/png"
+    }
+  ],
+  "yoast_description": "Witam, zajmuje sie naprawa sprzetow elektronicznych i w sumie jesli masz z czyms problem to doradze co zrobic, jesli nie bedziesz wiedzial jak i cos to zorganizuje. Doradztwo w naprawach...",
+  "categories": [
+    {
+      "id": 286,
+      "name": "Różne",
+      "slug": "rozne",
+      "icon": "fas fa-align-justify"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\RepToGo\\zdjecie_glowne\\Logo-maker-project-1_png.png",
+    "other": []
+  },
+  "images_count": 1
+}

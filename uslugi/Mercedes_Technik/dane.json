@@ -1,0 +1,71 @@
+{
+  "id": 61448,
+  "title": "Mercedes Technik",
+  "slug": "mercedes-technik",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<h4>Problem z Mercedesem?<br />\nSerwis elektroniczny specjalizujący się w diagnostyce i naprawie samochodów marki Mercedes. Zapraszamy!</h4>\n",
+  "short_description": "",
+  "author": 219,
+  "featured_media_id": 0,
+  "phone": "+41 78 205 57 77",
+  "phone_2": "",
+  "fax": "",
+  "email": "info@mercedestechnik.ch",
+  "website": "http://mercedestechnik.ch",
+  "address": "Merenschwand, Schweiz",
+  "latitude": "47.2594048",
+  "longitude": "8.374920699999999",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": null,
+  "views_count": 9,
+  "yoast_og_image": [
+    {
+      "width": 1024,
+      "height": 1024,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/11/42E84AE3-8463-440A-9B48-B612CDB445BF.png",
+      "type": "image/png"
+    }
+  ],
+  "yoast_description": "Problem z Mercedesem? Serwis elektroniczny specjalizujący się w diagnostyce i naprawie samochodów marki Mercedes. Zapraszamy!",
+  "categories": [
+    {
+      "id": 287,
+      "name": "Samochód / Transport",
+      "slug": "samochod-transport",
+      "icon": "fas fa-car-alt"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\Mercedes_Technik\\zdjecie_glowne\\42E84AE3-8463-440A-9B48-B612CDB445BF_png.png",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Mercedes_Technik\\reszta_zdjec\\6f7cf6a25bb84080557595f7992973df17b6e233e2cef094f774a9798c299bd0_png.png",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/11/6f7cf6a25bb84080557595f7992973df17b6e233e2cef094f774a9798c299bd0.png",
+        "id": 61452,
+        "name": "6f7cf6a25bb84080557595f7992973df17b6e233e2cef094f774a9798c299bd0",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\Mercedes_Technik\\reszta_zdjec\\876e60d803bdbe2847d92df94612aee128e3a5989cca7f3787a37c9736682e6d_png.png",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/11/876e60d803bdbe2847d92df94612aee128e3a5989cca7f3787a37c9736682e6d.png",
+        "id": 61453,
+        "name": "876e60d803bdbe2847d92df94612aee128e3a5989cca7f3787a37c9736682e6d",
+        "alt": "",
+        "position": 2
+      }
+    ]
+  },
+  "images_count": 3
+}

@@ -1,0 +1,76 @@
+{
+  "id": 55142,
+  "title": "EwaRiseAbove Gesundheimsssage",
+  "slug": "ewariseabove-gesundheimsssage",
+  "status": "publish",
+  "date": "",
+  "modified": "",
+  "link": "",
+  "content": "<p>W swojej ofercie mam cały wachlarz masaży od relaksacyjnych, liftingujacych po glebokie powięziowe.</p>\n<p>Poniżej podaję stronę internetową</p>\n<p>Zapraszam do kontaktu</p>\n<p>www.ewa-riseabove.com</p>\n",
+  "short_description": "",
+  "author": 134,
+  "featured_media_id": 0,
+  "phone": "+41762408543",
+  "phone_2": "",
+  "fax": "",
+  "email": "riseabove.ewa@protonmail.com",
+  "website": "http://www.ewa-riseabove.com",
+  "address": "Aarburg, Szwajcaria",
+  "latitude": "46.7985624",
+  "longitude": "8.2319736",
+  "zip": "",
+  "tagline": "",
+  "price": 0,
+  "pricing_type": "",
+  "price_range": "",
+  "video_url": "",
+  "social_links": [
+    {
+      "id": "facebook",
+      "url": "https://www.facebook.com/share/177KxU6Lbp/"
+    }
+  ],
+  "views_count": 15,
+  "yoast_og_image": [
+    {
+      "width": 679,
+      "height": 661,
+      "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/09/1000038478.png",
+      "type": "image/png"
+    }
+  ],
+  "yoast_description": "W swojej ofercie mam cały wachlarz masaży od relaksacyjnych, liftingujacych po glebokie powięziowe. Poniżej podaję stronę internetową Zapraszam do kontaktu www.ewa-riseabove.com",
+  "categories": [
+    {
+      "id": 290,
+      "name": "Zdrowie",
+      "slug": "zdrowie",
+      "icon": "fas fa-hospital-user"
+    }
+  ],
+  "tags": [],
+  "images": {
+    "featured": "uslugi\\EwaRiseAbove_Gesundheimsssage\\zdjecie_glowne\\1000038478_png.png",
+    "other": [
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\EwaRiseAbove_Gesundheimsssage\\reszta_zdjec\\1000039008_webp.webp",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/09/1000039008.webp",
+        "id": 55144,
+        "name": "1000039008",
+        "alt": "",
+        "position": 1
+      },
+      {
+        "type": "directorist_gallery",
+        "path": "uslugi\\EwaRiseAbove_Gesundheimsssage\\reszta_zdjec\\1000043396-scaled_jpg.jpg",
+        "url": "https://polacyszwajcaria.com/wp-content/uploads/2025/09/1000043396-scaled.jpg",
+        "id": 55145,
+        "name": "1000043396",
+        "alt": "",
+        "position": 2
+      }
+    ]
+  },
+  "images_count": 3
+}
