@@ -30,6 +30,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://poprawskipawel.com",
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', type: 'image/png', sizes: '512x512' },
+    ],
+    apple: { url: '/icon.png', type: 'image/png', sizes: '512x512' },
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
