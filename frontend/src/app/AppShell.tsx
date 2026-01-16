@@ -71,7 +71,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
       <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 sm:gap-6">
             <Link href="/" className="flex items-center gap-2 group">
               <span className="bg-primary p-1.5 rounded-lg group-hover:rotate-12 transition-transform duration-300 inline-block">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -83,10 +83,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                   Polskie usługi <span className="text-primary">w Szwajcarii</span>
                 </span>
                 <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                  część portalu <span className="text-primary">PolacySzwajcaria.com</span>
+                  część portalu
                 </span>
               </span>
             </Link>
+            {/* Klikalny link do portalu - widoczny zawsze */}
+            <a
+              href="https://polacyszwajcaria.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs sm:text-sm font-bold text-primary hover:underline transition-all"
+            >
+              PolacySzwajcaria.com
+            </a>
           </div>
 
           <a
