@@ -192,7 +192,6 @@ export default function EditCompanyPage() {
                 canton: c.canton || "",
                 postal_code: c.postal_code || "",
                 desc: c.description || "",
-                offer: c.offer || "",
                 phone: c.phone || "",
                 email: c.email || "",
                 website: c.website || "",
