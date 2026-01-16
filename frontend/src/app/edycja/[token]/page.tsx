@@ -3,9 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
-const steps = ["Dane firmy", "Kontakt", "Oferta", "Zdjęcia", "Podsumowanie"];
-const DESC_LIMIT = 500;
-const OFFER_LIMIT = 400;
+const steps = ["Dane firmy", "Kontakt", "Zdjęcia", "Podsumowanie"];
+const DESC_LIMIT = 10000; // Merged: description + offer
 
 type Category = {
     id: number;
@@ -33,8 +32,7 @@ export default function EditCompanyPage() {
         city: "",
         canton: "",
         postal_code: "",
-        desc: "",
-        offer: "",
+        desc: "", // Merged: Firma & Usługi
         phone: "",
         email: "",
         website: "",
@@ -146,7 +144,6 @@ export default function EditCompanyPage() {
                     canton: c.canton || "",
                     postal_code: c.postal_code || "",
                     desc: c.description || "",
-                    offer: c.offer || "",
                     phone: c.phone || "",
                     email: c.email || "",
                     website: c.website || "",
@@ -396,8 +393,7 @@ export default function EditCompanyPage() {
             const body = {
                 name: form.name,
                 category_id,
-                description: form.desc,
-                offer: form.offer,
+                description: form.desc, // Merged field
                 phone: form.phone,
                 email: form.email,
                 website: form.website ? (form.website.startsWith("www.") ? `https://${form.website}` : form.website) : null,
@@ -696,42 +692,23 @@ export default function EditCompanyPage() {
                                 <div className="space-y-8 animate-fade-in">
                                     <div className="space-y-3">
                                         <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
-                                            Opis firmy <span className="text-primary text-lg leading-none">*</span>
+                                            Firma & Usługi <span className="text-primary text-lg leading-none">*</span>
                                         </label>
                                         <textarea
                                             value={form.desc}
                                             onChange={handleChange("desc")}
                                             maxLength={DESC_LIMIT}
-                                            className={`${inputClass("desc")} min-h-[160px] resize-none`}
+                                            className={`${inputClass("desc")} min-h-[200px] resize-none`}
+                                            placeholder="Opisz czym zajmuje się Twoja firma i jakie usługi oferujesz. Możesz wypunktować najważniejsze usługi:&#10;&#10;- Wykończenia wnętrz&#10;- Malowanie i tapetowanie&#10;- Instalacje elektryczne"
                                             required
                                         />
                                         <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                                            <span>Minimum 20 znaków</span>
+                                            <span>Minimum 20 znaków, maksimum 10,000</span>
                                             <span className={form.desc.length >= DESC_LIMIT ? "text-primary" : ""}>
                                                 {form.desc.length} / {DESC_LIMIT}
                                             </span>
                                         </div>
                                         {errors.desc && <p className="text-xs font-bold text-red-500 animate-shake">{errors.desc}</p>}
-                                    </div>
-
-                                    <div className="space-y-3">
-                                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
-                                            Oferowane usługi / produkty <span className="text-primary text-lg leading-none">*</span>
-                                        </label>
-                                        <textarea
-                                            value={form.offer}
-                                            onChange={handleChange("offer")}
-                                            maxLength={OFFER_LIMIT}
-                                            className={`${inputClass("offer")} min-h-[120px] resize-none`}
-                                            required
-                                        />
-                                        <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                                            <span>Wypisz od nowej linii</span>
-                                            <span className={form.offer.length >= OFFER_LIMIT ? "text-primary" : ""}>
-                                                {form.offer.length} / {OFFER_LIMIT}
-                                            </span>
-                                        </div>
-                                        {errors.offer && <p className="text-xs font-bold text-red-500 animate-shake">{errors.offer}</p>}
                                     </div>
                                 </div>
                             )}
