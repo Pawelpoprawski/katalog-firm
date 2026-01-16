@@ -582,6 +582,82 @@ export default function AddCompanyPage() {
               )}
 
 
+
+              {step === 1 && (
+                <div className="space-y-8 animate-fade-in">
+                  <div className="grid gap-8 md:grid-cols-2">
+                    <div className="space-y-3">
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                        Telefon / WhatsApp
+                      </label>
+                      <input
+                        type="tel"
+                        className={inputClass("phone")}
+                        placeholder="+41 79 123 45 67 lub +48 600 123 456"
+                        value={form.phone}
+                        onChange={handleChange("phone")}
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                        Adres E-mail <span className="text-primary text-lg leading-none">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        className={inputClass("email")}
+                        placeholder="kontakt@twoja-firma.ch"
+                        value={form.email}
+                        onChange={handleChange("email")}
+                      />
+                    </div>
+                  </div>
+                  {(errors.phone || errors.email) && (
+                    <p className="text-xs font-bold text-red-500 bg-red-50 dark:bg-red-900/10 p-3 rounded-xl border border-red-100 dark:border-red-900/20">
+                      {errors.phone || errors.email}
+                    </p>
+                  )}
+
+                  <div className="grid gap-8 md:grid-cols-2">
+                    <div className="space-y-3">
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Strona internetowa</label>
+                      <input
+                        type="url"
+                        className={inputClass("website")}
+                        placeholder="https://www.twoja-firma.ch"
+                        value={form.website}
+                        onChange={handleChange("website")}
+                      />
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="space-y-3">
+                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                          <svg className="w-4 h-4 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12.07C22 6.48 17.52 2 11.93 2 6.34 2 1.86 6.48 1.86 12.07c0 4.97 3.65 9.09 8.42 9.93v-7.02H7.9v-2.91h2.38v-2.22c0-2.35 1.4-3.65 3.54-3.65 1.03 0 2.1.18 2.1.18v2.31h-1.18c-1.16 0-1.52.72-1.52 1.46v1.92h2.59l-.41 2.91h-2.18V22c4.77-.84 8.42-4.96 8.42-9.93z" /></svg>
+                          Facebook
+                        </label>
+                        <input
+                          className={inputClass("facebook")}
+                          placeholder="Link do profilu"
+                          value={form.facebook}
+                          onChange={handleChange("facebook")}
+                        />
+                      </div>
+                      <div className="space-y-3">
+                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                          <svg className="w-4 h-4 text-[#E1306C]" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2h8.5C19.55 2 22 4.45 22 7.75v8.5C22 19.55 19.55 22 16.25 22h-8.5C4.45 22 2 19.55 2 16.25v-8.5C2 4.45 4.45 2 7.75 2zm0 2C5.68 4 4 5.68 4 7.75v8.5C4 18.32 5.68 20 7.75 20h8.5C18.32 20 20 18.32 20 16.25v-8.5C20 5.68 18.32 4 16.25 4h-8.5z" /><path d="M12 7.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zM17 6.25a1 1 0 1 1-1 1 1 1 0 0 1 1-1z" /></svg>
+                          Instagram
+                        </label>
+                        <input
+                          className={inputClass("instagram")}
+                          placeholder="Link do profilu"
+                          value={form.instagram}
+                          onChange={handleChange("instagram")}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {step === 2 && (
                 <div className="space-y-8 animate-fade-in">
                   <div className="grid gap-8 md:grid-cols-2">
