@@ -557,11 +557,7 @@ export default function AddCompanyPage() {
                     </div>
                     {errors.address && <p className="text-xs font-bold text-red-500 animate-shake">{errors.address}</p>}
                   </div>
-                </div>
-              )}
 
-              {step === 1 && (
-                <div className="space-y-8 animate-fade-in">
                   <div className="space-y-3">
                     <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
                       Firma & Usługi <span className="text-primary text-lg leading-none">*</span>
@@ -584,6 +580,7 @@ export default function AddCompanyPage() {
                   </div>
                 </div>
               )}
+
 
               {step === 2 && (
                 <div className="space-y-8 animate-fade-in">
