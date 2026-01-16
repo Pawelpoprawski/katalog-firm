@@ -295,9 +295,14 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
               <div>
                 <h1 className="text-2xl font-bold text-slate-900">{company.name}</h1>
                 <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600 mt-1">
-                  <span>
-                    {company.city}, {company.canton}
-                  </span>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${company.city}, ${company.canton}, Switzerland`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-primary transition-colors inline-flex items-center gap-1"
+                  >
+                    📍 {company.city}, {company.canton}
+                  </a>
                   {company.rating && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[11px] font-semibold text-green-800">
                       ★ {company.rating.toFixed(1)}
@@ -387,8 +392,24 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
               {company.phone && <div>Telefon: <a href={`tel:${company.phone}`} className="text-primary hover:underline">{company.phone}</a></div>}
               {company.whatsapp && <div>WhatsApp: <a href={`https://wa.me/${company.whatsapp.replace(/[^0-9]/g, "")}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">{company.whatsapp}</a></div>}
               {company.website && <div>Strona: <a href={company.website} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline" onClick={handleTrackClick}>{company.website}</a></div>}
-              {company.address && <div>Adres: {company.address}</div>}
-              <div>{company.city}, {company.canton} {company.postal_code && company.postal_code}</div>
+              {company.address && (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.address)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline block"
+                >
+                  📍 Adres: {company.address}
+                </a>
+              )}
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${company.city}, ${company.canton} ${company.postal_code || ''}, Switzerland`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline block"
+              >
+                {company.city}, {company.canton} {company.postal_code && company.postal_code}
+              </a>
             </div>
 
             {/* Social Media Icons */}
@@ -399,6 +420,16 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
                     href={company.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={(e) => {
+                      // Try to open in FB app on mobile  
+                      if (company.facebook) {
+                        const fbUrl = company.facebook.replace('https://www.facebook.com/', 'fb://profile/');
+                        window.location.href = fbUrl;
+                        // Fallback to web if app not installed
+                        setTimeout(() => { window.open(company.facebook, '_blank'); }, 500);
+                      }
+                      e.preventDefault();
+                    }}
                     className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                     aria-label="Facebook"
                   >
@@ -410,6 +441,17 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
                     href={company.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={(e) => {
+                      // Try to open in Instagram app on mobile
+                      if (company.instagram) {
+                        const username = company.instagram.split('/').filter(Boolean).pop();
+                        const igUrl = `instagram://user?username=${username}`;
+                        window.location.href = igUrl;
+                        // Fallback to web if app not installed
+                        setTimeout(() => { window.open(company.instagram, '_blank'); }, 500);
+                      }
+                      e.preventDefault();
+                    }}
                     className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 text-white hover:opacity-90 transition-opacity"
                     aria-label="Instagram"
                   >

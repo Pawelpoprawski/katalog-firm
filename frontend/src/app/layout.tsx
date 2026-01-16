@@ -42,6 +42,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pl">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
+      </head>
       <body className="bg-slate-50 text-slate-900 antialiased">
         <AppShell>{children}</AppShell>
       </body>
