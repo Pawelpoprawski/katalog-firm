@@ -71,43 +71,33 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
       <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 sm:gap-6">
-            <Link href="/" className="flex items-center gap-2 group">
-              <span className="bg-primary p-1.5 rounded-lg group-hover:rotate-12 transition-transform duration-300 inline-block">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
+          <Link href="/" className="flex items-center gap-2 group">
+            <span className="bg-primary p-1.5 rounded-lg group-hover:rotate-12 transition-transform duration-300 inline-block">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </span>
+            <span className="flex flex-col">
+              <span className="text-base sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+                Polskie usługi <span className="text-primary">w Szwajcarii</span>
               </span>
-              <span className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
-                  Polskie usługi <span className="text-primary">w Szwajcarii</span>
-                </span>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                  część portalu
-                </span>
+              <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400">
+                część portalu <span className="text-primary">PolacySzwajcaria.com</span>
               </span>
-            </Link>
-            {/* Klikalny link do portalu - widoczny zawsze */}
-            <a
-              href="https://polacyszwajcaria.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs sm:text-sm font-bold text-primary hover:underline transition-all"
-            >
-              PolacySzwajcaria.com
-            </a>
-          </div>
+            </span>
+          </Link>
 
           <a
             href="https://polacyszwajcaria.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all font-semibold text-sm"
+            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all font-semibold text-xs sm:text-sm"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
-            PolacySzwajcaria.com
+            <span className="hidden xs:inline">PolacySzwajcaria.com</span>
+            <span className="xs:hidden">Portal</span>
           </a>
         </div>
       </header>
