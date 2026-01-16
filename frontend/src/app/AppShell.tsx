@@ -12,19 +12,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     setIsMounted(true);
-    // Fetch social media links
-    const fetchSocialMedia = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/admin/settings`);
-        if (res.ok) {
-          const data = await res.json();
-          setSocialMedia(data.social_media || {});
-        }
-      } catch (err) {
-        console.error('Failed to fetch social media links', err);
-      }
-    };
-    fetchSocialMedia();
   }, []);
 
   useEffect(() => {
