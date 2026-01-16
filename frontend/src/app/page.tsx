@@ -302,20 +302,27 @@ export default function HomePage() {
   // Get unique cantons and categories for filters
   const cantons = Array.from(new Set(companies.map((c) => c.canton).filter(Boolean))).sort();
 
-  // Load Google Maps API script
+  // Load Google Maps API script with delay for better performance
+  // List loads immediately, map loads 2 seconds later
   useEffect(() => {
     if (!googleMapsKey || typeof window === "undefined") return;
     if (window.google?.maps) {
       setMapsReady(true);
       return;
     }
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsKey}`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => setMapsReady(true);
-    script.onerror = () => console.error("Failed to load Google Maps API");
-    document.head.appendChild(script);
+
+    // Delay map loading to prioritize list rendering (especially on mobile)
+    const delayTimer = setTimeout(() => {
+      const script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsKey}`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => setMapsReady(true);
+      script.onerror = () => console.error("Failed to load Google Maps API");
+      document.head.appendChild(script);
+    }, 2000); // 2 second delay - list shows immediately, map loads after
+
+    return () => clearTimeout(delayTimer);
   }, [googleMapsKey]);
 
   // Initialize Google Maps with markers
