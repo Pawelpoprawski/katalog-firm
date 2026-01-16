@@ -148,7 +148,10 @@ export default function HomePage() {
       return { ...company, coords: { lat: company.latitude, lng: company.longitude } };
     }
     const coords = CANTON_COORDS[company.canton as keyof typeof CANTON_COORDS];
-    if (!coords || !Number.isFinite(coords.lat) || !Number.isFinite(coords.lng)) return null;
+    if (!coords || !Number.isFinite(coords.lat) || !Number.isFinite(coords.lng)) {
+      // Return company without coords instead of null - will be shown in list but not on map
+      return { ...company, coords: null };
+    }
     return { ...company, coords };
   };
 
@@ -182,11 +185,11 @@ export default function HomePage() {
     return true;
   });
 
-  // Apply map bounds if valid to keep list == map
+  // Apply map bounds if valid to keep list == map (but include companies without coords in list)
   const filteredWithBounds = isBoundsValid(mapBounds) && mapsReady
-    ? baseFiltered.filter((c) => {
-      const enriched = withCoords(c);
-      if (!enriched || !enriched.coords) return false;
+    ? baseFiltered.map(withCoords).filter((enriched) => {
+      // Companies without coords are included in list
+      if (!enriched.coords) return true;
       const { lat, lng } = enriched.coords;
       return (
         lat <= (mapBounds as MapBounds).north &&
@@ -195,13 +198,14 @@ export default function HomePage() {
         lng >= (mapBounds as MapBounds).west
       );
     })
-    : baseFiltered;
+    : baseFiltered.map(withCoords);
 
+  // Only companies with valid coords go on the map
   const companiesWithCoordsAll = filteredWithBounds
-    .map(withCoords)
+    .filter((c) => c.coords !== null)
     .filter(
       (c): c is Company & { coords: { lat: number; lng: number } } =>
-        c !== null
+        c.coords !== null && Number.isFinite(c.coords.lat) && Number.isFinite(c.coords.lng)
     );
 
   const projectToPercent = (lat: number, lng: number) => {
