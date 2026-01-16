@@ -228,8 +228,6 @@ export default function EditCompanyPage() {
                     newErrors.address = "Podaj adres/miasto.";
                 } else if (key === "desc" && value.trim().length > 0 && value.trim().length < 20) {
                     newErrors.desc = `Opis min. 20 znaków (obecnie ${value.trim().length}).`;
-                } else if (key === "offer" && value.trim().length > 0 && value.trim().length < 10) {
-                    newErrors.offer = `Oferta min. 10 znaków (obecnie ${value.trim().length}).`;
                 } else if (key === "email" && value.trim() && !validateEmail(value)) {
                     newErrors.email = "Nieprawidłowy format e-mail.";
                 } else if (key === "phone" && value.trim() && !validatePhone(value)) {
@@ -287,9 +285,8 @@ export default function EditCompanyPage() {
             }
         }
         if (current === 2) {
-            // Step 2: "Oferta" - validate description/offer
+            // Step 2: Validate description
             if (form.desc.trim().length < 20) newErrors.desc = "Opis min. 20 znaków.";
-            if (form.offer.trim().length < 10) newErrors.offer = "Podaj ofertę/usługi.";
         }
         if (current === 3) {
             // Step 3: "Zdjęcia" - validate main photo
@@ -821,10 +818,6 @@ export default function EditCompanyPage() {
                                                 </div>
                                             </dl>
                                         </div>
-                                    </div>
-
-                                    <div className="bg-slate-50 dark:bg-slate-800/30 rounded-3xl p-6 border border-slate-100 dark:border-slate-800/50 text-sm font-bold text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
-                                        {form.offer}
                                     </div>
                                 </div>
                             )}
