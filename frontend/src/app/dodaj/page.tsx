@@ -2,9 +2,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-const steps = ["Dane firmy", "Kontakt", "Oferta", "Zdjęcia", "Podsumowanie"];
-const DESC_LIMIT = 500;
-const OFFER_LIMIT = 400;
+const steps = ["Dane firmy", "Kontakt", "Zdjęcia", "Podsumowanie"];
+const DESC_LIMIT = 10000; // Merged: description + offer
 const ADDRESS_SUGGESTIONS = [
   { label: "Bahnhofstrasse 1, Zürich", canton: "ZH" },
   { label: "Bundesplatz 1, Bern", canton: "BE" },
@@ -33,8 +32,7 @@ export default function AddCompanyPage() {
     city: "",
     canton: "",
     postal_code: "",
-    desc: "",
-    offer: "",
+    desc: "", // Merged: Firma & Usługi (20-10,000 chars)
     phone: "",
     email: "",
     website: "",
@@ -93,7 +91,7 @@ export default function AddCompanyPage() {
 
   // Auto-save draft to localStorage
   useEffect(() => {
-    const hasData = form.name || form.category || form.address || form.desc || form.offer;
+    const hasData = form.name || form.category || form.address || form.desc;
     if (hasData) {
       localStorage.setItem("company_draft", JSON.stringify(form));
     }
@@ -125,8 +123,6 @@ export default function AddCompanyPage() {
           newErrors.address = "Podaj adres/miasto.";
         } else if (key === "desc" && value.trim().length > 0 && value.trim().length < 20) {
           newErrors.desc = `Opis min. 20 znaków (obecnie ${value.trim().length}).`;
-        } else if (key === "offer" && value.trim().length > 0 && value.trim().length < 10) {
-          newErrors.offer = `Oferta min. 10 znaków (obecnie ${value.trim().length}).`;
         } else if (key === "email" && value.trim() && !validateEmail(value)) {
           newErrors.email = "Nieprawidłowy format e-mail.";
         } else if (key === "phone" && value.trim() && !validatePhone(value)) {
@@ -171,10 +167,6 @@ export default function AddCompanyPage() {
       if (!form.address.trim()) newErrors.address = "Podaj adres/miasto.";
     }
     if (current === 1) {
-      if (form.desc.trim().length < 20) newErrors.desc = "Opis min. 20 znaków.";
-      if (form.offer.trim().length < 10) newErrors.offer = "Podaj ofertę/usługi.";
-    }
-    if (current === 2) {
       if (!form.email.trim()) {
         newErrors.email = "Adres e-mail jest wymagany.";
       } else if (!validateEmail(form.email)) {
@@ -184,6 +176,9 @@ export default function AddCompanyPage() {
       if (form.phone.trim() && !validatePhone(form.phone)) {
         newErrors.phone = "Nieprawidłowy format telefonu.";
       }
+    }
+    if (current === 2) {
+      // Moved to step 1
     }
     if (current === 3) {
       if (!mainPhoto) {
@@ -268,8 +263,7 @@ export default function AddCompanyPage() {
       const body = {
         name: form.name,
         category_id,
-        description: form.desc,
-        offer: form.offer,
+        description: form.desc, // Merged field
         phone: form.phone,
         email: form.email,
         website: form.website ? (form.website.startsWith("www.") ? `https://${form.website}` : form.website) : null,
@@ -570,44 +564,23 @@ export default function AddCompanyPage() {
                 <div className="space-y-8 animate-fade-in">
                   <div className="space-y-3">
                     <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
-                      Opis firmy <span className="text-primary text-lg leading-none">*</span>
+                      Firma & Usługi <span className="text-primary text-lg leading-none">*</span>
                     </label>
                     <textarea
                       value={form.desc}
                       onChange={handleChange("desc")}
                       maxLength={DESC_LIMIT}
-                      className={`${inputClass("desc")} min-h-[160px] resize-none`}
-                      placeholder="Opisz czym zajmuje się Twoja firma, jakie ma doświadczenie i co ją wyróżnia..."
+                      className={`${inputClass("desc")} min-h-[200px] resize-none`}
+                      placeholder="Opisz czym zajmuje się Twoja firma i jakie usługi oferujesz. Możesz wypunktować najważniejsze usługi:&#10;&#10;- Wykończenia wnętrz&#10;- Malowanie i tapetowanie&#10;- Instalacje elektryczne"
                       required
                     />
                     <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                      <span>Minimum 20 znaków</span>
+                      <span>Minimum 20 znaków, maksimum 10,000</span>
                       <span className={form.desc.length >= DESC_LIMIT ? "text-primary" : ""}>
                         {form.desc.length} / {DESC_LIMIT}
                       </span>
                     </div>
                     {errors.desc && <p className="text-xs font-bold text-red-500 animate-shake">{errors.desc}</p>}
-                  </div>
-
-                  <div className="space-y-3">
-                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
-                      Oferowane usługi / produkty <span className="text-primary text-lg leading-none">*</span>
-                    </label>
-                    <textarea
-                      value={form.offer}
-                      onChange={handleChange("offer")}
-                      maxLength={OFFER_LIMIT}
-                      className={`${inputClass("offer")} min-h-[120px] resize-none`}
-                      placeholder="Wypunktuj najważniejsze usługi, np:&#10;- Wykończenia wnętrz&#10;- Malowanie i tapetowanie&#10;- Transport ciężarowy"
-                      required
-                    />
-                    <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                      <span>Wypisz od nowej linii</span>
-                      <span className={form.offer.length >= OFFER_LIMIT ? "text-primary" : ""}>
-                        {form.offer.length} / {OFFER_LIMIT}
-                      </span>
-                    </div>
-                    {errors.offer && <p className="text-xs font-bold text-red-500 animate-shake">{errors.offer}</p>}
                   </div>
                 </div>
               )}
@@ -867,20 +840,10 @@ export default function AddCompanyPage() {
                     <div className="space-y-2">
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                         <div className="w-1.5 h-4 bg-primary rounded-full"></div>
-                        O Twojej firmie
+                        Firma & Usługi
                       </h4>
                       <div className="bg-slate-50 dark:bg-slate-800/30 rounded-3xl p-6 border border-slate-100 dark:border-slate-800/50 text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap italic">
                         {form.desc}
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <div className="w-1.5 h-4 bg-primary rounded-full"></div>
-                        Zakres usług
-                      </h4>
-                      <div className="bg-slate-50 dark:bg-slate-800/30 rounded-3xl p-6 border border-slate-100 dark:border-slate-800/50 text-sm font-bold text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
-                        {form.offer}
                       </div>
                     </div>
                   </div>

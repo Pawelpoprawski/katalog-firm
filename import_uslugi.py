@@ -326,13 +326,16 @@ def import_companies():
                 }
                 canton = canton_map.get(canton, canton[:2].upper() if canton else None)
         
+        # Merge description and offer into single field (offer removed from separate field)
+        description = sanitize_html(data.get("content", "")) or ""
+        # Note: offer field removed - description now contains all company info
+        
         company = {
             "id": max_id,
             "name": clean_text(name),
             "slug": slug,
             "short_description": clean_text(data.get("yoast_description", ""))[:200] or None,
-            "description": sanitize_html(data.get("content", "")) or None,
-            "offer": None,
+            "description": description or None,
             "phone": data.get("phone", "").strip() or None,
             "whatsapp": None,
             "email": data.get("email", "").strip() or None,

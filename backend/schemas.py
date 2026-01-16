@@ -35,8 +35,7 @@ class CompanyBase(BaseModel):
     name: str
     slug: Optional[str] = None  # Auto-generated if not provided
     short_description: Optional[str] = None  # Krótki opis dla kart
-    description: Optional[str] = None
-    offer: Optional[str] = None
+    description: Optional[str] = None  # Merged: Firma & Usługi (20-10,000 chars when required)
     phone: Optional[str] = None
     whatsapp: Optional[str] = None  # WhatsApp number
     email: Optional[str] = None  # Generic base is optional, specific schemas will strict it
