@@ -402,14 +402,6 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
                   📍 Adres: {company.address}
                 </a>
               )}
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${company.city}, ${company.canton} ${company.postal_code || ''}, Switzerland`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline block"
-              >
-                {company.city}, {company.canton} {company.postal_code && company.postal_code}
-              </a>
             </div>
 
             {/* Social Media Icons */}
