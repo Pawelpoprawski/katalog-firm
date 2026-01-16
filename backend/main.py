@@ -1,6 +1,7 @@
 import logging
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from slowapi.middleware import SlowAPIMiddleware
 
 # Allow running both as module (`python -m backend.main`) and as script (`python main.py` inside backend/)
@@ -36,6 +37,10 @@ app.middleware("http")(security_headers_middleware)
 
 # Add SlowAPI middleware for rate limiting
 app.add_middleware(SlowAPIMiddleware)
+
+# Add GZIP compression middleware (compress responses > 1KB)
+# This reduces JSON payload from ~21MB to ~3-5MB for mobile clients
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # CORS configuration - use settings for production safety
 # In production, settings.cors_origins should be set to specific domains
