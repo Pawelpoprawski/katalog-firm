@@ -232,3 +232,34 @@ def get_company_photo(company_id: int):
         return RedirectResponse(url=photo_data)
     
     raise HTTPException(status_code=500, detail="Unknown photo format")
+
+@router.post("/companies/confirm")
+def confirm_company_activity(body: dict[str, str]) -> dict[str, str]:
+    ""\"
+    Confirm company activity by email.
+    Updates last_confirmed_at to current datetime.
+    ""\"
+    from datetime import datetime
+    
+    email = body.get("email")
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email jest wymagany"
+        )
+    
+    # Find company by email
+    all_companies = storage_list_companies()
+    company = next((c for c in all_companies if c.get("email") == email), None)
+    
+    if not company:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Nie ma takiego adresu email w bazie. Skontaktuj się z kontakt@polacyszwajcaria.com"
+        )
+    
+    # Update last_confirmed_at
+    company["last_confirmed_at"] = datetime.now().isoformat()
+    storage_update_company(company["id"], company)
+    
+    return {"status": "confirmed", "message": "Dziękujemy! Twoje ogłoszenie zostało potwierdzone."}

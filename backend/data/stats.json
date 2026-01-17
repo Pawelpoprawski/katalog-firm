@@ -424,5 +424,47 @@
     "company_id": 59,
     "views": 2,
     "clicks": 0
+  },
+  {
+    "date": "2026-01-16",
+    "company_id": 101,
+    "views": 4,
+    "clicks": 0
+  },
+  {
+    "date": "2026-01-16",
+    "company_id": 24,
+    "views": 8,
+    "clicks": 0
+  },
+  {
+    "date": "2026-01-16",
+    "company_id": 98,
+    "views": 2,
+    "clicks": 0
+  },
+  {
+    "date": "2026-01-16",
+    "company_id": 97,
+    "views": 2,
+    "clicks": 0
+  },
+  {
+    "date": "2026-01-16",
+    "company_id": 96,
+    "views": 2,
+    "clicks": 0
+  },
+  {
+    "date": "2026-01-16",
+    "company_id": 66,
+    "views": 2,
+    "clicks": 0
+  },
+  {
+    "date": "2026-01-16",
+    "company_id": 40,
+    "views": 2,
+    "clicks": 0
   }
 ]

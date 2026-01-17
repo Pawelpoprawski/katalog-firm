@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Optional
+from datetime import datetime
 
 from pydantic import BaseModel, EmailStr
 from pydantic import ConfigDict
@@ -58,6 +59,7 @@ class CompanyBase(BaseModel):
     is_active: bool = True
     status: str = "draft"  # Changed from "published" to "draft"
     is_promoted: bool = False
+    last_confirmed_at: Optional[datetime] = None  # Data utworzenia/ostatniego potwierdzenia
 
 
 class CompanyCreate(CompanyBase):

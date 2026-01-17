@@ -654,6 +654,8 @@ def get_company_by_slug(slug: str) -> Optional[dict]:
 
 
 def create_company(payload: dict) -> dict:
+    from datetime import datetime
+    
     with _lock:
         companies = _read_list(COMPANIES_FILE)
         demo_user = get_or_create_demo_user()
@@ -700,6 +702,7 @@ def create_company(payload: dict) -> dict:
             "views": 0,
             "clicks": 0,
             "created_at": _now_ts(),
+            "last_confirmed_at": datetime.now().isoformat(),  # Data utworzenia
         }
         companies.append(company)
         _write_list(COMPANIES_FILE, companies)
@@ -707,12 +710,14 @@ def create_company(payload: dict) -> dict:
 
 
 def update_company(company_id: int, updates: dict) -> dict:
+    from datetime import datetime
+    
     with _lock:
         companies = _read_list(COMPANIES_FILE)
         for idx, c in enumerate(companies):
             if int(c.get("id") or 0) != company_id:
                 continue
-            merged = {**c, **updates, "id": company_id, "updated_at": _now_ts()}
+            merged = {**c, **updates, "id": company_id, "updated_at": _now_ts(), "last_confirmed_at": datetime.now().isoformat()}
             companies[idx] = merged
             _write_list(COMPANIES_FILE, companies)
             return merged
