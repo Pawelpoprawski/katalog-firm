@@ -15,6 +15,7 @@ type Company = {
     created_at: number;
     is_promoted?: boolean;
     category_id?: number;
+    last_confirmed_at?: string;  // ISO datetime string
 };
 
 type Review = {
@@ -61,6 +62,7 @@ export default function AdminPage() {
     const [savingNewsletter, setSavingNewsletter] = useState(false);
     const [sortOrder, setSortOrder] = useState<'newest' | 'random' | 'alphabetical'>('random');
     const [savingSortOrder, setSavingSortOrder] = useState(false);
+    const [adminSortBy, setAdminSortBy] = useState<'name' | 'confirmed' | 'created'>('created');
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
     // Admin authentication state
@@ -571,8 +573,22 @@ export default function AdminPage() {
 
                     {/* Companies Table */}
                     <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
-                        <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+                        <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
                             <h3 className="text-lg font-bold text-slate-900 dark:text-white">Lista Firm</h3>
+                            <div className="flex items-center gap-2">
+                                <label className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                                    Sortuj po:
+                                </label>
+                                <select
+                                    value={adminSortBy}
+                                    onChange={(e) => setAdminSortBy(e.target.value as 'name' | 'confirmed' | 'created')}
+                                    className="text-sm px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-medium hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                >
+                                    <option value="created">Data utworzenia</option>
+                                    <option value="confirmed">Data potwierdzenia</option>
+                                    <option value="name">Nazwa alfabetycznie</option>
+                                </select>
+                            </div>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm text-left">
@@ -584,93 +600,110 @@ export default function AdminPage() {
                                         <th className="px-6 py-4">Status</th>
                                         <th className="px-6 py-4 text-center">Promocja</th>
                                         <th className="px-6 py-4 text-center">Widoki</th>
+                                        <th className="px-6 py-4">Utworzono/Potwierdzono</th>
                                         <th className="px-6 py-4 text-right">Akcje</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-                                    {companies.map((c, idx) => (
-                                        <tr key={c.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
-                                            <td className="px-6 py-4 text-center font-mono text-slate-400 font-semibold">#{idx + 1}</td>
-                                            <td className="px-6 py-4">
-                                                <div className="font-bold text-slate-900 dark:text-white">{c.name}</div>
-                                                <div className="text-xs text-slate-500">{c.email || "Brak emaila"}</div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <select
-                                                    value={(c as any).category_id || ""}
-                                                    onChange={(e) => updateCategory(c, parseInt(e.target.value))}
-                                                    disabled={updatingCategory === c.id}
-                                                    className="text-xs px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-medium hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all disabled:opacity-50"
-                                                >
-                                                    <option value="">Brak kategorii</option>
-                                                    {categories.map(cat => (
-                                                        <option key={cat.id} value={cat.id}>
-                                                            {cat.name}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <button
-                                                    onClick={() => toggleStatus(c)}
-                                                    className={`inline-flex px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all hover:scale-105 cursor-pointer ${c.status === 'published'
-                                                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 hover:bg-green-200'
-                                                        : 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 hover:bg-orange-200'
-                                                        }`}
-                                                    title={c.status === 'published' ? 'Kliknij aby wycofać do szkicu' : 'Kliknij aby opublikować'}
-                                                >
-                                                    {c.status === 'published' ? '✓ Opublikowane' : '⏳ Szkic'}
-                                                </button>
-                                            </td>
-                                            <td className="px-6 py-4 text-center">
-                                                <button
-                                                    onClick={() => togglePromotion(c)}
-                                                    className={`w-6 h-6 rounded border-2 flex items-center justify-center mx-auto transition-all ${c.is_promoted ? 'bg-yellow-400 border-yellow-500 text-white' : 'bg-white border-slate-300 hover:border-yellow-400'
-                                                        }`}
-                                                >
-                                                    {c.is_promoted && <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>}
-                                                </button>
-                                            </td>
-                                            <td className="px-6 py-4 text-center font-mono text-slate-600 dark:text-slate-400">
-                                                {c.views}
-                                            </td>
-                                            <td className="px-6 py-4 text-right">
-                                                <div className="flex items-center justify-end gap-2">
-                                                    {c.edit_token && (
-                                                        <>
-                                                            <Link
-                                                                href={`/edycja/${c.edit_token}?admin=true`}
-                                                                className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 px-2 py-1 rounded-lg transition-colors inline-flex items-center gap-1"
-                                                                title="Edytuj ogłoszenie"
-                                                            >
-                                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                                </svg>
-                                                                Edytuj
-                                                            </Link>
-                                                            <button
-                                                                onClick={() => copyLink(c.edit_token!)}
-                                                                className="text-xs font-bold text-primary hover:text-primary-dark bg-primary/10 hover:bg-primary/20 px-2 py-1 rounded-lg transition-colors"
-                                                                title="Kopiuj link do edycji"
-                                                            >
-                                                                Link
-                                                            </button>
-                                                        </>
-                                                    )}
-                                                    <button
-                                                        onClick={() => deleteCompany(c.id)}
-                                                        className="text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30 px-2 py-1 rounded-lg transition-colors inline-flex items-center gap-1"
-                                                        title="Usuń firmę"
+                                    {companies
+                                        .slice()
+                                        .sort((a, b) => {
+                                            if (adminSortBy === 'name') {
+                                                return a.name.localeCompare(b.name);
+                                            } else if (adminSortBy === 'confirmed') {
+                                                const dateA = a.last_confirmed_at ? new Date(a.last_confirmed_at).getTime() : 0;
+                                                const dateB = b.last_confirmed_at ? new Date(b.last_confirmed_at).getTime() : 0;
+                                                return dateA - dateB; // Oldest first
+                                            } else { // created
+                                                return (a.created_at || 0) - (b.created_at || 0); // Oldest first
+                                            }
+                                        })
+                                        .map((c, idx) => (
+                                            <tr key={c.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
+                                                <td className="px-6 py-4 text-center font-mono text-slate-400 font-semibold">#{idx + 1}</td>
+                                                <td className="px-6 py-4">
+                                                    <div className="font-bold text-slate-900 dark:text-white">{c.name}</div>
+                                                    <div className="text-xs text-slate-500">{c.email || "Brak emaila"}</div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <select
+                                                        value={(c as any).category_id || ""}
+                                                        onChange={(e) => updateCategory(c, parseInt(e.target.value))}
+                                                        disabled={updatingCategory === c.id}
+                                                        className="text-xs px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-medium hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all disabled:opacity-50"
                                                     >
-                                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                        </svg>
-                                                        X
+                                                        <option value="">Brak kategorii</option>
+                                                        {categories.map(cat => (
+                                                            <option key={cat.id} value={cat.id}>
+                                                                {cat.name}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <button
+                                                        onClick={() => toggleStatus(c)}
+                                                        className={`inline-flex px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all hover:scale-105 cursor-pointer ${c.status === 'published'
+                                                            ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 hover:bg-green-200'
+                                                            : 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 hover:bg-orange-200'
+                                                            }`}
+                                                        title={c.status === 'published' ? 'Kliknij aby wycofać do szkicu' : 'Kliknij aby opublikować'}
+                                                    >
+                                                        {c.status === 'published' ? '✓ Opublikowane' : '⏳ Szkic'}
                                                     </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                                </td>
+                                                <td className="px-6 py-4 text-center">
+                                                    <button
+                                                        onClick={() => togglePromotion(c)}
+                                                        className={`w-6 h-6 rounded border-2 flex items-center justify-center mx-auto transition-all ${c.is_promoted ? 'bg-yellow-400 border-yellow-500 text-white' : 'bg-white border-slate-300 hover:border-yellow-400'
+                                                            }`}
+                                                    >
+                                                        {c.is_promoted && <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>}
+                                                    </button>
+                                                </td>
+                                                <td className="px-6 py-4 text-center font-mono text-slate-600 dark:text-slate-400">
+                                                    {c.views}
+                                                </td>
+                                                <td className="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm">
+                                                    {c.last_confirmed_at ? new Date(c.last_confirmed_at).toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'Nigdy'}
+                                                </td>
+                                                <td className="px-6 py-4 text-right">
+                                                    <div className="flex items-center justify-end gap-2">
+                                                        {c.edit_token && (
+                                                            <>
+                                                                <Link
+                                                                    href={`/edycja/${c.edit_token}?admin=true`}
+                                                                    className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 px-2 py-1 rounded-lg transition-colors inline-flex items-center gap-1"
+                                                                    title="Edytuj ogłoszenie"
+                                                                >
+                                                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                                    </svg>
+                                                                    Edytuj
+                                                                </Link>
+                                                                <button
+                                                                    onClick={() => copyLink(c.edit_token!)}
+                                                                    className="text-xs font-bold text-primary hover:text-primary-dark bg-primary/10 hover:bg-primary/20 px-2 py-1 rounded-lg transition-colors"
+                                                                    title="Kopiuj link do edycji"
+                                                                >
+                                                                    Link
+                                                                </button>
+                                                            </>
+                                                        )}
+                                                        <button
+                                                            onClick={() => deleteCompany(c.id)}
+                                                            className="text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30 px-2 py-1 rounded-lg transition-colors inline-flex items-center gap-1"
+                                                            title="Usuń firmę"
+                                                        >
+                                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
+                                                            X
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
                                 </tbody>
                             </table>
                         </div>
