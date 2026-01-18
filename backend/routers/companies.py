@@ -148,6 +148,20 @@ def delete_company(company_id: int):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
 
 
+
+
+@router.get("/by-token/{token}")
+def get_company_by_edit_token(token: str):
+    """Get company by edit token (for admin or direct access)."""
+    # Find company by token
+    companies = storage_list_companies()
+    for c in companies:
+        if storage_verify_edit_token(c["id"], token):
+            return _enrich_company(c.copy())
+    
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid or expired token")
+
+
 @router.get("/{company_id}/edit-token", response_model=CompanyReadWithToken)
 def get_company_with_edit_token(company_id: int, token: str):
     """Get company with edit token verification."""
