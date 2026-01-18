@@ -30,68 +30,64 @@ def _calculate_rating(company_id: int) -> float | None:
     return round(sum(ratings) / len(ratings), 1)
 
 
-def _enrich_company(company: dict[str, Any]) -> dict[str, Any]:
-    """Add computed fields like rating to company dict."""
-    rating = _calculate_rating(company.get("id"))
-    if rating is not None:
-        company["rating"] = rating
-    return company
+def _enrich_company(company: dict) -> dict:
+    """Add calculated fields like rating to a company dict."""
+    rating = _calculate_rating(company["id"])
+    return {**company, "rating": rating}
 
 
-@router.get("/random", response_model=list[CompanyRead])
-def get_random_companies(count: int = Query(None, ge=1, le=50, description="Number of random companies to return")):
-    """
-    Get X random published companies for newsletter.
-    If count is not provided, uses the value from admin settings (default 5).
-    """
-    companies = storage_list_companies()
-    published_companies = [c for c in companies if c.get("status") == "published"]
-    
-    # Use provided count or default from settings
-    num_to_return = count if count is not None else get_newsletter_count()
-    
-    # Shuffle and take N companies
-    if len(published_companies) <= num_to_return:
-        selected = published_companies
-    else:
-        selected = random.sample(published_companies, num_to_return)
-    
-    return [_enrich_company(c.copy()) for c in selected]
-
-
-@router.get("/")
+@router.get("/", response_model=list[CompanyRead])
 def list_companies(
-    limit: int = Query(200, ge=1, le=500, description="Number of companies per page"),
-    offset: int = Query(0, ge=0, description="Number of companies to skip")
-):
+    limit: int = Query(default=100, le=1000),
+    category_id: int | None = None,
+    status: str | None = None,
+) -> list[dict]:
     """
-    Get list of published companies (without images for performance).
-    Images are loaded only when viewing individual company details.
-    Supports pagination with limit/offset.
+    List companies.
+    
+    - **limit**: Maximum number of results (default: 100, max: 1000)
+    - **category_id**: Filter by category ID
+    - **status**: Filter by status (published, draft, etc.)
     """
-    companies = storage_list_companies()
-    # Filter only published companies
-    published_companies = [c for c in companies if c.get("status") == "published"]
+    all_companies = storage_list_companies()
     
-    # Apply pagination
-    total = len(published_companies)
-    paginated = published_companies[offset:offset + limit]
+    # Apply filters
+    if category_id is not None:
+        all_companies = [c for c in all_companies if c.get("category_id") == category_id]
+    if status:
+        all_companies = [c for c in all_companies if c.get("status") == status]
     
-    # Strip heavy image data for list view (keep main img, remove gallery)
-    lightweight_companies = []
-    for c in paginated:
-        company = _enrich_company(c.copy())
-        # Keep main img for thumbnails, remove photos gallery
-        company.pop("photos", None)  # Gallery loaded only on detail page
-        lightweight_companies.append(company)
+    # Apply limit
+    limited = all_companies[:limit]
     
-    return {
-        "companies": lightweight_companies,
-        "total": total,
-        "limit": limit,
-        "offset": offset,
-        "has_more": offset + limit < total
-    }
+    # Enrich with ratings
+    return [_enrich_company(c.copy()) for c in limited]
+
+
+def _get_random_promoted_companies(companies: list[dict], limit: int = 5) -> list[dict]:
+    """Return random promoted companies (is_promoted=True)."""
+    promoted = [c for c in companies if c.get("is_promoted")]
+    if not promoted:
+        return []
+    random.shuffle(promoted)
+    return promoted[:limit]
+
+
+def _get_random_companies(companies: list[dict], limit: int = 20) -> list[dict]:
+    """Return random selection of companies."""
+    shuffled = companies.copy()
+    random.shuffle(shuffled)
+    return shuffled[:limit]
+
+
+def _sort_alphabetically(companies: list[dict]) -> list[dict]:
+    """Sort companies alphabetically by name."""
+    return sorted(companies, key=lambda c: c.get("name", "").lower())
+
+
+def _sort_by_newest(companies: list[dict]) -> list[dict]:
+    """Sort companies by creation date (newest first)."""
+    return sorted(companies, key=lambda c: c.get("created_at", 0), reverse=True)
 
 
 @router.post("/", response_model=CompanyReadWithToken, status_code=status.HTTP_201_CREATED)
@@ -137,44 +133,8 @@ def update_company(
     payload: CompanyUpdate,
 ):
     try:
-        return storage_update_company(company_id, payload.dict(exclude_unset=True))
-    except KeyError:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
-
-
-@router.post("/verify-edit")
-def verify_edit_access(token: str = Body(..., embed=True), email: str = Body(..., embed=True)):
-    """Verify if token matches email for editing."""
-    company = storage_verify_edit_token(token, email)
-    if not company:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
-    return {"status": "ok", "company": _enrich_company(company.copy())}
-
-
-@router.get("/by-token/{token}")
-def get_company_by_token(token: str):
-    """Get company by edit token (for admin access without email verification)."""
-    companies = storage_list_companies()
-    company = next((c for c in companies if c.get("edit_token") == token), None)
-    
-    if not company:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
-    
-    return _enrich_company(company.copy())
-
-@router.put("/by-token/{token}", response_model=CompanyRead)
-def update_company_by_token(
-    token: str,
-    payload: CompanyUpdate,
-):
-    companies = storage_list_companies()
-    company = next((c for c in companies if c.get("edit_token") == token), None)
-    
-    if not company:
-         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
-    
-    try:
-        return storage_update_company(int(company["id"]), payload.dict(exclude_unset=True))
+        updated = storage_update_company(company_id, payload.dict(exclude_unset=True))
+        return _enrich_company(updated.copy())
     except KeyError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
 
@@ -188,35 +148,37 @@ def delete_company(company_id: int):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
 
 
-from fastapi.responses import Response
-import base64
-
-@router.get("/{company_id}/photo")
-def get_company_photo(company_id: int):
-    """
-    Get main photo for a company as an image.
-    Useful for newsletters where you need direct image URLs.
-    Returns the image as image/jpeg or image/png.
-    Checks 'img' field first (main photo), then 'photos' array.
-    """
+@router.get("/{company_id}/edit-token", response_model=CompanyReadWithToken)
+def get_company_with_edit_token(company_id: int, token: str):
+    """Get company with edit token verification."""
     company = storage_get_company(company_id)
     if not company:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     
-    # First try the 'img' field (main photo)
-    photo_data = company.get("img")
+    if not storage_verify_edit_token(company_id, token):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid token")
     
-    # If no 'img', try photos array
-    if not photo_data:
-        photos = company.get("photos", [])
-        if photos and len(photos) > 0:
-            photo_data = photos[0]
+    return _enrich_company(company.copy())
+
+
+@router.get("/{company_id}/photo/{photo_index}")
+def get_company_photo(company_id: int, photo_index: int):
+    """Get a specific photo for a company."""
+    from fastapi.responses import Response
+    import base64
     
-    if not photo_data:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No photos available")
+    company = storage_get_company(company_id)
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
     
-    # Handle base64 data URLs
-    if photo_data.startswith("data:"):
+    photos = company.get("photos") or []
+    if photo_index < 0 or photo_index >= len(photos):
+        raise HTTPException(status_code=404, detail="Photo not found")
+    
+    photo_data = photos[photo_index]
+    
+    # If it's a base64 data URL, decode and return
+    if photo_data.startswith("data:image"):
         # Format: data:image/jpeg;base64,/9j/4AAQ...
         try:
             header, encoded = photo_data.split(",", 1)
@@ -235,10 +197,10 @@ def get_company_photo(company_id: int):
 
 @router.post("/companies/confirm")
 def confirm_company_activity(body: dict[str, str]) -> dict[str, str]:
-    ""\"
+    """
     Confirm company activity by email.
     Updates last_confirmed_at to current datetime.
-    ""\"
+    """
     from datetime import datetime
     
     email = body.get("email")
