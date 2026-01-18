@@ -195,7 +195,7 @@ def get_company_photo(company_id: int, photo_index: int):
     
     raise HTTPException(status_code=500, detail="Unknown photo format")
 
-@router.post("/companies/confirm")
+@router.post("/confirm")
 def confirm_company_activity(body: dict[str, str]) -> dict[str, str]:
     """
     Confirm company activity by email.
