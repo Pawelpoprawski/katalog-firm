@@ -15,8 +15,6 @@ type Category = {
 export default function EditCompanyPage() {
     const { token } = useParams<{ token: string }>();
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const isAdminMode = searchParams.get('admin') === 'true';
 
     // Auth State
     const [isVerified, setIsVerified] = useState(false);
@@ -120,49 +118,7 @@ export default function EditCompanyPage() {
         });
     }, [placesReady, isVerified]); // Re-attach when verified
 
-    // Auto-verify for admin mode
-    useEffect(() => {
-        if (!isAdminMode || isVerified) return;
-
-        const autoVerify = async () => {
-            setVerifying(true);
-            try {
-                const res = await fetch(`${apiUrl}/companies/by-token/${token}`);
-                if (!res.ok) throw new Error("Invalid token");
-                const c = await res.json();
-
-                setCompanyId(c.id);
-                setIsVerified(true);
-
-                const catName = categories.find(cat => cat.id === c.category_id)?.name || "";
-
-                setForm({
-                    name: c.name || "",
-                    category: catName,
-                    address: c.address || "",
-                    city: c.city || "",
-                    canton: c.canton || "",
-                    postal_code: c.postal_code || "",
-                    desc: c.description || "",
-                    phone: c.phone || "",
-                    email: c.email || "",
-                    website: c.website || "",
-                    facebook: c.facebook || "",
-                    instagram: c.instagram || ""
-                });
-
-                if (c.img) setMainPhoto(c.img);
-                if (Array.isArray(c.photos)) setPreviews(c.photos);
-            } catch (err) {
-                setAuthError("Błąd ładowania danych firmy");
-            } finally {
-                setVerifying(false);
-            }
-        };
-
-        autoVerify();
-    }, [isAdminMode, token, apiUrl, categories, isVerified]);
-
+    // Email-based verification
     const verifyAccess = async (e: React.FormEvent) => {
         e.preventDefault();
         setVerifying(true);

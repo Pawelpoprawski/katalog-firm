@@ -68,9 +68,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               <span className="text-base sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
                 Polskie usługi <span className="text-primary">w Szwajcarii</span>
               </span>
-              <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400">
-                część portalu <span className="text-primary">PolacySzwajcaria.com</span>
-              </span>
+              <a
+                href="https://polacyszwajcaria.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+              >
+                <span className="text-primary">PolacySzwajcaria - Natalia & Paweł</span>
+              </a>
             </span>
           </Link>
 
@@ -117,7 +122,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="mt-16 pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-xs text-slate-500 dark:text-slate-500">
-              © {new Date().getFullYear()} Polskie usługi w Szwajcarii. Projekt częścią platformy <a href="https://polacyszwajcaria.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">PolacySzwajcaria.com</a>
+              © {new Date().getFullYear()} Polskie usługi w Szwajcarii. Projekt <a href="https://polacyszwajcaria.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">PolacySzwajcaria - Natalia & Paweł</a>
             </p>
             {isMounted && (
               <div className="flex gap-4">

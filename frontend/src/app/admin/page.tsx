@@ -58,6 +58,9 @@ export default function AdminPage() {
     const [updatingStatus, setUpdatingStatus] = useState<number | null>(null);
     const [updatingPromotion, setUpdatingPromotion] = useState<number | null>(null);
     const [updatingCategory, setUpdatingCategory] = useState<number | null>(null);
+    const [updatingEmail, setUpdatingEmail] = useState<number | null>(null);
+    const [editingEmailId, setEditingEmailId] = useState<number | null>(null);
+    const [tempEmail, setTempEmail] = useState("");
     const [newsletterCount, setNewsletterCount] = useState(5);
     const [savingNewsletter, setSavingNewsletter] = useState(false);
     const [sortOrder, setSortOrder] = useState<'newest' | 'random' | 'alphabetical'>('random');
@@ -410,6 +413,31 @@ export default function AdminPage() {
         }
     };
 
+    const updateEmail = async (company: Company, newEmail: string) => {
+        setUpdatingEmail(company.id);
+        setEditingEmailId(null);
+        const originalCompanies = companies;
+
+        try {
+            const res = await fetch(`${apiUrl}/admin/companies/${company.id}`, {
+                method: "PATCH",
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ email: newEmail.trim() || null })
+            });
+            if (res.ok) {
+                setCompanies(prev => prev.map(c => c.id === company.id ? { ...c, email: newEmail.trim() || undefined } : c));
+                toast.success(newEmail.trim() ? `Email zaktualizowany: ${newEmail}` : "Email usunięty");
+            } else {
+                toast.error("Błąd podczas aktualizacji emaila");
+            }
+        } catch (e) {
+            console.error("Failed to update email", e);
+            toast.error("Błąd połączenia");
+        } finally {
+            setUpdatingEmail(null);
+        }
+    };
+
     const updateCategory = async (company: Company, newCategoryId: number) => {
         setUpdatingCategory(company.id);
         const originalCompanies = companies;
@@ -596,6 +624,7 @@ export default function AdminPage() {
                                     <tr>
                                         <th className="px-6 py-4">#</th>
                                         <th className="px-6 py-4">Firma</th>
+                                        <th className="px-6 py-4">Email</th>
                                         <th className="px-6 py-4">Kategoria</th>
                                         <th className="px-6 py-4">Status</th>
                                         <th className="px-6 py-4 text-center">Promocja</th>
@@ -623,7 +652,46 @@ export default function AdminPage() {
                                                 <td className="px-6 py-4 text-center font-mono text-slate-400 font-semibold">#{idx + 1}</td>
                                                 <td className="px-6 py-4">
                                                     <div className="font-bold text-slate-900 dark:text-white">{c.name}</div>
-                                                    <div className="text-xs text-slate-500">{c.email || "Brak emaila"}</div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    {editingEmailId === c.id ? (
+                                                        <div className="flex items-center gap-2">
+                                                            <input
+                                                                type="email"
+                                                                value={tempEmail}
+                                                                onChange={(e) => setTempEmail(e.target.value)}
+                                                                className="text-xs px-2 py-1.5 rounded-lg border border-primary bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-medium focus:ring-2 focus:ring-primary/20 outline-none w-full"
+                                                                autoFocus
+                                                                placeholder="email@example.com"
+                                                            />
+                                                            <button
+                                                                onClick={() => updateEmail(c, tempEmail)}
+                                                                className="text-xs px-2 py-1 rounded bg-green-600 text-white hover:bg-green-700"
+                                                                disabled={updatingEmail === c.id}
+                                                            >
+                                                                ✓
+                                                            </button>
+                                                            <button
+                                                                onClick={() => { setEditingEmailId(null); setTempEmail(""); }}
+                                                                className="text-xs px-2 py-1 rounded bg-slate-300 dark:bg-slate-600 text-slate-700 dark:text-white hover:bg-slate-400"
+                                                            >
+                                                                ✕
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex items-center gap-2 group">
+                                                            <span className="text-sm text-slate-600 dark:text-slate-400">
+                                                                {c.email || <span className="italic text-slate-400">Brak emaila</span>}
+                                                            </span>
+                                                            <button
+                                                                onClick={() => { setEditingEmailId(c.id); setTempEmail(c.email || ""); }}
+                                                                className="opacity-0 group-hover:opacity-100 text-xs text-primary hover:text-primary-dark transition-opacity"
+                                                                title="Edytuj email"
+                                                            >
+                                                                ✏️
+                                                            </button>
+                                                        </div>
+                                                    )}
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <select
@@ -672,9 +740,9 @@ export default function AdminPage() {
                                                         {c.edit_token && (
                                                             <>
                                                                 <Link
-                                                                    href={`/edycja/${c.edit_token}?admin=true`}
+                                                                    href={`/edycja/${c.edit_token}`}
                                                                     className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 px-2 py-1 rounded-lg transition-colors inline-flex items-center gap-1"
-                                                                    title="Edytuj ogłoszenie"
+                                                                    title="Edytuj ogłoszenie (wymaga emaila)"
                                                                 >
                                                                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
