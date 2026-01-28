@@ -103,7 +103,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 // Try to open FB app on mobile, fallback to browser
                 if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
                   e.preventDefault();
-                  const fbAppUrl = "fb://page/61566988051893"; // Page ID
+                  const fbAppUrl = "fb://page/PolacySzwajcaria2024"; // Page username
                   const fbWebUrl = "https://www.facebook.com/PolacySzwajcaria2024";
 
                   window.location.href = fbAppUrl;
