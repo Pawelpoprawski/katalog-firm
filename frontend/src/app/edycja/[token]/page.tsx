@@ -551,6 +551,27 @@ export default function EditCompanyPage() {
                                         </div>
                                         {errors.address && <p className="text-xs font-bold text-red-500 animate-shake">{errors.address}</p>}
                                     </div>
+
+                                    <div className="space-y-3">
+                                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                                            Firma & Usługi <span className="text-primary text-lg leading-none">*</span>
+                                        </label>
+                                        <textarea
+                                            value={form.desc}
+                                            onChange={handleChange("desc")}
+                                            maxLength={DESC_LIMIT}
+                                            className={`${inputClass("desc")} min-h-[200px] resize-none`}
+                                            placeholder="Opisz czym zajmuje się Twoja firma i jakie usługi oferujesz. Możesz wypunktować najważniejsze usługi:&#10;&#10;- Wykończenia wnętrz&#10;- Malowanie i tapetowanie&#10;- Instalacje elektryczne"
+                                            required
+                                        />
+                                        <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                                            <span>Minimum 20 znaków, maksimum 10,000</span>
+                                            <span className={form.desc.length >= DESC_LIMIT ? "text-primary" : ""}>
+                                                {form.desc.length} / {DESC_LIMIT}
+                                            </span>
+                                        </div>
+                                        {errors.desc && <p className="text-xs font-bold text-red-500 animate-shake">{errors.desc}</p>}
+                                    </div>
                                 </div>
                             )}
 
@@ -626,31 +647,6 @@ export default function EditCompanyPage() {
                             )}
 
                             {step === 2 && (
-                                <div className="space-y-8 animate-fade-in">
-                                    <div className="space-y-3">
-                                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
-                                            Firma & Usługi <span className="text-primary text-lg leading-none">*</span>
-                                        </label>
-                                        <textarea
-                                            value={form.desc}
-                                            onChange={handleChange("desc")}
-                                            maxLength={DESC_LIMIT}
-                                            className={`${inputClass("desc")} min-h-[200px] resize-none`}
-                                            placeholder="Opisz czym zajmuje się Twoja firma i jakie usługi oferujesz. Możesz wypunktować najważniejsze usługi:&#10;&#10;- Wykończenia wnętrz&#10;- Malowanie i tapetowanie&#10;- Instalacje elektryczne"
-                                            required
-                                        />
-                                        <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                                            <span>Minimum 20 znaków, maksimum 10,000</span>
-                                            <span className={form.desc.length >= DESC_LIMIT ? "text-primary" : ""}>
-                                                {form.desc.length} / {DESC_LIMIT}
-                                            </span>
-                                        </div>
-                                        {errors.desc && <p className="text-xs font-bold text-red-500 animate-shake">{errors.desc}</p>}
-                                    </div>
-                                </div>
-                            )}
-
-                            {step === 3 && (
                                 <div className="space-y-10 animate-fade-in">
                                     <div className="bg-slate-50 dark:bg-slate-800/50 rounded-3xl p-8 border border-slate-200 dark:border-slate-800 space-y-6">
                                         <div className="flex items-center justify-between">
@@ -721,6 +717,101 @@ export default function EditCompanyPage() {
                                                     )}
                                                 </div>
                                             ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {step === 3 && (
+                                <div className="space-y-8 animate-fade-in">
+                                    <div className="grid gap-8 md:grid-cols-2">
+                                        <div className="bg-slate-50 dark:bg-slate-800/30 rounded-3xl p-6 border border-slate-100 dark:border-slate-800/50 space-y-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" strokeWidth={2} /></svg>
+                                                </div>
+                                                <h3 className="font-bold text-slate-900 dark:text-white">Podstawowe informacje</h3>
+                                            </div>
+                                            <dl className="space-y-3 text-sm">
+                                                <div className="flex justify-between border-b border-slate-200 dark:border-slate-800/50 pb-2">
+                                                    <dt className="text-slate-500">Nazwa</dt>
+                                                    <dd className="font-bold text-slate-900 dark:text-white">{form.name}</dd>
+                                                </div>
+                                                <div className="flex justify-between border-b border-slate-200 dark:border-slate-800/50 pb-2">
+                                                    <dt className="text-slate-500">Kategoria</dt>
+                                                    <dd className="font-bold text-slate-900 dark:text-white">{form.category}</dd>
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <dt className="text-slate-500">Adres</dt>
+                                                    <dd className="font-bold text-slate-900 dark:text-white leading-tight">{form.address}</dd>
+                                                </div>
+                                            </dl>
+                                        </div>
+
+                                        <div className="bg-slate-50 dark:bg-slate-800/30 rounded-3xl p-6 border border-slate-100 dark:border-slate-800/50 space-y-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" strokeWidth={2} /></svg>
+                                                </div>
+                                                <h3 className="font-bold text-slate-900 dark:text-white">Kontakt</h3>
+                                            </div>
+                                            <dl className="space-y-3 text-sm">
+                                                <div className="flex justify-between border-b border-slate-200 dark:border-slate-800/50 pb-2">
+                                                    <dt className="text-slate-500">E-mail</dt>
+                                                    <dd className="font-bold text-slate-900 dark:text-white">{form.email || "—"}</dd>
+                                                </div>
+                                                <div className="flex justify-between border-b border-slate-200 dark:border-slate-800/50 pb-2">
+                                                    <dt className="text-slate-500">Telefon</dt>
+                                                    <dd className="font-bold text-slate-900 dark:text-white">{form.phone || "—"}</dd>
+                                                </div>
+                                                <div className="flex justify-between border-b border-slate-200 dark:border-slate-800/50 pb-2">
+                                                    <dt className="text-slate-500">Strona</dt>
+                                                    <dd className="font-bold text-slate-900 dark:text-white truncate max-w-[150px]">{form.website || "—"}</dd>
+                                                </div>
+                                            </dl>
+                                        </div>
+                                    </div>
+
+                                    {(mainPhoto || previews.length > 0) && (
+                                        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border-2 border-slate-100 dark:border-slate-800 shadow-lg">
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                </div>
+                                                <h3 className="font-bold text-lg text-slate-900 dark:text-white">📸 Zdjęcia ({previews.length})</h3>
+                                            </div>
+
+                                            <div className={`grid gap-4 ${mainPhoto ? 'md:grid-cols-2' : 'grid-cols-1'}`}>
+                                                {mainPhoto && (
+                                                    <div className="space-y-2">
+                                                        <p className="text-xs font-bold text-primary uppercase tracking-wider">Zdjęcie główne</p>
+                                                        <div className="relative aspect-video overflow-hidden rounded-2xl border-4 border-primary/30 shadow-xl">
+                                                            <img src={mainPhoto} alt="Główne" className="h-full w-full object-cover" />
+                                                            <div className="absolute top-3 left-3 px-3 py-1 rounded-lg bg-primary text-xs font-black text-white shadow-lg uppercase">
+                                                                ★ GŁÓWNE
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {previews.filter(p => p !== mainPhoto).length > 0 && (
+                                                    <div className="space-y-2">
+                                                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Dodatkowe zdjęcia ({previews.filter(p => p !== mainPhoto).length})</p>
+                                                        <div className="grid grid-cols-2 gap-2">
+                                                            {previews.filter(p => p !== mainPhoto).slice(0, 4).map((src, idx) => (
+                                                                <div key={idx} className="relative aspect-square overflow-hidden rounded-xl border-2 border-slate-200 dark:border-slate-700 shadow-md hover:scale-105 transition-transform">
+                                                                    <img src={src} alt={`Dodatkowe ${idx + 1}`} className="h-full w-full object-cover" />
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                        {previews.filter(p => p !== mainPhoto).length > 4 && (
+                                                            <p className="text-xs text-slate-500 dark:text-slate-400 text-center font-semibold mt-2">+ {previews.filter(p => p !== mainPhoto).length - 4} więcej zdjęć</p>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     )}
                                 </div>
