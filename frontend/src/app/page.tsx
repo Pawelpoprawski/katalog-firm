@@ -816,12 +816,7 @@ export default function HomePage() {
                           {categoryName}
                         </span>
                       </div>
-                      <button
-                        onClick={(e) => { e.preventDefault(); toggleFavorite(item.id); }}
-                        className={`absolute top-4 right-4 p-2 rounded-xl transition-all duration-300 ${favorites.includes(item.id) ? 'bg-yellow-400 text-white scale-110' : 'glass text-white hover:scale-110'}`}
-                      >
-                        <svg className="w-5 h-5" fill={favorites.includes(item.id) ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.945a1 1 0 00.95.69h4.147c.969 0 1.371 1.24.588 1.81l-3.357 2.44a1 1 0 00-.364 1.118l1.286 3.945c.3.921-.755 1.688-1.54 1.118l-3.357-2.44a1 1 0 00-1.176 0l-3.357 2.44c-.784.57-1.838-.197-1.539-1.118l1.285-3.945a1 1 0 00-.364-1.118L2.98 9.372c-.783-.57-.38-1.81.588-1.81h4.147a1 1 0 00.95-.69l1.286-3.945z" /></svg>
-                      </button>
+
                     </div>
 
                     <div className="flex flex-1 flex-col p-6 space-y-4">

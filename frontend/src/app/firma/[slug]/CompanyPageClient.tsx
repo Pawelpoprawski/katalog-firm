@@ -311,17 +311,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
                 </div>
               </div>
 
-              {isLoaded && (
-                <button
-                  onClick={() => toggleFavorite(company.id)}
-                  className={`flex-shrink-0 p-3 rounded-full transition-colors ${favorites.includes(company.id) ? 'bg-yellow-50 text-yellow-500' : 'bg-slate-100 text-slate-400 hover:text-yellow-500 hover:bg-yellow-50'}`}
-                  aria-label={favorites.includes(company.id) ? "Usuń z ulubionych" : "Dodaj do ulubionych"}
-                >
-                  <svg className="w-6 h-6" fill={favorites.includes(company.id) ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </button>
-              )}
+
             </div>
             <div
               className="prose prose-slate prose-sm max-w-none text-base text-slate-700"

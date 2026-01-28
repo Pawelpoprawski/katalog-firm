@@ -279,24 +279,7 @@ export default function CategoryPage({ params }: Props) {
                         ★ {item.rating.toFixed(1)}
                       </span>
                     )}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toggleFavorite(item.id);
-                      }}
-                      className="ml-auto inline-flex items-center justify-center rounded-full border border-transparent p-1 text-yellow-500 hover:border-yellow-500 hover:bg-yellow-50"
-                      aria-label={favorites.includes(item.id) ? "Usuń z ulubionych" : "Dodaj do ulubionych"}
-                    >
-                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill={favorites.includes(item.id) ? "currentColor" : "none"} stroke="currentColor">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.945a1 1 0 00.95.69h4.147c.969 0 1.371 1.24.588 1.81l-3.357 2.44a1 1 0 00-.364 1.118l1.286 3.945c.3.921-.755 1.688-1.54 1.118l-3.357-2.44a1 1 0 00-1.176 0l-3.357 2.44c-.784.57-1.838-.197-1.539-1.118l1.285-3.945a1 1 0 00-.364-1.118L2.98 9.372c-.783-.57-.38-1.81.588-1.81h4.147a1 1 0 00.95-.69l1.286-3.945z"
-                        />
-                      </svg>
-                    </button>
+
                   </div>
                   <div className="text-base font-bold text-slate-900">{item.name}</div>
                   <div className="text-sm text-slate-600">
