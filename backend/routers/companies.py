@@ -31,9 +31,21 @@ def _calculate_rating(company_id: int) -> float | None:
 
 
 def _enrich_company(company: dict) -> dict:
-    """Add calculated fields like rating to a company dict."""
+    """Add calculated fields like rating and category name to a company dict."""
+    from ..storage import list_categories
+    
     rating = _calculate_rating(company["id"])
-    return {**company, "rating": rating}
+    
+    # Lookup category name from category_id to prevent stale/grayed category names
+    category_name = None
+    if company.get("category_id"):
+        categories = list_categories()
+        category = next((cat for cat in categories if cat["id"] == company["category_id"]), None)
+        if category:
+            category_name = category["name"]
+    
+    return {**company, "rating": rating, "category": category_name}
+
 
 
 @router.get("/", response_model=list[CompanyRead])
