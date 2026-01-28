@@ -139,6 +139,51 @@ def update_company_category(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
 
 
+@router.patch("/companies/{company_id}")
+def update_company_fields(
+    company_id: int,
+    email: Optional[str] = Body(None),
+    name: Optional[str] = Body(None),
+    phone: Optional[str] = Body(None),
+    website: Optional[str] = Body(None),
+    description: Optional[str] = Body(None),
+    address: Optional[str] = Body(None),
+    city: Optional[str] = Body(None),
+    canton: Optional[str] = Body(None),
+    postal_code: Optional[str] = Body(None)
+):
+    """Update company fields (email, name, etc). Admin only."""
+    # Build update payload from non-None values
+    updates = {}
+    if email is not None:
+        updates["email"] = email.strip() if email else None
+    if name is not None:
+        updates["name"] = name
+    if phone is not None:
+        updates["phone"] = phone
+    if website is not None:
+        updates["website"] = website
+    if description is not None:
+        updates["description"] = description
+    if address is not None:
+        updates["address"] = address
+    if city is not None:
+        updates["city"] = city
+    if canton is not None:
+        updates["canton"] = canton
+    if postal_code is not None:
+        updates["postal_code"] = postal_code
+    
+    if not updates:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No fields to update")
+    
+    try:
+        updated = storage_update_company(company_id, updates)
+        return {"message": "Company updated", "company": updated}
+    except KeyError:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
+
+
 @router.delete("/companies/{company_id}")
 def delete_company(company_id: int):
     """Delete a company. Admin only."""
