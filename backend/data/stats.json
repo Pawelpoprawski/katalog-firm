@@ -466,5 +466,35 @@
     "company_id": 40,
     "views": 2,
     "clicks": 0
+  },
+  {
+    "date": "2026-01-18",
+    "company_id": 10,
+    "views": 2,
+    "clicks": 0
+  },
+  {
+    "date": "2026-01-27",
+    "company_id": 69,
+    "views": 2,
+    "clicks": 0
+  },
+  {
+    "date": "2026-01-27",
+    "company_id": 86,
+    "views": 2,
+    "clicks": 0
+  },
+  {
+    "date": "2026-01-27",
+    "company_id": 74,
+    "views": 2,
+    "clicks": 0
+  },
+  {
+    "date": "2026-01-27",
+    "company_id": 17,
+    "views": 2,
+    "clicks": 0
   }
 ]
