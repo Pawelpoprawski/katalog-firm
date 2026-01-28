@@ -79,18 +79,33 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             </span>
           </Link>
 
-          <a
-            href="https://polacyszwajcaria.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all font-semibold text-xs sm:text-sm"
-          >
-            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-            <span className="hidden xs:inline">PolacySzwajcaria.com</span>
-            <span className="xs:hidden">Portal</span>
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href="https://polacyszwajcaria.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all font-semibold text-xs sm:text-sm"
+            >
+              <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              <span className="hidden xs:inline">PolacySzwajcaria.com</span>
+              <span className="xs:hidden">Portal</span>
+            </a>
+
+            {/* Facebook Icon */}
+            <a
+              href="https://www.facebook.com/PolacySzwajcaria2024"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-all"
+              aria-label="Facebook"
+            >
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+              </svg>
+            </a>
+          </div>
         </div>
       </header>
 
