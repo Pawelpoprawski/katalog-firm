@@ -918,7 +918,7 @@ export default function HomePage() {
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                 </button>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2 justify-center">
                   {[...Array(totalPages)].map((_, i) => (
                     <button
                       key={i}
