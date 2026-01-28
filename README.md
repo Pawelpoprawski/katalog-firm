@@ -281,3 +281,159 @@ git pull
 cd frontend && npm run build
 pm2 restart katalog-api katalog-frontend
 ```
+
+---
+
+## 🔒 SSL/HTTPS Setup (Produkcja)
+
+### Wymagania wstępne
+- Domena wskazująca na IP serwera (np. `katalog.polacyszwajcaria.com`)
+- Rekordy DNS:
+  - `A` record: `katalog.polacyszwajcaria.com` → `51.75.141.194`
+  - `A` record: `www.katalog.polacyszwajcaria.com` → `51.75.141.194`
+  - `A` record: `api.katalog.polacyszwajcaria.com` → `51.75.141.194`
+
+### Krok 1: Instalacja Nginx i Certbot
+
+```bash
+sudo apt update
+sudo apt install nginx certbot python3-certbot-nginx
+```
+
+### Krok 2: Konfiguracja Nginx
+
+Utwórz plik `/etc/nginx/sites-available/katalog-firm`:
+
+```nginx
+# Frontend (Next.js)
+server {
+    server_name katalog.polacyszwajcaria.com www.katalog.polacyszwajcaria.com;
+    
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+# Backend API (FastAPI)
+server {
+    server_name api.katalog.polacyszwajcaria.com;
+    
+    location / {
+        proxy_pass http://localhost:8000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+Aktywuj konfigurację:
+```bash
+sudo ln -s /etc/nginx/sites-available/katalog-firm /etc/nginx/sites-enabled/
+sudo nginx -t  # Test konfiguracji
+sudo systemctl reload nginx
+```
+
+### Krok 3: Certyfikat SSL (Let's Encrypt)
+
+Uruchom Certbot dla wszystkich domen:
+
+```bash
+sudo certbot --nginx -d katalog.polacyszwajcaria.com -d www.katalog.polacyszwajcaria.com -d api.katalog.polacyszwajcaria.com
+```
+
+Certbot automatycznie:
+- ✅ Wygeneruje certyfikat SSL
+- ✅ Skonfiguruje przekierowanie HTTP → HTTPS
+- ✅ Ustawi auto-odnowienie (cron job)
+
+### Krok 4: Aktualizacja zmiennych środowiskowych
+
+Zaktualizuj URL w plikach konfiguracyjnych:
+
+**Backend (`backend/.env`):**
+```env
+CORS_ORIGINS=https://katalog.polacyszwajcaria.com,https://www.katalog.polacyszwajcaria.com
+```
+
+**Frontend (`frontend/.env.local`):**
+```env
+NEXT_PUBLIC_API_URL=https://api.katalog.polacyszwajcaria.com
+```
+
+### Krok 5: Rebuild i restart
+
+```bash
+cd /var/www/katalog-firm/frontend
+npm run build
+pm2 restart all
+```
+
+### Weryfikacja HTTPS
+
+Sprawdź czy certyfikat działa:
+- https://katalog.polacyszwajcaria.com (powinno pokazać 🔒)
+- https://api.katalog.polacyszwajcaria.com/docs (powinno pokazać Swagger UI z 🔒)
+
+### Auto-odnowienie certyfikatu
+
+Certbot automatycznie dodaje cron job. Sprawdź czy działa:
+```bash
+sudo certbot renew --dry-run
+```
+
+Jeśli OK, certyfikat będzie odnawiany automatycznie przed wygaśnięciem.
+
+### Troubleshooting SSL
+
+**Problem: "ERR_SSL_PROTOCOL_ERROR"**
+```bash
+# Sprawdź logi Nginx
+sudo tail -f /var/log/nginx/error.log
+
+# Sprawdź czy port 443 jest otwarty
+sudo ufw status
+sudo ufw allow 443/tcp
+```
+
+**Problem: Certbot nie może połączyć się z domeną**
+```bash
+# Sprawdź czy DNS wskazuje na prawidłowy IP
+dig katalog.polacyszwajcaria.com
+
+# Sprawdź czy Nginx działa
+sudo systemctl status nginx
+```
+
+**Problem: Mixed Content (HTTP/HTTPS)**
+Upewnij się że wszystkie linki w aplikacji używają HTTPS lub są relatywne.
+
+---
+
+## 📦 Automated Deployment Script
+
+Użyj skryptu `deploy.sh` dla szybkiego deploymentu:
+
+```bash
+cd /var/www/katalog-firm
+./deploy.sh
+```
+
+Skrypt automatycznie:
+1. Pobiera kod z GitHub
+2. Zachowuje dane produkcyjne (companies.json, stats.json)
+3. Rozwiązuje konflikty
+4. Buduje frontend
+5. Restartuje PM2
+
+---
