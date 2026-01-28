@@ -771,6 +771,42 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+        ) : loading ? (
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="group flex flex-col overflow-hidden rounded-4xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm animate-pulse"
+              >
+                {/* Image skeleton */}
+                <div className="relative h-60 bg-slate-200 dark:bg-slate-800" />
+
+                {/* Content skeleton */}
+                <div className="flex flex-1 flex-col p-6 space-y-4">
+                  <div className="flex items-start justify-between gap-4">
+                    {/* Title skeleton */}
+                    <div className="h-7 bg-slate-200 dark:bg-slate-800 rounded-lg w-3/4" />
+                    {/* Rating skeleton */}
+                    <div className="h-7 w-12 bg-slate-200 dark:bg-slate-800 rounded-lg shrink-0" />
+                  </div>
+
+                  {/* Location skeleton */}
+                  <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-lg w-1/2" />
+
+                  {/* Description skeleton */}
+                  <div className="space-y-2">
+                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-lg w-full" />
+                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-lg w-4/5" />
+                  </div>
+
+                  {/* Button skeleton */}
+                  <div className="pt-4 mt-auto border-t border-slate-100 dark:border-slate-800">
+                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-lg w-1/3" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         ) : filteredCompanies.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center rounded-4xl border-2 border-dashed border-slate-200 dark:border-slate-800">
             <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-3xl mb-4">
