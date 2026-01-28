@@ -354,19 +354,22 @@ export default function EditCompanyPage() {
                 photos: photos.length ? photos : null
             };
 
-            const res = await fetch(`${apiUrl}/companies/by-token/${token}`, {
+            const res = await fetch(`${apiUrl}/companies/${companyId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             });
 
             if (!res.ok) {
-                throw new Error("Błąd aktualizacji firmy");
+                const text = await res.text();
+                throw new Error(`(${res.status}) ${text || "Błąd aktualizacji firmy"}`);
             }
             setSubmitStatus("success");
+            // Redirect to company page or home
+            router.push("/");
         } catch (err: any) {
             setSubmitStatus("error");
-            setSubmitError(err.message || "Nie udało się zapisać.");
+            setSubmitError(err.message || "Nie udało się zaktualizować firmy.");
         }
     };
 
