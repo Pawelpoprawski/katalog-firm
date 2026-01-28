@@ -878,7 +878,7 @@ export default function HomePage() {
 
                     <div className="flex flex-1 flex-col p-6 space-y-4">
                       <div className="flex items-start justify-between gap-4">
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors leading-tight">
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors leading-tight line-clamp-2">
                           {item.name}
                         </h3>
                         {item.rating && (
