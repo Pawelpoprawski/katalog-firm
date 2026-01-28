@@ -16,11 +16,9 @@ export default function EditCompanyPage() {
     const { token } = useParams<{ token: string }>();
     const router = useRouter();
 
-    // Auth State
-    const [isVerified, setIsVerified] = useState(false);
-    const [authEmail, setAuthEmail] = useState("");
-    const [authError, setAuthError] = useState("");
-    const [verifying, setVerifying] = useState(false);
+    // Loading State
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState("");
 
     // Form State
     const [form, setForm] = useState({
@@ -116,54 +114,51 @@ export default function EditCompanyPage() {
                 return rest;
             });
         });
-    }, [placesReady, isVerified]); // Re-attach when verified
+    }, [placesReady]); // Re-attach when placesReady
 
-    // Email-based verification
-    const verifyAccess = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setVerifying(true);
-        setAuthError("");
-        try {
-            const res = await fetch(`${apiUrl}/companies/verify-edit`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token, email: authEmail })
-            });
-            if (!res.ok) throw new Error("Nieprawidłowy email lub token wygasł.");
-            const data = await res.json();
-            const c = data.company;
+    // Auto-load company data on mount
+    useEffect(() => {
+        const loadCompanyData = async () => {
+            if (!token || categories.length === 0) return;
 
-            setCompanyId(c.id);
-            setIsVerified(true);
+            setLoading(true);
+            setLoadError("");
+            try {
+                const res = await fetch(`${apiUrl}/companies/by-token/${token}`);
+                if (!res.ok) throw new Error("Nieprawidłowy lub wygasły link edycji.");
+                const c = await res.json();
 
-            // Populate Form
-            // Find category name by ID
-            const catName = categories.find(cat => cat.id === c.category_id)?.name || "";
+                setCompanyId(c.id);
 
-            setForm({
-                name: c.name || "",
-                category: catName,
-                address: c.address || "",
-                city: c.city || "",
-                canton: c.canton || "",
-                postal_code: c.postal_code || "",
-                desc: c.description || "",
-                phone: c.phone || "",
-                email: c.email || "",
-                website: c.website || "",
-                facebook: c.facebook || "",
-                instagram: c.instagram || ""
-            });
+                // Find category name by ID
+                const catName = categories.find(cat => cat.id === c.category_id)?.name || "";
 
-            if (c.img) setMainPhoto(c.img);
-            if (Array.isArray(c.photos)) setPreviews(c.photos);
+                setForm({
+                    name: c.name || "",
+                    category: catName,
+                    address: c.address || "",
+                    city: c.city || "",
+                    canton: c.canton || "",
+                    postal_code: c.postal_code || "",
+                    desc: c.description || "",
+                    phone: c.phone || "",
+                    email: c.email || "",
+                    website: c.website || "",
+                    facebook: c.facebook || "",
+                    instagram: c.instagram || ""
+                });
 
-        } catch (err: any) {
-            setAuthError(err.message);
-        } finally {
-            setVerifying(false);
-        }
-    };
+                if (c.img) setMainPhoto(c.img);
+                if (Array.isArray(c.photos)) setPreviews(c.photos);
+
+            } catch (err: any) {
+                setLoadError(err.message || "Nie udało się załadować danych firmy.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadCompanyData();
+    }, [token, apiUrl, categories]);
 
     const goNext = () => setStep((s) => Math.min(s + 1, steps.length - 1));
     const goPrev = () => setStep((s) => Math.max(s - 1, 0));
@@ -377,44 +372,36 @@ export default function EditCompanyPage() {
 
     // --- RENDER ---
 
-    if (!isVerified) {
+    if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center p-4">
-                <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-8 animate-fade-in relative overflow-hidden">
-                    <div className="absolute top-0 right-0 -mr-20 -mt-20 w-60 h-60 bg-primary/5 rounded-full blur-3xl" />
-
-                    <div className="text-center space-y-2">
-                        <div className="mx-auto w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 mb-4">
-                            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeWidth={2} /></svg>
-                        </div>
-                        <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Weryfikacja dostępu</h1>
-                        <p className="text-sm text-slate-500">Aby edytować ogłoszenie, podaj adres e-mail przypisany do firmy.</p>
+                <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-12 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-6 text-center animate-fade-in">
+                    <div className="mx-auto w-16 h-16 relative">
+                        <svg className="animate-spin h-16 w-16 text-primary" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
                     </div>
+                    <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Ładowanie danych...</h1>
+                    <p className="text-sm text-slate-500">Pobieranie informacji o firmie</p>
+                </div>
+            </div>
+        );
+    }
 
-                    <form onSubmit={verifyAccess} className="space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Adres E-mail</label>
-                            <input
-                                type="email"
-                                required
-                                value={authEmail}
-                                onChange={e => setAuthEmail(e.target.value)}
-                                className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-4 text-sm font-medium focus:ring-4 focus:ring-primary/10 outline-none transition-all"
-                                placeholder="np. kontakt@firma.ch"
-                            />
+    if (loadError) {
+        return (
+            <div className="min-h-screen flex items-center justify-center p-4">
+                <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-8 animate-fade-in">
+                    <div className="text-center space-y-4">
+                        <div className="mx-auto w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-2xl flex items-center justify-center text-red-500 mb-4">
+                            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" strokeWidth={2} /></svg>
                         </div>
-                        {authError && <p className="text-sm font-bold text-red-500 text-center bg-red-50 dark:bg-red-900/10 p-3 rounded-xl">{authError}</p>}
-
-                        <button
-                            type="submit"
-                            disabled={verifying}
-                            className="w-full py-4 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition-all disabled:opacity-50"
-                        >
-                            {verifying ? "Weryfikacja..." : "Odblokuj edycję"}
-                        </button>
-                    </form>
+                        <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Błąd ładowania</h1>
+                        <p className="text-sm text-red-500">{loadError}</p>
+                    </div>
                     <div className="text-center">
-                        <Link href="/" className="text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors">Anuluj i wróć</Link>
+                        <Link href="/" className="inline-block px-8 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-dark transition-all">Wróć na stronę główną</Link>
                     </div>
                 </div>
             </div>
@@ -446,8 +433,6 @@ export default function EditCompanyPage() {
         <div className="mx-auto max-w-4xl px-4 py-12 space-y-10 sm:px-6">
             <nav className="flex items-center gap-3 text-sm font-medium animate-fade-in text-slate-500">
                 <Link href="/" className="hover:text-primary transition-colors">Start</Link>
-                <svg className="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" strokeWidth={2.5} /></svg>
-                <span className="text-green-600 font-bold flex items-center gap-1">Zweryfikowano</span>
                 <svg className="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" strokeWidth={2.5} /></svg>
                 <span className="text-slate-900 dark:text-white">Edycja danych</span>
             </nav>

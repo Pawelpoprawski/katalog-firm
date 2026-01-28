@@ -149,32 +149,12 @@ def delete_company(company_id: int):
 
 
 
-
-@router.post("/verify-edit")
-def verify_edit_access(body: dict):
-    """Verify edit access by email and token."""
-    token = body.get("token")
-    email = body.get("email")
-    
-    if not token or not email:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Token and email required")
-    
-    # Verify token and email using storage function
-    company = storage_verify_edit_token(token, email)
-    
-    if company:
-        return {"company": _enrich_company(company.copy())}
-    else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid token or email")
-
-
 @router.get("/by-token/{token}")
 def get_company_by_edit_token(token: str):
-    """Get company by edit token (for admin or direct access)."""
-    # Find company by token
+    """Get company by edit token (no email verification needed - token is unique)."""
     companies = storage_list_companies()
     for c in companies:
-        if storage_verify_edit_token(c["id"], token):
+        if c.get("edit_token") == token:
             return _enrich_company(c.copy())
     
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid or expired token")
