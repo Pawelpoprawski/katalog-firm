@@ -57,70 +57,32 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
       <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2 group">
-            <span className="bg-primary p-1.5 rounded-lg group-hover:rotate-12 transition-transform duration-300 inline-block">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
+            <span className="p-1.5 rounded-lg group-hover:rotate-12 transition-transform duration-300 inline-block">
+              <img src="/logo.png" alt="Logo" className="w-6 h-6" />
             </span>
             <span className="flex flex-col">
               <span className="text-base sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
                 Polskie usługi <span className="text-primary">w Szwajcarii</span>
               </span>
-              <a
-                href="https://polacyszwajcaria.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
-              >
+              <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400">
                 część portalu <span className="text-primary">PolacySzwajcaria - Natalia & Paweł</span>
-              </a>
+              </span>
             </span>
           </Link>
 
-          <div className="flex flex-col sm:flex-row items-center gap-2">
-            <a
-              href="https://polacyszwajcaria.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all font-semibold text-xs sm:text-sm"
-            >
-              <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              <span className="hidden xs:inline">PolacySzwajcaria.com</span>
-              <span className="xs:hidden">Portal</span>
-            </a>
-
-
-            {/* Facebook Icon */}
-            <a
-              href="https://www.facebook.com/PolacySzwajcaria2024"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                // Try to open FB app on mobile, fallback to browser
-                if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                  e.preventDefault();
-                  const fbAppUrl = "fb://page/PolacySzwajcaria2024"; // Page username
-                  const fbWebUrl = "https://www.facebook.com/PolacySzwajcaria2024";
-
-                  window.location.href = fbAppUrl;
-                  setTimeout(() => {
-                    window.location.href = fbWebUrl;
-                  }, 1000);
-                }
-              }}
-              className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-all"
-              aria-label="Facebook"
-            >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-              </svg>
-            </a>
-
-          </div>
+          <a
+            href="https://polacyszwajcaria.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all font-bold text-sm sm:text-base"
+          >
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            Portal
+          </a>
         </div>
       </header>
 
@@ -131,8 +93,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <div className="grid gap-12 md:grid-cols-3">
             <div className="col-span-2">
               <Link href="/" className="flex items-center gap-2 mb-6">
-                <span className="bg-primary p-1 rounded-lg inline-block">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                <span className="p-1 rounded-lg inline-block">
+                  <img src="/logo.png" alt="Logo" className="w-5 h-5" />
                 </span>
                 <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
                   Polskie <span className="text-primary">usługi</span>
@@ -148,6 +110,32 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 <li><a href="mailto:kontakt@polacyszwajcaria.com" className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Kontakt</a></li>
                 <li><Link href="/polityka-prywatnosci" className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Polityka prywatności</Link></li>
               </ul>
+              <div className="mt-6">
+                <a
+                  href="https://www.facebook.com/PolacySzwajcaria2024"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    // Try to open FB app on mobile, fallback to browser
+                    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                      e.preventDefault();
+                      const fbAppUrl = "fb://page/PolacySzwajcaria2024"; // Page username
+                      const fbWebUrl = "https://www.facebook.com/PolacySzwajcaria2024";
+
+                      window.location.href = fbAppUrl;
+                      setTimeout(() => {
+                        window.location.href = fbWebUrl;
+                      }, 1000);
+                    }
+                  }}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-all"
+                  aria-label="Facebook"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
           <div className="mt-16 pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">

@@ -49,12 +49,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    keywords: [company.name, categoryName, location, "polskie usługi", "Szwajcaria"],
     openGraph: {
       title,
       description,
       type: "website",
       url: `https://polacyszwajcaria.com/uslugi/firma/${params.slug}`,
-      images: company.img ? [{ url: company.img }] : [],
+      images: company.img ? [{ url: company.img, alt: company.name }] : [],
     },
     twitter: {
       card: "summary_large_image",

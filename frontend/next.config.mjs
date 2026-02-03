@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: '/uslugi',
   reactStrictMode: true,
   // Removed basePath and assetPrefix - they were causing redirect loops
   // The app should work directly on / for local development
+
 
   // Security headers for production
   async headers() {

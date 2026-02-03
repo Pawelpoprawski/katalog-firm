@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+
+
 const steps = ["Dane firmy", "Kontakt", "Zdjęcia", "Podsumowanie"];
 const DESC_LIMIT = 10000; // Merged: description + offer
 const ADDRESS_SUGGESTIONS = [
@@ -49,6 +51,7 @@ export default function AddCompanyPage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const mainPhotoInputRef = useRef<HTMLInputElement | null>(null);
   const addressInputRef = useRef<HTMLInputElement | null>(null);
+  const formContainerRef = useRef<HTMLDivElement | null>(null);
   const [placesReady, setPlacesReady] = useState(false);
   const googleKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -104,8 +107,14 @@ export default function AddCompanyPage() {
     }
   }, [submitStatus]);
 
-  const goNext = () => setStep((s) => Math.min(s + 1, steps.length - 1));
-  const goPrev = () => setStep((s) => Math.max(s - 1, 0));
+  const goNext = () => {
+    setStep((s) => Math.min(s + 1, steps.length - 1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  const goPrev = () => {
+    setStep((s) => Math.max(s - 1, 0));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleChange =
     (key: keyof typeof form) =>
@@ -195,6 +204,7 @@ export default function AddCompanyPage() {
     const errs = validateStep(step);
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     goNext();
@@ -298,6 +308,7 @@ export default function AddCompanyPage() {
         setCreatedEditToken(createdCompany.edit_token);
       }
       setSubmitStatus("success");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err: any) {
       setSubmitStatus("error");
       setSubmitError(err.message || "Nie udało się zapisać. Upewnij się, że backend działa.");
@@ -758,7 +769,7 @@ export default function AddCompanyPage() {
                     <div className="bg-slate-50 dark:bg-slate-800/30 rounded-3xl p-6 border border-slate-100 dark:border-slate-800/50 space-y-4">
                       <div className="flex items-center gap-3">
                         <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" strokeWidth={2} /></svg>
+                          <img src="/logo.png" alt="Logo" className="w-5 h-5" />
                         </div>
                         <h3 className="font-bold text-slate-900 dark:text-white">Podstawowe informacje</h3>
                       </div>

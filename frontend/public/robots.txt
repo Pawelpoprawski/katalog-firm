@@ -8,4 +8,5 @@ Disallow: /api/
 Disallow: /_next/
 
 # Sitemap
-Sitemap: https://poprawskipawel.com/sitemap.xml
+Sitemap: https://polacyszwajcaria.com/uslugi/sitemap.xml
+
