@@ -1,46 +1,75 @@
 #!/bin/bash
 
-# Skrypt automatycznego deploymentu dla Katalog Firm
+# Deploy script dla Katalog Firm na polacyszwajcaria.com/uslugi
 # Użycie: ./deploy.sh
 
-set -e  # Zatrzymaj na błędach
+set -e  # Exit on error
 
-echo "🚀 Rozpoczynam deployment Katalog Firm..."
+echo "🚀 === Deploy Katalog Firm ===" 
+echo ""
 
-# 1. Pobierz najnowszy kod z GitHub
-echo "📥 Pobieranie kodu z GitHub..."
-git stash  # Zachowaj lokalne zmiany (companies.json, stats.json)
+# Kolory dla outputu
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+# Katalog projektu (dostosuj do swojej ścieżki)
+PROJECT_DIR="/var/www/katalog-firm"
+
+echo -e "${YELLOW}📂 Przechodzę do katalogu projektu...${NC}"
+cd $PROJECT_DIR
+
+echo -e "${YELLOW}📥 Git pull (pobieranie zmian)...${NC}"
 git pull origin main
 
-# 2. Przywróć lokalne dane
-echo "💾 Przywracanie danych produkcyjnych..."
-git stash pop || true  # Ignoruj błędy jeśli nie ma stasha
-
-# 3. Rozwiąż konflikty automatycznie (zachowaj wersję lokalną dla plików danych)
-if [ -f backend/data/companies.json ]; then
-    git checkout --ours backend/data/companies.json 2>/dev/null || true
-    git add backend/data/companies.json 2>/dev/null || true
-fi
-
-if [ -f backend/data/stats.json ]; then
-    git checkout --ours backend/data/stats.json 2>/dev/null || true
-    git add backend/data/stats.json 2>/dev/null || true
-fi
-
-# Commit merge jeśli trzeba
-git commit -m "Merge: keep production data" 2>/dev/null || true
-
-# 4. Buduj frontend
-echo "🔨 Budowanie frontendu..."
-cd frontend
-npm run build
-cd ..
-
-# 5. Restart PM2
-echo "🔄 Restartowanie aplikacji..."
-pm2 restart all
-
-# 6. Pokaż status
-echo "✅ Deployment zakończony!"
 echo ""
-pm2 list
+echo -e "${GREEN}✅ Git pull zakończony${NC}"
+echo ""
+
+# Frontend
+echo -e "${YELLOW}🎨 === Frontend ===${NC}"
+cd $PROJECT_DIR/frontend
+
+echo "📦 Instalacja zależności npm..."
+npm install
+
+echo "🏗️  Building Next.js..."
+npm run build
+
+echo "♻️  Restart PM2 frontend..."
+pm2 restart katalog-frontend || pm2 start npm --name "katalog-frontend" -- start
+
+echo ""
+echo -e "${GREEN}✅ Frontend zaktualizowany${NC}"
+echo ""
+
+# Backend
+echo -e "${YELLOW}⚙️  === Backend ===${NC}"
+cd $PROJECT_DIR/backend
+
+echo "🐍 Aktywacja virtualenv..."
+source venv/bin/activate
+
+echo "📦 Instalacja zależności Python..."
+pip install -r requirements.txt --quiet
+
+echo "♻️  Restart PM2 backend..."
+pm2 restart katalog-backend
+
+echo ""
+echo -e "${GREEN}✅ Backend zaktualizowany${NC}"
+echo ""
+
+# Status
+echo -e "${YELLOW}📊 Status PM2:${NC}"
+pm2 status
+
+echo ""
+echo -e "${GREEN}🎉 === Deploy zakończony pomyślnie! ===${NC}"
+echo ""
+echo "URL: https://polacyszwajcaria.com/uslugi"
+echo ""
+echo "Logi:"
+echo "  Frontend: pm2 logs katalog-frontend"
+echo "  Backend:  pm2 logs katalog-backend"
