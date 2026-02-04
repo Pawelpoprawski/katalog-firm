@@ -121,20 +121,11 @@ export default function HomePage() {
 
   const goToCompany = (slug?: string, id?: number) => {
     const target = `/firma/${slug || id}`;
-    if (typeof window !== "undefined") {
-      window.location.href = target;
-    } else {
-      router.push(target);
-    }
+    router.push(target); // Next.js router automatycznie dodaje basePath
   };
 
   const goToAdd = () => {
-    const target = `/dodaj`;
-    if (typeof window !== "undefined") {
-      window.location.href = target;
-    } else {
-      router.push(target);
-    }
+    router.push(`/dodaj`);
   };
 
   // Enrich companies with approximate coordinates (based on canton)
