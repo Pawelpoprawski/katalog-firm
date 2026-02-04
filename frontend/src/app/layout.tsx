@@ -51,10 +51,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico' },
-      { url: '/icon.png', type: 'image/png', sizes: '512x512' },
+      { url: 'favicon.ico' },  // Relative path works with basePath
+      { url: 'icon.png', type: 'image/png', sizes: '512x512' },
     ],
-    apple: { url: '/icon.png', type: 'image/png', sizes: '512x512' },
+    apple: { url: 'icon.png', type: 'image/png', sizes: '512x512' },
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
