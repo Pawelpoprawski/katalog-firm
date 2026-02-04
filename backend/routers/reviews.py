@@ -20,7 +20,8 @@ def list_reviews(company_id: Optional[int] = None):
 
 
 @router.post("/", response_model=ReviewRead, status_code=status.HTTP_201_CREATED)
-@limiter.limit("5/minute")  # Max 5 reviews per minute per IP
+# TEMPORARY: Rate limiting disabled - caused issues on production
+# @limiter.limit("5/minute")  # Max 5 reviews per minute per IP
 def create_review(request: Request, payload: ReviewCreate):
     logger.info("POST /reviews/ payload=%s", payload.dict())
     

@@ -104,7 +104,8 @@ def _sort_by_newest(companies: list[dict]) -> list[dict]:
 
 
 @router.post("/", response_model=CompanyReadWithToken, status_code=status.HTTP_201_CREATED)
-@limiter.limit("3/hour")  # Max 3 companies per hour per IP - prevent spam
+# TEMPORARY: Rate limiting disabled - caused issues on production  
+# @limiter.limit("3/hour")  # Max 3 companies per hour per IP - prevent spam
 def create_company(
     request: Request,
     payload: CompanyCreate,
