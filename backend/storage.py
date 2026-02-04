@@ -655,6 +655,7 @@ def get_company_by_slug(slug: str) -> Optional[dict]:
 
 def create_company(payload: dict) -> dict:
     from datetime import datetime
+    from .image_utils import convert_base64_to_webp
     
     with _lock:
         companies = _read_list(COMPANIES_FILE)
@@ -690,6 +691,12 @@ def create_company(payload: dict) -> dict:
                     payload['latitude'] = coords[0]
                     payload['longitude'] = coords[1]
         
+        # Convert images to WebP
+        if payload.get('img'):
+            payload['img'] = convert_base64_to_webp(payload['img'])
+        if payload.get('photos') and isinstance(payload['photos'], list):
+            payload['photos'] = [convert_base64_to_webp(photo) for photo in payload['photos'] if photo]
+        
         company = {
             **payload,  # Apply payload first
             "id": _next_id(companies),
@@ -711,6 +718,13 @@ def create_company(payload: dict) -> dict:
 
 def update_company(company_id: int, updates: dict) -> dict:
     from datetime import datetime
+    from .image_utils import convert_base64_to_webp
+    
+    # Convert images to WebP before updating
+    if updates.get('img'):
+        updates['img'] = convert_base64_to_webp(updates['img'])
+    if updates.get('photos') and isinstance(updates['photos'], list):
+        updates['photos'] = [convert_base64_to_webp(photo) for photo in updates['photos'] if photo]
     
     with _lock:
         companies = _read_list(COMPANIES_FILE)

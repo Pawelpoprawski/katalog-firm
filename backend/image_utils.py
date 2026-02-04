@@ -1,0 +1,74 @@
+"""
+Image processing utilities for converting images to WebP format.
+"""
+
+import base64
+import io
+from PIL import Image
+
+
+def convert_base64_to_webp(
+    base64_str: str,
+    max_size: int = 1200,
+    quality: int = 85
+) -> str:
+    """
+    Convert a base64 image (JPG/PNG) to WebP format.
+    
+    Args:
+        base64_str: Data URI string (data:image/jpeg;base64,...)
+        max_size: Maximum dimension in pixels (default: 1200)
+        quality: WebP compression quality 0-100 (default: 85)
+    
+    Returns:
+        New data URI with WebP format
+    """
+    try:
+        # Skip if already WebP
+        if "image/webp" in base64_str:
+            return base64_str
+        
+        # Skip if not a data URI
+        if not base64_str.startswith("data:image"):
+            return base64_str
+        
+        # Extract base64 data (after comma)
+        if ";base64," not in base64_str:
+            return base64_str
+        
+        base64_data = base64_str.split(";base64,")[1]
+        
+        # Decode base64
+        image_data = base64.b64decode(base64_data)
+        
+        # Load image
+        img = Image.open(io.BytesIO(image_data))
+        
+        # Convert to RGB if needed (RGBA/P/LA not compatible with JPEG/WebP)
+        if img.mode in ("RGBA", "P", "LA"):
+            # Create white background for transparent images
+            background = Image.new("RGB", img.size, (255, 255, 255))
+            if img.mode == "P":
+                img = img.convert("RGBA")
+            background.paste(img, mask=img.split()[-1] if img.mode == "RGBA" else None)
+            img = background
+        elif img.mode != "RGB":
+            img = img.convert("RGB")
+        
+        # Resize if too large
+        if img.width > max_size or img.height > max_size:
+            img.thumbnail((max_size, max_size), Image.Resampling.LANCZOS)
+        
+        # Convert to WebP
+        buffer = io.BytesIO()
+        img.save(buffer, format="WEBP", quality=quality, method=6)
+        webp_data = buffer.getvalue()
+        
+        # Return as base64 data URI
+        webp_base64 = base64.b64encode(webp_data).decode()
+        return f"data:image/webp;base64,{webp_base64}"
+        
+    except Exception as e:
+        # If conversion fails, return original
+        print(f"Warning: Failed to convert image to WebP: {e}")
+        return base64_str
