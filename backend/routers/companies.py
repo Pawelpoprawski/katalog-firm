@@ -113,7 +113,11 @@ def create_company(
     # Check for duplicate email
     existing_companies = storage_list_companies()
     email_lower = payload.email.lower().strip()
-    if any(c.get("email", "").lower().strip() == email_lower for c in existing_companies):
+    # Fix: Check if email exists and is not None before calling .lower()
+    if any(
+        c.get("email") and c.get("email").lower().strip() == email_lower 
+        for c in existing_companies
+    ):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Firma z tym adresem email już istnieje. Jeśli to Twoja firma, użyj linku edycji z emaila."
