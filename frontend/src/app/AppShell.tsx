@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
+
+const basePath = process.env.NODE_ENV === 'production' ? '/uslugi' : '';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -61,7 +62,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2 group">
             <span className="p-1.5 rounded-lg group-hover:rotate-12 transition-transform duration-300 inline-block">
-              <Image src="/logo.png" alt="Logo" width={24} height={24} className="w-6 h-6" />
+              <img src={`${basePath}/logo.png`} alt="Logo" className="w-6 h-6" />
             </span>
             <span className="flex flex-col">
               <span className="text-base sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
@@ -95,7 +96,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <div className="col-span-2">
               <Link href="/" className="flex items-center gap-2 mb-6">
                 <span className="p-1 rounded-lg inline-block">
-                  <Image src="/logo.png" alt="Logo" width={20} height={20} className="w-5 h-5" />
+                  <img src={`${basePath}/logo.png`} alt="Logo" className="w-5 h-5" />
                 </span>
                 <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
                   Polskie <span className="text-primary">usługi</span>
