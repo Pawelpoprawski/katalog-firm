@@ -65,6 +65,19 @@ def health():
     return {"status": "ok"}
 
 
+@app.get("/settings", tags=["meta"])
+def get_public_settings():
+    """Get public settings (social media links) - no auth required."""
+    from backend.storage import get_settings as storage_get_settings
+    settings = storage_get_settings()
+    # Return only public fields (social media)
+    return {
+        "social_media": settings.get("social_media", {}),
+        "newsletter_count": settings.get("newsletter_count", 5),
+        "sort_order": settings.get("sort_order", "alphabetical")
+    }
+
+
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(admin.router, prefix="/admin", tags=["admin"])
 app.include_router(categories.router, prefix="/categories", tags=["categories"])
