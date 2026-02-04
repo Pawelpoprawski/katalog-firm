@@ -5,6 +5,8 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 
+const basePath = process.env.NODE_ENV === 'production' ? '/uslugi' : '';
+
 // Google Maps types
 declare global {
   interface Window {
@@ -599,7 +601,7 @@ export default function HomePage() {
             {/* Animated Logo/Icon */}
             <div className="relative">
               <div className="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center animate-pulse">
-                <img src="/logo.png" alt="Logo" className="w-12 h-12" />
+                <img src={`${basePath}/logo.png`} alt="Logo" className="w-12 h-12" />
               </div>
               {/* Spinning ring */}
               <div className="absolute inset-0 rounded-3xl border-4 border-primary/20 border-t-primary animate-spin" />

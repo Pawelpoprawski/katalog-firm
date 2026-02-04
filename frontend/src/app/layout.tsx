@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     locale: "pl_PL",
     images: [
       {
-        url: "/logo.png",
+        url: "logo.png",
         width: 512,
         height: 512,
         alt: "Polskie Usługi w Szwajcarii - Logo",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Polskie usługi w Szwajcarii | Katalog Firm",
     description: "Katalog polskich firm i usług w Szwajcarii",
-    images: ["/logo.png"],
+    images: ["logo.png"],
   },
   alternates: {
     canonical: "https://polacyszwajcaria.com/uslugi",
@@ -72,7 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         url: "https://polacyszwajcaria.com/uslugi",
         logo: {
           "@type": "ImageObject",
-          url: "/logo.png",
+          url: "logo.png",
           width: 512,
           height: 512,
         },

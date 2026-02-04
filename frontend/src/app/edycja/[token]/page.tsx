@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
+const basePath = process.env.NODE_ENV === 'production' ? '/uslugi' : '';
 const steps = ["Dane firmy", "Kontakt", "Zdjęcia", "Podsumowanie"];
 const DESC_LIMIT = 10000; // Merged: description + offer
 
@@ -731,7 +732,7 @@ export default function EditCompanyPage() {
                                         <div className="bg-slate-50 dark:bg-slate-800/30 rounded-3xl p-6 border border-slate-100 dark:border-slate-800/50 space-y-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                                                    <img src="/logo.png" alt="Logo" className="w-5 h-5" />
+                                                    <img src={`${basePath}/logo.png`} alt="Logo" className="w-5 h-5" />
                                                 </div>
                                                 <h3 className="font-bold text-slate-900 dark:text-white">Podstawowe informacje</h3>
                                             </div>
