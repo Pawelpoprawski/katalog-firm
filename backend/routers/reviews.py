@@ -6,7 +6,7 @@ from ..schemas import ReviewCreate, ReviewRead
 from ..storage import create_review as storage_create_review
 from ..storage import list_reviews as storage_list_reviews
 from ..security_middleware import limiter
-from ..ip_blacklist import is_ip_blacklisted
+# REMOVED: from ..ip_blacklist import is_ip_blacklisted - function doesn't exist!
 
 logger = logging.getLogger(__name__)
 
@@ -30,13 +30,8 @@ def create_review(request: Request, payload: ReviewCreate):
     if "x-forwarded-for" in request.headers:
         client_ip = request.headers["x-forwarded-for"].split(",")[0].strip()
     
-    # Check IP blacklist
-    if is_ip_blacklisted(client_ip):
-        logger.warning(f"Blocked review from blacklisted IP: {client_ip}")
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Your IP address has been blocked from posting reviews"
-        )
+    # REMOVED: IP blacklist check - function doesn't exist
+    # Will re-implement properly later
     
     try:
         review_data = payload.dict()
