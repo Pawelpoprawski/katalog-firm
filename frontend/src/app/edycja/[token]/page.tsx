@@ -352,7 +352,8 @@ export default function EditCompanyPage() {
                 canton: form.canton || null,
                 postal_code: form.postal_code || null,
                 img: imgUrl || null,
-                photos: photos.length ? photos : null
+                photos: photos.length ? photos : null,
+                edit_token: token  // Required by backend for security
             };
 
             const res = await fetch(`${apiUrl}/companies/${companyId}`, {

@@ -126,28 +126,114 @@ pm2 save
 
 ---
 
-### 4. Zmienne Środowiskowe
+### 4. Google Maps API - Konfiguracja
+
+#### Jak uzyskać klucz API:
+
+1. **Przejdź do Google Cloud Console**: https://console.cloud.google.com
+2. **Utwórz nowy projekt** lub wybierz istniejący
+3. **Włącz APIs**:
+   - Maps JavaScript API
+   - Places API
+   - Geocoding API
+4. **Utwórz credentials**:
+   - W menu "APIs & Services" → "Credentials"
+   - Kliknij "Create Credentials" → "API key"
+   - Skopiuj wygenerowany klucz
+
+#### Zabezpieczenie klucza API:
+
+5. **Ogranicz klucz** (WAŻNE dla bezpieczeństwa):
+   - Kliknij na klucz w liście
+   - "Application restrictions" → wybierz "HTTP referrers (web sites)"
+   - Dodaj dozwolone domeny:
+     ```
+     https://polacyszwajcaria.com/*
+     http://localhost:3000/*
+     ```
+   - "API restrictions" → wybierz "Restrict key"
+   - Zaznacz tylko potrzebne APIs:
+     - Maps JavaScript API
+     - Places API
+     - Geocoding API
+   - Zapisz zmiany
+
+6. **Dodaj klucz do .env.local**:
+   ```bash
+   NEXT_PUBLIC_GOOGLE_MAPS_KEY=AIzaSy...your_key_here
+   ```
+
+---
+
+### 5. Zmienne Środowiskowe
+
 
 #### Frontend (.env.local)
 
 ```bash
+# API Backend
 NEXT_PUBLIC_API_URL=https://polacyszwajcaria.com/api
-NEXT_PUBLIC_GOOGLE_MAPS_KEY=your_google_maps_key
-NEXT_PUBLIC_GOOGLE_VERIFICATION=your_google_verification_code
+
+# Google Maps API (wymagane dla autocomplete adresów i mapy)
+NEXT_PUBLIC_GOOGLE_MAPS_KEY=AIzaSy...your_key_here
+
+# Google Search Console (opcjonalne)
+NEXT_PUBLIC_GOOGLE_VERIFICATION=your_verification_code
 ```
 
 #### Backend (.env)
 
 ```bash
+# Database (obecnie JSON, nie używane)
 DATABASE_URL=sqlite:///./companies.db
+
+# CORS - WAŻNE! Ustaw dokładną domenę produkcyjną
 CORS_ORIGINS=https://polacyszwajcaria.com
-SECRET_KEY=your_secret_key_here
-ADMIN_PASSWORD=your_admin_password
+
+# Security - hasło admina (ustaw silne hasło!)
+ADMIN_PASSWORD=your_strong_admin_password_here
+
+# Secret key (generuj losowy)
+SECRET_KEY=your_secret_key_here_generate_random
+```
+
+**Generowanie SECRET_KEY:**
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
 ---
 
-### 5. SEO - Sitemaps i Robots.txt
+### 6. Security Best Practices ⚠️
+
+#### Rate Limiting (już zaimplementowane)
+- **Reviews**: Max 5/minutę per IP
+- **Nowe firmy**: Max 3/godzinę per IP
+- **IP Blacklist**: Admin może blokować spamerów
+
+#### Admin Panel
+- Dostęp tylko z hasłem (`ADMIN_PASSWORD` w .env)
+- URL: `https://polacyszwajcaria.com/uslugi/admin`
+- **Nigdy nie udostępniaj hasła publicznie!**
+
+#### Upload Obrazów
+- Max rozmiar: **10MB per obraz**
+- Tylko JPG, PNG (auto-konwersja do WebP)
+- Resize do max 1200px
+
+#### Token Edycji
+- Każda firma ma unikalny `edit_token`
+- Wymagany do edycji/usuwania firmy
+- Link edycji: `/uslugi/edycja/[TOKEN]`
+- **NIE udostępniaj tokenów publicznie**
+
+#### CORS
+- W produkcji ustaw `CORS_ORIGINS` na dokładną domenę
+- **NIE używaj** `CORS_ORIGINS=*` w produkcji!
+
+---
+
+### 7. SEO - Sitemaps i Robots.txt
 
 #### Główny robots.txt (WordPress root)
 

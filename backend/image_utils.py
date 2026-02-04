@@ -10,7 +10,8 @@ from PIL import Image
 def convert_base64_to_webp(
     base64_str: str,
     max_size: int = 1200,
-    quality: int = 85
+    quality: int = 85,
+    max_size_mb: float = 10.0  # Max 10MB per image
 ) -> str:
     """
     Convert a base64 image (JPG/PNG) to WebP format.
@@ -19,9 +20,13 @@ def convert_base64_to_webp(
         base64_str: Data URI string (data:image/jpeg;base64,...)
         max_size: Maximum dimension in pixels (default: 1200)
         quality: WebP compression quality 0-100 (default: 85)
+        max_size_mb: Maximum file size in MB (default: 10.0)
     
     Returns:
         New data URI with WebP format
+        
+    Raises:
+        ValueError: If image is too large
     """
     try:
         # Skip if already WebP
@@ -35,6 +40,14 @@ def convert_base64_to_webp(
         # Extract base64 data (after comma)
         if ";base64," not in base64_str:
             return base64_str
+        
+        # Check file size BEFORE processing (prevent DoS)
+        size_mb = len(base64_str) / (1024 * 1024)
+        if size_mb > max_size_mb:
+            raise ValueError(
+                f"Obraz jest za duży: {size_mb:.1f}MB (maksymalnie {max_size_mb}MB). "
+                f"Użyj mniejszego zdjęcia lub zmniejsz rozdzielczość."
+            )
         
         base64_data = base64_str.split(";base64,")[1]
         

@@ -5,6 +5,8 @@ from typing import Optional
 from ..schemas import ReviewCreate, ReviewRead
 from ..storage import create_review as storage_create_review
 from ..storage import list_reviews as storage_list_reviews
+from ..security_middleware import limiter
+from ..ip_blacklist import is_ip_blacklisted
 
 logger = logging.getLogger(__name__)
 
@@ -18,13 +20,22 @@ def list_reviews(company_id: Optional[int] = None):
 
 
 @router.post("/", response_model=ReviewRead, status_code=status.HTTP_201_CREATED)
-def create_review(payload: ReviewCreate, request: Request):
+@limiter.limit("5/minute")  # Max 5 reviews per minute per IP
+def create_review(request: Request, payload: ReviewCreate):
     logger.info("POST /reviews/ payload=%s", payload.dict())
     
     # Get client IP address
     client_ip = request.client.host if request.client else "unknown"
     if "x-forwarded-for" in request.headers:
         client_ip = request.headers["x-forwarded-for"].split(",")[0].strip()
+    
+    # Check IP blacklist
+    if is_ip_blacklisted(client_ip):
+        logger.warning(f"Blocked review from blacklisted IP: {client_ip}")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Your IP address has been blocked from posting reviews"
+        )
     
     try:
         review_data = payload.dict()

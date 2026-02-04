@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Body, Query
+from fastapi import APIRouter, HTTPException, status, Body, Query, Request
 from typing import Any
 import random
 
@@ -14,6 +14,7 @@ from ..storage import increment_view as storage_increment_view
 from ..storage import increment_click as storage_increment_click
 from ..storage import verify_edit_token as storage_verify_edit_token
 from ..storage import get_newsletter_count
+from ..security_middleware import limiter
 
 
 router = APIRouter()
@@ -103,9 +104,20 @@ def _sort_by_newest(companies: list[dict]) -> list[dict]:
 
 
 @router.post("/", response_model=CompanyReadWithToken, status_code=status.HTTP_201_CREATED)
+@limiter.limit("3/hour")  # Max 3 companies per hour per IP - prevent spam
 def create_company(
+    request: Request,
     payload: CompanyCreate,
 ):
+    # Check for duplicate email
+    existing_companies = storage_list_companies()
+    email_lower = payload.email.lower().strip()
+    if any(c.get("email", "").lower().strip() == email_lower for c in existing_companies):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Firma z tym adresem email już istnieje. Jeśli to Twoja firma, użyj linku edycji z emaila."
+        )
+    
     company = storage_create_company(payload.dict())
     return _enrich_company(company.copy())
 
@@ -143,7 +155,19 @@ def increment_click(company_id: int):
 def update_company(
     company_id: int,
     payload: CompanyUpdate,
+    edit_token: str = Body(..., embed=True),  # Require token in request body
 ):
+    # Verify edit token
+    company = storage_get_company(company_id)
+    if not company:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Firma nie znaleziona")
+    
+    if company.get("edit_token") != edit_token:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Nieprawidłowy token edycji. Użyj linku z emaila."
+        )
+    
     try:
         updated = storage_update_company(company_id, payload.dict(exclude_unset=True))
         return _enrich_company(updated.copy())
@@ -152,7 +176,21 @@ def update_company(
 
 
 @router.delete("/{company_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_company(company_id: int):
+def delete_company(
+    company_id: int,
+    edit_token: str = Body(..., embed=True),  # Require token in request body
+):
+    # Verify edit token
+    company = storage_get_company(company_id)
+    if not company:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Firma nie znaleziona")
+    
+    if company.get("edit_token") != edit_token:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Nieprawidłowy token edycji. Nie możesz usunąć tej firmy."
+        )
+    
     try:
         storage_delete_company(company_id)
         return None
