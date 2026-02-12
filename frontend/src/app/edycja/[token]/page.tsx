@@ -340,21 +340,23 @@ export default function EditCompanyPage() {
             const category_id = selectedCategory?.id || null;
 
             const body = {
-                name: form.name,
-                category_id,
-                description: form.desc, // Merged field
-                phone: form.phone,
-                email: form.email,
-                website: form.website ? (form.website.startsWith("www.") ? `https://${form.website}` : form.website) : null,
-                facebook: form.facebook || null,
-                instagram: form.instagram || null,
-                address: form.address,
-                city: form.city || null,
-                canton: form.canton || null,
-                postal_code: form.postal_code || null,
-                img: imgUrl || null,
-                photos: photos.length ? photos : null,
-                edit_token: token  // Required by backend for security
+                payload: {
+                    name: form.name,
+                    category_id,
+                    description: form.desc,
+                    phone: form.phone,
+                    email: form.email,
+                    website: form.website ? (form.website.startsWith("www.") ? `https://${form.website}` : form.website) : null,
+                    facebook: form.facebook || null,
+                    instagram: form.instagram || null,
+                    address: form.address,
+                    city: form.city || null,
+                    canton: form.canton || null,
+                    postal_code: form.postal_code || null,
+                    img: imgUrl || null,
+                    photos: photos.length ? photos : null,
+                },
+                edit_token: token
             };
 
             const res = await fetch(`${apiUrl}/companies/${companyId}`, {
