@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -75,10 +75,10 @@ export default function AdminPage() {
     const [passwordInput, setPasswordInput] = useState("");
 
     // Helper to get auth headers
-    const getAuthHeaders = () => ({
+    const getAuthHeaders = useCallback(() => ({
         "Authorization": `Bearer ${adminPassword}`,
         "Content-Type": "application/json"
-    });
+    }), [adminPassword]);
 
     // Check if already logged in (from sessionStorage)
     useEffect(() => {
@@ -156,7 +156,7 @@ export default function AdminPage() {
             }
         };
         fetchData();
-    }, [apiUrl, isLoggedIn, adminPassword]);
+    }, [apiUrl, isLoggedIn, adminPassword, getAuthHeaders]);
 
     const copyLink = (token: string) => {
         const link = `${window.location.origin}/edycja/${token}`;

@@ -11,10 +11,11 @@ router = APIRouter()
 
 @router.post("/register", response_model=UserRead)
 def register(payload: UserCreate):
+    hashed = hash_password(payload.password)
     try:
         return storage_create_user(
             email=payload.email,
-            hashed_password=hash_password(payload.password),
+            hashed_password=hashed,
             full_name=payload.full_name,
         )
     except ValueError:

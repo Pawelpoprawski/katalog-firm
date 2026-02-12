@@ -1,11 +1,5 @@
-"""
-IP Blacklist Management
+# IP Blacklist Management
+# This file stores blacklisted IP addresses.
+# Add one IP address per line.
+# Lines starting with # are comments.
 
-This file stores blacklisted IP addresses.
-Add one IP address per line.
-Lines starting with # are comments.
-"""
-
-# Example:
-# 192.168.1.100
-# 10.0.0.5

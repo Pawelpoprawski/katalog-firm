@@ -24,7 +24,7 @@ def load_blacklist() -> set[str]:
         with open(BLACKLIST_FILE, "r", encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
-                # Skip empty lines and comments
+                # Skip empty lines and comments (lines starting with #)
                 if line and not line.startswith("#"):
                     blacklist.add(line)
     except Exception as e:
@@ -92,7 +92,7 @@ def remove_ip_from_blacklist(ip_address: str) -> bool:
         
         # Rewrite file
         with open(BLACKLIST_FILE, "w", encoding="utf-8") as f:
-            f.write('"""\nIP Blacklist Management\n\nThis file stores blacklisted IP addresses.\nAdd one IP address per line.\nLines starting with # are comments.\n"""\n\n')
+            f.write("# IP Blacklist Management\n# Add one IP address per line.\n# Lines starting with # are comments.\n\n")
             for ip in sorted(blacklist):
                 f.write(f"{ip}\n")
         

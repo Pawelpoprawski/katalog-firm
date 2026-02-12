@@ -14,7 +14,7 @@ from ..storage import increment_view as storage_increment_view
 from ..storage import increment_click as storage_increment_click
 from ..storage import verify_edit_token as storage_verify_edit_token
 from ..storage import get_newsletter_count
-from ..security_middleware import limiter
+from ..security_middleware import limiter, sanitize_html
 
 
 router = APIRouter()
@@ -123,7 +123,15 @@ def create_company(
             detail="Firma z tym adresem email już istnieje. Jeśli to Twoja firma, użyj linku edycji z emaila."
         )
     
-    company = storage_create_company(payload.dict())
+    data = payload.dict()
+    # Sanitize text fields to prevent XSS
+    if data.get("name"):
+        data["name"] = sanitize_html(data["name"])
+    if data.get("description"):
+        data["description"] = sanitize_html(data["description"], allowed_tags=["p", "br", "b", "strong", "i", "em", "ul", "ol", "li"])
+    if data.get("short_description"):
+        data["short_description"] = sanitize_html(data["short_description"])
+    company = storage_create_company(data)
     return _enrich_company(company.copy())
 
 

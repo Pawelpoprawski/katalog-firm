@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from pydantic import ConfigDict
 
 
@@ -33,7 +33,7 @@ class CategoryRead(CategoryCreate):
 
 
 class CompanyBase(BaseModel):
-    name: str
+    name: str = Field(min_length=1)
     slug: Optional[str] = None  # Auto-generated if not provided
     short_description: Optional[str] = None  # Krótki opis dla kart
     description: Optional[str] = None  # Merged: Firma & Usługi (20-10,000 chars when required)
@@ -63,8 +63,7 @@ class CompanyBase(BaseModel):
 
 
 class CompanyCreate(CompanyBase):
-    email: str  # Mandatory for creation
-    pass
+    email: EmailStr  # Mandatory for creation, must be valid email
 
 
 class CompanyUpdate(CompanyBase):
@@ -93,7 +92,7 @@ class CompanyReadWithToken(CompanyRead):
 
 
 class ReviewCreate(BaseModel):
-    rating: int
+    rating: int = Field(ge=1, le=5)
     comment: Optional[str] = None
     company_id: Optional[int] = None
 

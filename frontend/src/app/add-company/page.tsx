@@ -676,6 +676,7 @@ export default function AddCompanyPage() {
                 <div className="flex items-center gap-3">
                   <div className="h-24 w-32 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
                     {mainPhoto ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img src={mainPhoto} alt="Zdjęcie główne" className="h-full w-full object-cover" />
                     ) : (
                       <div className="flex h-full items-center justify-center text-xs text-slate-500">Brak</div>
@@ -730,6 +731,7 @@ export default function AddCompanyPage() {
                         }`}
                       onClick={() => setMainPhoto(src)}
                     >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={src} alt="podgląd" className="h-full w-full object-cover" loading="lazy" />
                       {src === mainPhoto && (
                         <span className="absolute bottom-1 left-1 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-white shadow">
@@ -824,11 +826,13 @@ export default function AddCompanyPage() {
                   <div className="flex gap-2">
                     {mainPhoto && (
                       <div className="h-20 w-28 overflow-hidden rounded-lg border border-slate-200">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={mainPhoto} alt="Zdjęcie główne" className="h-full w-full object-cover" />
                       </div>
                     )}
                     {previews.map((src, idx) => (
                       <div key={idx} className="h-20 w-28 overflow-hidden rounded-lg border border-slate-200">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={src} alt={`Zdjęcie ${idx + 1}`} className="h-full w-full object-cover" />
                       </div>
                     ))}

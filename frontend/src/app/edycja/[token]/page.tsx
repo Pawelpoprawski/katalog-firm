@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 const basePath = process.env.NODE_ENV === 'production' ? '/uslugi' : '';
@@ -670,6 +671,7 @@ export default function EditCompanyPage() {
 
                                         <div className="relative aspect-video w-full max-w-md mx-auto overflow-hidden rounded-3xl border-4 border-white dark:border-slate-800 shadow-2xl group cursor-pointer" onClick={() => mainPhotoInputRef.current?.click()}>
                                             {mainPhoto ? (
+                                                // eslint-disable-next-line @next/next/no-img-element
                                                 <img src={mainPhoto} alt="Główne" className="h-full w-full object-contain transition-transform group-hover:scale-105" />
                                             ) : (
                                                 <div className="flex flex-col items-center justify-center h-full gap-3 text-slate-400">
@@ -707,6 +709,7 @@ export default function EditCompanyPage() {
                                                     className={`group relative aspect-square rounded-2xl overflow-hidden border-2 transition-all ${src === mainPhoto ? "border-primary shadow-lg scale-105 z-10" : "border-transparent opacity-80 hover:opacity-100"}`}
                                                     onClick={() => setMainPhoto(src)}
                                                 >
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
                                                     <img src={src} alt="Podgląd" className="h-full w-full object-contain" />
                                                     <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                                         <button
@@ -733,7 +736,7 @@ export default function EditCompanyPage() {
                                         <div className="bg-slate-50 dark:bg-slate-800/30 rounded-3xl p-6 border border-slate-100 dark:border-slate-800/50 space-y-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                                                    <img src={`${basePath}/logo.png`} alt="Logo" className="w-5 h-5" />
+                                                    <Image src={`${basePath}/logo.png`} alt="Logo" width={20} height={20} className="w-5 h-5" />
                                                 </div>
                                                 <h3 className="font-bold text-slate-900 dark:text-white">Podstawowe informacje</h3>
                                             </div>
@@ -793,6 +796,7 @@ export default function EditCompanyPage() {
                                                     <div className="space-y-2">
                                                         <p className="text-xs font-bold text-primary uppercase tracking-wider">Zdjęcie główne</p>
                                                         <div className="relative aspect-video overflow-hidden rounded-2xl border-4 border-primary/30 shadow-xl">
+                                                            {/* eslint-disable-next-line @next/next/no-img-element */}
                                                             <img src={mainPhoto} alt="Główne" className="h-full w-full object-cover" />
                                                             <div className="absolute top-3 left-3 px-3 py-1 rounded-lg bg-primary text-xs font-black text-white shadow-lg uppercase">
                                                                 ★ GŁÓWNE
@@ -807,6 +811,7 @@ export default function EditCompanyPage() {
                                                         <div className="grid grid-cols-2 gap-2">
                                                             {previews.filter(p => p !== mainPhoto).slice(0, 4).map((src, idx) => (
                                                                 <div key={idx} className="relative aspect-square overflow-hidden rounded-xl border-2 border-slate-200 dark:border-slate-700 shadow-md hover:scale-105 transition-transform">
+                                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
                                                                     <img src={src} alt={`Dodatkowe ${idx + 1}`} className="h-full w-full object-cover" />
                                                                 </div>
                                                             ))}

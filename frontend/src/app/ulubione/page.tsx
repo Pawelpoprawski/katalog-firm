@@ -79,6 +79,7 @@ export default function FavoritesPage() {
                         >
                             <div className="flex gap-3">
                                 <div className="h-20 w-28 overflow-hidden rounded-xl bg-slate-100">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
                                         src={item.img || "https://via.placeholder.com/112x80?text=Brak+zdjęcia"}
                                         alt={item.name}

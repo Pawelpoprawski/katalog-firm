@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
@@ -316,7 +317,8 @@ export default function HomePage() {
     }, 2000); // 2 second delay - list shows immediately, map loads after
 
     return () => clearTimeout(delayTimer);
-  }, [googleMapsKey]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Initialize Google Maps with markers
   useEffect(() => {
@@ -531,6 +533,7 @@ export default function HomePage() {
       map.setCenter(DEFAULT_CENTER);
       map.setZoom(7);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapsReady, companies.length, selectedCategory, searchQuery, selectedCanton, router]);
 
   useEffect(() => {
@@ -555,6 +558,7 @@ export default function HomePage() {
 
     setFilteredCompanies(sorted);
     setCurrentPage(1);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companies, searchQuery, selectedCanton, selectedCategory, minRating, mapBounds, mapsReady]);
 
   const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / PAGE_SIZE));
@@ -601,7 +605,7 @@ export default function HomePage() {
             {/* Animated Logo/Icon */}
             <div className="relative">
               <div className="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center animate-pulse">
-                <img src={`${basePath}/logo.png`} alt="Logo" className="w-12 h-12" />
+                <Image src={`${basePath}/logo.png`} alt="Logo" width={48} height={48} className="w-12 h-12" />
               </div>
               {/* Spinning ring */}
               <div className="absolute inset-0 rounded-3xl border-4 border-primary/20 border-t-primary animate-spin" />
@@ -847,6 +851,7 @@ export default function HomePage() {
                       }`}
                   >
                     <div className="relative h-60 overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={item.img || "/default-company.png"}
                         alt={item.name}

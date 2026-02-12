@@ -283,7 +283,8 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
                 }
               }}
             >
-              <img
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
                 src={company.img || "/default-company.png"}
                 alt={company.name}
                 className="max-h-full max-w-full object-contain"
@@ -349,6 +350,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
                             setLightboxIndex(imageIndex);
                           }}
                         >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={src}
                             alt={`${company.name} zdjęcie ${idx + 1}`}
@@ -783,6 +785,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
                   </button>
                 )}
 
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={lightboxImage}
                   alt={`${company.name} - zdjęcie ${currentIndex + 1}`}

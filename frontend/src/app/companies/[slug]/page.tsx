@@ -260,6 +260,7 @@ export default function CompanyPage({ params }: Props) {
         <div className="grid gap-8 md:grid-cols-[1.5fr,1fr]">
           <div className="space-y-4">
             <div className="h-64 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={company.img || "https://via.placeholder.com/600x400?text=Brak+zdjęcia"}
                 alt={company.name}
@@ -318,6 +319,7 @@ export default function CompanyPage({ params }: Props) {
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                   {company.photos.map((src, idx) => (
                     <div key={idx} className="h-24 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={src}
                         alt={`${company.name} zdjęcie ${idx + 1}`}
