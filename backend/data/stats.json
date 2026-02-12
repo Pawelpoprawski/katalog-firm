@@ -508,5 +508,11 @@
     "company_id": 54,
     "views": 2,
     "clicks": 0
+  },
+  {
+    "date": "2026-02-12",
+    "company_id": 102,
+    "views": 1,
+    "clicks": 1
   }
 ]

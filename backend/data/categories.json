@@ -58,5 +58,11 @@
     "name": "Zdrowie",
     "slug": "zdrowie",
     "description": "⚕️ Lekarze, dentyści, fizjoterapia, masaże, wellness"
+  },
+  {
+    "id": 11,
+    "name": "TestKategoria",
+    "slug": "test-kategoria",
+    "description": "Testowa kategoria"
   }
 ]

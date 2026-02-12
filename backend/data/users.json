@@ -6,5 +6,13 @@
     "full_name": "Demo User",
     "is_admin": false,
     "created_at": 1765912238.1148744
+  },
+  {
+    "id": 2,
+    "email": "audit-2026@example.com",
+    "hashed_password": "$2b$12$WCUjKuL2L/GHLwpkq7Kft.1T/OJ3Jy0xu0VjN6Mr4y2rUnL.bpsny",
+    "full_name": "Audit User",
+    "is_admin": false,
+    "created_at": 1770922897.2927737
   }
 ]
