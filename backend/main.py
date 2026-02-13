@@ -30,11 +30,14 @@ app = FastAPI(title=settings.app_name, debug=settings.debug)
 # Add rate limiting state
 app.state.limiter = limiter
 
-# Analytics middleware - track unique IPs
+# Analytics + caching middleware
 async def analytics_middleware(request: Request, call_next):
     response = await call_next(request)
-    # Track only page-level requests, not assets
     path = request.url.path
+    # Add Cache-Control for read-only endpoints (5 min browser cache)
+    if request.method == "GET" and path in ("/companies/", "/categories/", "/settings"):
+        response.headers["Cache-Control"] = "public, max-age=300, stale-while-revalidate=600"
+    # Track unique IPs for page-level requests
     if path in ("/companies/", "/categories/", "/settings") or path.startswith("/companies/by-slug/"):
         ip = request.headers.get("x-forwarded-for", "").split(",")[0].strip() or request.client.host if request.client else ""
         if ip:

@@ -258,46 +258,77 @@ export default function HomePage() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Fetch companies
+  // Fetch companies with stale-while-revalidate caching
   useEffect(() => {
+    const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+    const getCached = <T,>(key: string): T | null => {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const { data, ts } = JSON.parse(raw);
+        if (Date.now() - ts > CACHE_TTL) return null;
+        return data as T;
+      } catch { return null; }
+    };
+
+    const setCache = <T,>(key: string, data: T) => {
+      try { localStorage.setItem(key, JSON.stringify({ data, ts: Date.now() })); } catch {}
+    };
+
+    // Show cached data immediately
+    const cachedCompanies = getCached<Company[]>('swr_companies');
+    const cachedCategories = getCached<Category[]>('swr_categories');
+    const cachedSortOrder = getCached<"newest" | "random" | "alphabetical">('swr_sort_order');
+
+    if (cachedCompanies && cachedCompanies.length > 0) {
+      setCompanies(cachedCompanies);
+      setFilteredCompanies(cachedCompanies);
+      setLoading(false);
+    }
+    if (cachedCategories) {
+      setCategories(cachedCategories);
+      setLoadingCategories(false);
+    }
+    if (cachedSortOrder) {
+      setSortOrder(cachedSortOrder);
+    }
+
+    // Fetch fresh data in background
     const fetchData = async () => {
-      // Fetch companies
       try {
         const res = await fetch(`${apiUrl}/companies/`);
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
-        // Handle both old array format and new paginated format
         const companiesList: Company[] = Array.isArray(data) ? data : (data.companies || []);
         setCompanies(companiesList);
         setFilteredCompanies(companiesList);
+        setCache('swr_companies', companiesList);
       } catch (e: any) {
-        setError(e.message);
+        if (!cachedCompanies) setError(e.message);
       } finally {
         setLoading(false);
       }
 
-      // Fetch categories
       try {
         const res = await fetch(`${apiUrl}/categories/`);
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data: Category[] = await res.json();
         setCategories(data);
+        setCache('swr_categories', data);
       } catch (e: any) {
         console.error("Failed to fetch categories:", e);
       } finally {
         setLoadingCategories(false);
       }
 
-      // Fetch sort order setting
       try {
         const res = await fetch(`${apiUrl}/settings`);
         if (res.ok) {
           const settings = await res.json();
-          setSortOrder(settings.sort_order || 'random');
+          const order = settings.sort_order || 'random';
+          setSortOrder(order);
+          setCache('swr_sort_order', order);
         }
       } catch (e) {
         console.error("Failed to fetch settings:", e);
