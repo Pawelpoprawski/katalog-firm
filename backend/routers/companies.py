@@ -119,6 +119,8 @@ def create_company(
     if data.get("short_description"):
         data["short_description"] = sanitize_html(data["short_description"])
     company = storage_create_company(data)
+    from ..storage import track_new_company
+    track_new_company()
     return _enrich_company(company.copy())
 
 
@@ -137,6 +139,14 @@ def get_company(company_id: int):
     if not company:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     return _enrich_company(company.copy())
+
+
+@router.post("/batch-view", status_code=status.HTTP_204_NO_CONTENT)
+def batch_increment_views(company_ids: list[int] = Body(...)):
+    """Batch increment views for multiple companies (from scroll impressions)."""
+    for cid in company_ids[:50]:  # Limit to 50 per request
+        storage_increment_view(cid)
+    return None
 
 
 @router.post("/{company_id}/view", status_code=status.HTTP_204_NO_CONTENT)

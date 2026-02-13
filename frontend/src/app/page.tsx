@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 
@@ -64,6 +64,8 @@ type Company = {
   img?: string;
   is_promoted?: boolean;
   created_at?: number;
+  views?: number;
+  clicks?: number;
 };
 
 type Category = {
@@ -106,6 +108,41 @@ export default function HomePage() {
   const userInteractingRef = useRef(false); // Track if user is interacting with map
   const PAGE_SIZE = 24;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+
+  // Impression tracking - batch send viewed company IDs
+  const viewedIdsRef = useRef<Set<number>>(new Set());
+  const flushTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const flushImpressions = useCallback(() => {
+    if (viewedIdsRef.current.size === 0) return;
+    const ids = Array.from(viewedIdsRef.current);
+    viewedIdsRef.current.clear();
+    fetch(`${apiUrl}/companies/batch-view`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(ids),
+    }).catch(() => {});
+  }, [apiUrl]);
+
+  // Flush on unmount or page hide
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) flushImpressions();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      flushImpressions();
+    };
+  }, [flushImpressions]);
+
+  const trackImpression = useCallback((companyId: number) => {
+    if (viewedIdsRef.current.has(companyId)) return;
+    viewedIdsRef.current.add(companyId);
+    // Debounce flush - send batch every 3 seconds
+    if (flushTimerRef.current) clearTimeout(flushTimerRef.current);
+    flushTimerRef.current = setTimeout(flushImpressions, 3000);
+  }, [flushImpressions]);
 
   // Category icons mapping
   const categoryIcons: Record<string, string> = {
@@ -809,6 +846,19 @@ export default function HomePage() {
                       e.preventDefault();
                       goToCompany(item.slug, item.id);
                     }}
+                    ref={(el) => {
+                      if (!el) return;
+                      const observer = new IntersectionObserver(
+                        ([entry]) => {
+                          if (entry.isIntersecting) {
+                            trackImpression(item.id);
+                            observer.disconnect();
+                          }
+                        },
+                        { threshold: 0.5 }
+                      );
+                      observer.observe(el);
+                    }}
                     className={`group flex flex-col overflow-hidden rounded-4xl border bg-white dark:bg-slate-900 shadow-sm hover:shadow-2xl hover-lift transition-all duration-500 ${item.is_promoted
                       ? "border-yellow-400 ring-2 ring-yellow-400/50 shadow-yellow-100"
                       : "border-slate-200 dark:border-slate-800 hover:border-primary/20"
@@ -858,7 +908,15 @@ export default function HomePage() {
                       </p>
 
                       <div className="pt-4 mt-auto border-t border-slate-100 dark:border-slate-800 flex justify-between items-center group/btn">
-                        <span className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Zobacz szczegóły</span>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Zobacz szczegóły</span>
+                          {(item.views || 0) > 0 && (
+                            <span className="flex items-center gap-1 text-xs text-slate-400">
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                              {item.views}
+                            </span>
+                          )}
+                        </div>
                         <div className="h-8 w-8 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover/btn:bg-primary group-hover/btn:text-white transition-all transform group-hover/btn:translate-x-1">
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                         </div>

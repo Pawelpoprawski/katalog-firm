@@ -1,9 +1,10 @@
 from fastapi import APIRouter, HTTPException, status, Body, Depends, Header
 from typing import Any, Optional
 from ..storage import (
-    list_companies as storage_list_companies, 
-    list_reviews as storage_list_reviews, 
+    list_companies as storage_list_companies,
+    list_reviews as storage_list_reviews,
     get_daily_stats,
+    get_analytics,
     update_company as storage_update_company,
     delete_review as storage_delete_review
 )
@@ -63,6 +64,12 @@ def get_stats():
         "total_clicks": total_clicks,
         "history": daily_stats
     }
+
+@router.get("/analytics")
+def get_analytics_endpoint(days: int = 30):
+    """Get daily analytics for last N days: views, unique IPs, new companies, new reviews."""
+    return get_analytics(days=min(days, 365))
+
 
 @router.get("/companies")
 def list_admin_companies():

@@ -37,6 +37,8 @@ def create_review(request: Request, payload: ReviewCreate):
         review_data = payload.dict()
         review_data["ip_address"] = client_ip
         result = storage_create_review(review_data)
+        from ..storage import track_new_review
+        track_new_review()
         logger.info("Created review id=%s company_id=%s ip=%s", result.get("id"), result.get("company_id"), client_ip)
         return result
     except Exception as exc:

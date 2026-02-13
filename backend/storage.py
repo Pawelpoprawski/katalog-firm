@@ -25,6 +25,7 @@ COMPANIES_FILE = DATA_DIR / "companies.json"
 REVIEWS_FILE = DATA_DIR / "reviews.json"
 REPORTS_FILE = DATA_DIR / "reports.json"
 STATS_FILE = DATA_DIR / "stats.json"
+ANALYTICS_FILE = DATA_DIR / "analytics.json"
 
 _lock = threading.RLock()  # Reentrant lock - allows nested locks
 
@@ -880,6 +881,91 @@ def get_daily_stats(days: int = 30) -> list[dict]:
         # Sort by date and return last N days
         sorted_stats = sorted(aggregated.values(), key=lambda x: x["date"])
         return sorted_stats[-days:]
+
+
+# ---------- Analytics (global daily tracking) ----------
+
+def _read_analytics() -> dict:
+    """Read analytics data. Structure: {date: {views, ips: [...], new_companies, new_reviews}}"""
+    try:
+        if ANALYTICS_FILE.exists():
+            with open(ANALYTICS_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+    except Exception:
+        pass
+    return {}
+
+
+def _write_analytics(data: dict) -> None:
+    with open(ANALYTICS_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def track_page_view(ip_address: str) -> None:
+    """Track a page view and unique IP for today."""
+    today = _get_today_str()
+    with _lock:
+        analytics = _read_analytics()
+        if today not in analytics:
+            analytics[today] = {"views": 0, "ips": [], "new_companies": 0, "new_reviews": 0}
+        analytics[today]["views"] = analytics[today].get("views", 0) + 1
+        if ip_address and ip_address not in analytics[today].get("ips", []):
+            analytics[today].setdefault("ips", []).append(ip_address)
+        _write_analytics(analytics)
+
+
+def track_impression(ip_address: str | None = None) -> None:
+    """Track a card impression (scroll view)."""
+    today = _get_today_str()
+    with _lock:
+        analytics = _read_analytics()
+        if today not in analytics:
+            analytics[today] = {"views": 0, "ips": [], "new_companies": 0, "new_reviews": 0}
+        analytics[today]["views"] = analytics[today].get("views", 0) + 1
+        _write_analytics(analytics)
+
+
+def track_new_company() -> None:
+    """Track a new company added today."""
+    today = _get_today_str()
+    with _lock:
+        analytics = _read_analytics()
+        if today not in analytics:
+            analytics[today] = {"views": 0, "ips": [], "new_companies": 0, "new_reviews": 0}
+        analytics[today]["new_companies"] = analytics[today].get("new_companies", 0) + 1
+        _write_analytics(analytics)
+
+
+def track_new_review() -> None:
+    """Track a new review added today."""
+    today = _get_today_str()
+    with _lock:
+        analytics = _read_analytics()
+        if today not in analytics:
+            analytics[today] = {"views": 0, "ips": [], "new_companies": 0, "new_reviews": 0}
+        analytics[today]["new_reviews"] = analytics[today].get("new_reviews", 0) + 1
+        _write_analytics(analytics)
+
+
+def get_analytics(days: int = 30) -> list[dict]:
+    """Get analytics for the last N days."""
+    from datetime import timedelta
+    with _lock:
+        analytics = _read_analytics()
+
+    today = datetime.now()
+    result = []
+    for i in range(days - 1, -1, -1):
+        date = (today - timedelta(days=i)).strftime("%Y-%m-%d")
+        day_data = analytics.get(date, {})
+        result.append({
+            "date": date,
+            "views": day_data.get("views", 0),
+            "unique_ips": len(day_data.get("ips", [])),
+            "new_companies": day_data.get("new_companies", 0),
+            "new_reviews": day_data.get("new_reviews", 0),
+        })
+    return result
 
 
 # Settings management

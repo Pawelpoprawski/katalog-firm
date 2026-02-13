@@ -19,6 +19,7 @@ from backend.security_middleware import (  # type: ignore  # noqa: E402
     security_headers_middleware
 )
 from backend.ip_blacklist import ip_blacklist_middleware  # type: ignore  # noqa: E402
+from backend.storage import track_page_view  # type: ignore  # noqa: E402
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -28,6 +29,22 @@ app = FastAPI(title=settings.app_name, debug=settings.debug)
 
 # Add rate limiting state
 app.state.limiter = limiter
+
+# Analytics middleware - track unique IPs
+async def analytics_middleware(request: Request, call_next):
+    response = await call_next(request)
+    # Track only page-level requests, not assets
+    path = request.url.path
+    if path in ("/companies/", "/categories/", "/settings") or path.startswith("/companies/by-slug/"):
+        ip = request.headers.get("x-forwarded-for", "").split(",")[0].strip() or request.client.host if request.client else ""
+        if ip:
+            try:
+                track_page_view(ip)
+            except Exception:
+                pass
+    return response
+
+app.middleware("http")(analytics_middleware)
 
 # Add IP blacklist middleware (FIRST - before other middleware)
 app.middleware("http")(ip_blacklist_middleware)

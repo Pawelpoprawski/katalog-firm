@@ -44,10 +44,19 @@ type Category = {
     description: string;
 };
 
+type AnalyticsDay = {
+    date: string;
+    views: number;
+    unique_ips: number;
+    new_companies: number;
+    new_reviews: number;
+};
+
 export default function AdminPage() {
     const [companies, setCompanies] = useState<Company[]>([]);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [stats, setStats] = useState<Stats | null>(null);
+    const [analytics, setAnalytics] = useState<AnalyticsDay[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [newCategory, setNewCategory] = useState({ name: '', slug: '', description: '', emoji: '🏢' });
     const [loading, setLoading] = useState(true);
@@ -128,12 +137,13 @@ export default function AdminPage() {
         const fetchData = async () => {
             try {
                 const headers = getAuthHeaders();
-                const [companiesRes, reviewsRes, statsRes, categoriesRes, settingsRes] = await Promise.all([
+                const [companiesRes, reviewsRes, statsRes, categoriesRes, settingsRes, analyticsRes] = await Promise.all([
                     fetch(`${apiUrl}/admin/companies`, { headers }),
                     fetch(`${apiUrl}/admin/reviews`, { headers }),
                     fetch(`${apiUrl}/admin/stats`, { headers }),
                     fetch(`${apiUrl}/admin/categories`, { headers }),
-                    fetch(`${apiUrl}/admin/settings`, { headers })
+                    fetch(`${apiUrl}/admin/settings`, { headers }),
+                    fetch(`${apiUrl}/admin/analytics?days=30`, { headers })
                 ]);
 
                 if (companiesRes.ok && statsRes.ok && reviewsRes.ok && categoriesRes.ok) {
@@ -141,6 +151,9 @@ export default function AdminPage() {
                     setStats(await statsRes.json());
                     setReviews(await reviewsRes.json());
                     setCategories(await categoriesRes.json());
+                }
+                if (analyticsRes.ok) {
+                    setAnalytics(await analyticsRes.json());
                 }
 
                 // Load settings separately (may not exist yet)
@@ -463,11 +476,16 @@ export default function AdminPage() {
         }
     };
 
-    // Prepare chart data (last 30 days from history, or empty if no history)
-    const chartData = (stats?.history || []).slice(-30).map(d => d.views + d.clicks);
-    const maxVal = Math.max(...chartData, 1);
-    const normalizedData = chartData.map(v => Math.round((v / maxVal) * 100));
-    const daysLabels = (stats?.history || []).slice(-30).map(d => d.date.slice(5)); // MM-DD
+    // Analytics line chart helpers
+    const chartLines = [
+        { key: "views" as const, label: "Wyświetlenia", color: "#3b82f6" },
+        { key: "unique_ips" as const, label: "Unikalni użytkownicy (IP)", color: "#10b981" },
+        { key: "new_companies" as const, label: "Nowe firmy", color: "#f59e0b" },
+        { key: "new_reviews" as const, label: "Nowe opinie", color: "#ef4444" },
+    ];
+    const [visibleLines, setVisibleLines] = useState<Record<string, boolean>>({
+        views: true, unique_ips: true, new_companies: true, new_reviews: true
+    });
 
     // Show login form if not logged in
     if (!isLoggedIn) {
@@ -569,34 +587,101 @@ export default function AdminPage() {
                     </header>
 
                     {/* Stats Cards */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <StatCard title="Firmy" value={stats?.total_companies || 0} icon="building" color="blue" />
                         <StatCard title="Wyświetlenia" value={stats?.total_views || 0} icon="eye" color="green" />
+                        <StatCard title="Unikalni (dziś)" value={analytics.length > 0 ? analytics[analytics.length - 1]?.unique_ips || 0 : 0} icon="user" color="purple" />
                         <StatCard title="Opinie" value={stats?.total_reviews || 0} icon="chat" color="orange" />
                     </div>
 
-                    {/* Chart */}
-                    <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-200 dark:border-slate-700 shadow-sm">
-                        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Aktywność (ostatnie 30 dni)</h3>
-                        <div className="h-48 flex items-end gap-2 justify-between px-2">
-                            {normalizedData.length > 0 ? normalizedData.map((h, i) => (
-                                <div key={i} className="flex-1 min-w-[30px] max-w-[60px] bg-slate-100 dark:bg-slate-700 rounded-t-xl relative group overflow-hidden" style={{ height: '100%' }}>
-                                    <div
-                                        className="absolute bottom-0 inset-x-0 bg-primary group-hover:bg-primary-dark transition-all duration-500"
-                                        style={{ height: `${Math.max(h, 5)}%` }}
-                                    ></div>
-                                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] font-bold text-slate-400 group-hover:text-white z-10 whitespace-nowrap">
-                                        {daysLabels[i]}
-                                    </div>
-                                    {/* Tooltip */}
-                                    <div className="absolute top-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 text-[10px] font-bold text-slate-500 transition-opacity">
-                                        {chartData[i]}
-                                    </div>
-                                </div>
-                            )) : (
-                                <div className="w-full text-center text-slate-400 self-center">Brak danych z ostatnich dni</div>
-                            )}
+                    {/* Analytics Line Chart */}
+                    <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Statystyki (ostatnie 30 dni)</h3>
+                            <div className="flex flex-wrap gap-3">
+                                {chartLines.map(line => (
+                                    <button
+                                        key={line.key}
+                                        onClick={() => setVisibleLines(prev => ({ ...prev, [line.key]: !prev[line.key] }))}
+                                        className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg transition-all ${visibleLines[line.key] ? "opacity-100" : "opacity-40"}`}
+                                    >
+                                        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: line.color }} />
+                                        {line.label}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
+                        {analytics.length > 0 ? (() => {
+                            const W = 900, H = 250, PX = 50, PY = 20;
+                            const days = analytics;
+                            const activeKeys = chartLines.filter(l => visibleLines[l.key]).map(l => l.key);
+                            const allValues = days.flatMap(d => activeKeys.map(k => d[k]));
+                            const maxY = Math.max(...allValues, 1);
+                            const stepX = (W - PX) / Math.max(days.length - 1, 1);
+
+                            const makePath = (key: keyof AnalyticsDay) => {
+                                return days.map((d, i) => {
+                                    const x = PX + i * stepX;
+                                    const y = H - PY - ((d[key] as number) / maxY) * (H - 2 * PY);
+                                    return `${i === 0 ? "M" : "L"}${x},${y}`;
+                                }).join(" ");
+                            };
+
+                            // Y-axis labels
+                            const ySteps = 4;
+                            const yLabels = Array.from({ length: ySteps + 1 }, (_, i) => Math.round((maxY / ySteps) * i));
+
+                            return (
+                                <div className="overflow-x-auto">
+                                    <svg viewBox={`0 0 ${W} ${H + 30}`} className="w-full min-w-[600px]" style={{ height: 300 }}>
+                                        {/* Grid lines */}
+                                        {yLabels.map((val, i) => {
+                                            const y = H - PY - (val / maxY) * (H - 2 * PY);
+                                            return (
+                                                <g key={i}>
+                                                    <line x1={PX} y1={y} x2={W} y2={y} stroke="#e2e8f0" strokeWidth={1} />
+                                                    <text x={PX - 8} y={y + 4} textAnchor="end" className="text-[11px]" fill="#94a3b8">{val}</text>
+                                                </g>
+                                            );
+                                        })}
+                                        {/* Data lines */}
+                                        {chartLines.filter(l => visibleLines[l.key]).map(line => (
+                                            <path
+                                                key={line.key}
+                                                d={makePath(line.key as keyof AnalyticsDay)}
+                                                fill="none"
+                                                stroke={line.color}
+                                                strokeWidth={2.5}
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        ))}
+                                        {/* Data points */}
+                                        {chartLines.filter(l => visibleLines[l.key]).map(line =>
+                                            days.map((d, i) => {
+                                                const x = PX + i * stepX;
+                                                const y = H - PY - ((d[line.key as keyof AnalyticsDay] as number) / maxY) * (H - 2 * PY);
+                                                return <circle key={`${line.key}-${i}`} cx={x} cy={y} r={3} fill={line.color} opacity={0.8} />;
+                                            })
+                                        )}
+                                        {/* X-axis labels (every 5 days) */}
+                                        {days.map((d, i) => {
+                                            if (i % 5 !== 0 && i !== days.length - 1) return null;
+                                            const x = PX + i * stepX;
+                                            return (
+                                                <text key={i} x={x} y={H + 15} textAnchor="middle" className="text-[10px]" fill="#94a3b8">
+                                                    {d.date.slice(5)}
+                                                </text>
+                                            );
+                                        })}
+                                    </svg>
+                                </div>
+                            );
+                        })() : (
+                            <div className="h-48 flex items-center justify-center text-slate-400">
+                                Brak danych analitycznych. Dane pojawią się po pierwszych wizytach.
+                            </div>
+                        )}
                     </div>
 
                     {/* Companies Table */}
