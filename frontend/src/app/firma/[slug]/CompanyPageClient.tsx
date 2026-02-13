@@ -271,101 +271,25 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
           <span className="font-semibold">Wróć do listy usług</span>
         </Link>
 
-        <div className="grid gap-8 md:grid-cols-[1.5fr,1fr]">
-          <div className="space-y-4">
-            <div
-              className="h-64 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 cursor-pointer hover:opacity-90 transition-opacity flex items-center justify-center"
-              onClick={() => {
-                const images = [company.img, ...(company.photos || [])].filter(Boolean) as string[];
-                if (images.length > 0) {
-                  setLightboxImage(images[0]);
-                  setLightboxIndex(0);
-                }
-              }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+        {/* Top row: Logo + Contact side by side on desktop */}
+        <div className="grid gap-8 md:grid-cols-[1.2fr,1fr]">
+          <div
+            className="h-64 md:h-80 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 cursor-pointer hover:opacity-90 transition-opacity flex items-center justify-center"
+            onClick={() => {
+              const images = [company.img, ...(company.photos || [])].filter(Boolean) as string[];
+              if (images.length > 0) {
+                setLightboxImage(images[0]);
+                setLightboxIndex(0);
+              }
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-                src={company.img || "/default-company.png"}
-                alt={company.name}
-                className="max-h-full max-w-full object-contain"
-                loading="lazy"
-              />
-            </div>
-            {/* Company Header with Heart */}
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h1 className="text-2xl font-bold text-slate-900">{company.name}</h1>
-                <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600 mt-1">
-                  {(company.city || company.canton || company.address) && (
-                    <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.address || `${company.city}, ${company.canton}, Switzerland`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-primary transition-colors inline-flex items-center gap-1"
-                    >
-                      📍 {[company.city, company.canton].filter(Boolean).join(", ") || company.address}
-                    </a>
-                  )}
-                  {company.rating && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[11px] font-semibold text-green-800">
-                      ★ {company.rating.toFixed(1)}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-
-            </div>
-            <div
-              className="prose prose-slate prose-sm max-w-none text-base text-slate-700"
-              dangerouslySetInnerHTML={{ __html: company.description || "Brak opisu" }}
+              src={company.img || "/default-company.png"}
+              alt={company.name}
+              className="max-h-full max-w-full object-contain"
+              loading="lazy"
             />
-            {company.offer && (
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <h3 className="text-sm font-semibold text-slate-900 mb-2">Oferta</h3>
-                <div
-                  className="prose prose-slate prose-sm max-w-none text-sm text-slate-700"
-                  dangerouslySetInnerHTML={{ __html: company.offer || "" }}
-                />
-              </div>
-            )}
-            {company.photos && company.photos.length > 0 && (() => {
-              // Filter out main photo from photos array to avoid duplication
-              const galleryPhotos = company.photos.filter(p => p !== company.img);
-              // All images for lightbox: main photo first, then gallery photos
-              const allImages = [company.img, ...galleryPhotos].filter(Boolean) as string[];
-
-              if (galleryPhotos.length === 0) return null;
-
-              return (
-                <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-2">
-                  <h3 className="text-sm font-semibold text-slate-900">Galeria zdjęć ({allImages.length})</h3>
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                    {galleryPhotos.map((src, idx) => {
-                      const imageIndex = company.img ? idx + 1 : idx; // +1 because main photo is at index 0
-                      return (
-                        <div
-                          key={idx}
-                          className="h-24 overflow-hidden rounded-lg border border-slate-200 bg-slate-100 cursor-pointer hover:opacity-90 transition-opacity flex items-center justify-center"
-                          onClick={() => {
-                            setLightboxImage(allImages[imageIndex]);
-                            setLightboxIndex(imageIndex);
-                          }}
-                        >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={src}
-                            alt={`${company.name} zdjęcie ${idx + 1}`}
-                            className="max-h-full max-w-full object-contain"
-                            loading="lazy"
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })()}
           </div>
 
           <aside className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -493,9 +417,95 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
             </div>
           </aside>
         </div>
+
+        {/* Full-width section: Company info, description, gallery */}
+        <div className="space-y-4">
+          {/* Company Header */}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900">{company.name}</h1>
+              <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600 mt-1">
+                {(company.city || company.canton || company.address) && (
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.address || `${company.city}, ${company.canton}, Switzerland`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-primary transition-colors inline-flex items-center gap-1"
+                  >
+                    📍 {[company.city, company.canton].filter(Boolean).join(", ") || company.address}
+                  </a>
+                )}
+                {company.category && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                    {company.category}
+                  </span>
+                )}
+                {company.rating && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[11px] font-semibold text-green-800">
+                    ★ {company.rating.toFixed(1)}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div
+            className="prose prose-slate prose-sm max-w-none text-base text-slate-700"
+            dangerouslySetInnerHTML={{ __html: company.description || "Brak opisu" }}
+          />
+
+          {/* Offer */}
+          {company.offer && (
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <h3 className="text-sm font-semibold text-slate-900 mb-2">Oferta</h3>
+              <div
+                className="prose prose-slate prose-sm max-w-none text-sm text-slate-700"
+                dangerouslySetInnerHTML={{ __html: company.offer || "" }}
+              />
+            </div>
+          )}
+
+          {/* Photo Gallery */}
+          {company.photos && company.photos.length > 0 && (() => {
+            const galleryPhotos = company.photos.filter(p => p !== company.img);
+            const allImages = [company.img, ...galleryPhotos].filter(Boolean) as string[];
+
+            if (galleryPhotos.length === 0) return null;
+
+            return (
+              <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-2">
+                <h3 className="text-sm font-semibold text-slate-900">Galeria zdjęć ({allImages.length})</h3>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+                  {galleryPhotos.map((src, idx) => {
+                    const imageIndex = company.img ? idx + 1 : idx;
+                    return (
+                      <div
+                        key={idx}
+                        className="h-28 overflow-hidden rounded-lg border border-slate-200 bg-slate-100 cursor-pointer hover:opacity-90 transition-opacity flex items-center justify-center"
+                        onClick={() => {
+                          setLightboxImage(allImages[imageIndex]);
+                          setLightboxIndex(imageIndex);
+                        }}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={src}
+                          alt={`${company.name} zdjęcie ${idx + 1}`}
+                          className="max-h-full max-w-full object-contain"
+                          loading="lazy"
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+        </div>
       </div>
 
-      {/* Reviews section - simplified for now */}
+      {/* Reviews section */}
       <div className="mx-auto max-w-5xl px-4 pb-12 sm:px-6">
         <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-semibold text-slate-900 mb-4">Recenzje</h2>
