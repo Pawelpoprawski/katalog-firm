@@ -110,9 +110,11 @@ export default function MyListingsPage() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-slate-900">{company.name}</h3>
-                  <p className="text-sm text-slate-600 mt-1">
-                    {company.city}, {company.canton}
-                  </p>
+                  {(company.city || company.canton || company.address) && (
+                    <p className="text-sm text-slate-600 mt-1">
+                      {[company.city, company.canton].filter(Boolean).join(", ") || company.address}
+                    </p>
+                  )}
                   <p className="text-sm text-slate-700 mt-2 line-clamp-2">
                     {company.description}
                   </p>

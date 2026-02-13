@@ -296,14 +296,16 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
               <div>
                 <h1 className="text-2xl font-bold text-slate-900">{company.name}</h1>
                 <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600 mt-1">
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${company.city}, ${company.canton}, Switzerland`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-primary transition-colors inline-flex items-center gap-1"
-                  >
-                    📍 {company.city}, {company.canton}
-                  </a>
+                  {(company.city || company.canton || company.address) && (
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.address || `${company.city}, ${company.canton}, Switzerland`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-primary transition-colors inline-flex items-center gap-1"
+                    >
+                      📍 {[company.city, company.canton].filter(Boolean).join(", ") || company.address}
+                    </a>
+                  )}
                   {company.rating && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[11px] font-semibold text-green-800">
                       ★ {company.rating.toFixed(1)}

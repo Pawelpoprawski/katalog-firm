@@ -113,9 +113,11 @@ export default function FavoritesPage() {
                                         </button>
                                     </div>
                                     <div className="text-base font-bold text-slate-900">{item.name}</div>
-                                    <div className="text-sm text-slate-600">
-                                        {item.city}, {item.canton}
-                                    </div>
+                                    {(item.city || item.canton || item.address) && (
+                                      <div className="text-sm text-slate-600">
+                                        {[item.city, item.canton].filter(Boolean).join(", ") || item.address}
+                                      </div>
+                                    )}
                                 </div>
                             </div>
                         </Link>

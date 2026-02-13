@@ -282,7 +282,7 @@ export default function CategoryPageClient({ categorySlug }: { categorySlug: str
                   </div>
                   <div className="text-base font-bold text-slate-900">{item.name}</div>
                   <div className="text-sm text-slate-600">
-                    {item.city}, {item.canton}
+                    {[item.city, item.canton].filter(Boolean).join(", ") || item.address || ""}
                     {item.rating && ` • Ocena ${item.rating.toFixed(1)}`}
                   </div>
                 </div>
