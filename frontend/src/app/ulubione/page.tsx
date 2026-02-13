@@ -11,6 +11,7 @@ type Company = {
     description: string;
     city: string;
     canton: string;
+    address?: string;
     category_id?: number;
     rating?: number;
     img?: string;
