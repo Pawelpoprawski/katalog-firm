@@ -611,7 +611,7 @@ export default function HomePage() {
               Znajdź <span className="bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">sprawdzone</span> firmy w Szwajcarii
             </h1>
             <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl">
-              <span className="font-bold text-primary">{filteredCompanies.length} polskich usług</span> w bazie. Przeglądaj na mapie i filtruj po branży. Dołącz do największej społeczności polskich przedsiębiorców w Szwajcarii.
+              {loading ? "Największa baza" : <><span className="font-bold text-primary">{filteredCompanies.length}</span></>} polskich usług w bazie. Przeglądaj na mapie i filtruj po branży. Dołącz do największej społeczności polskich przedsiębiorców w Szwajcarii.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
@@ -755,10 +755,12 @@ export default function HomePage() {
           </div>
 
           {/* Results count - pushed to right on desktop */}
-          <div className="hidden md:flex items-center gap-2 ml-auto text-sm text-slate-500">
-            <span className="font-bold text-primary">{filteredCompanies.length}</span>
-            <span>wyników</span>
-          </div>
+          {!loading && (
+            <div className="hidden md:flex items-center gap-2 ml-auto text-sm text-slate-500">
+              <span className="font-bold text-primary">{filteredCompanies.length}</span>
+              <span>wyników</span>
+            </div>
+          )}
         </div>
         {loading ? (
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
