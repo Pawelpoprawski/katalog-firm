@@ -598,24 +598,7 @@ export default function HomePage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 space-y-24 sm:px-6 lg:px-8">
-      {/* FULL PAGE LOADING OVERLAY */}
-      {loading && (
-        <div className="fixed inset-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="text-center space-y-6 animate-fade-in">
-            {/* Animated Logo/Icon */}
-            <div className="relative">
-              <div className="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center animate-pulse">
-                <Image src={`${basePath}/logo.png`} alt="Logo" width={48} height={48} className="w-12 h-12" />
-              </div>
-              {/* Spinning ring */}
-              <div className="absolute inset-0 rounded-3xl border-4 border-primary/20 border-t-primary animate-spin" />
-            </div>
-
-            {/* Loading text */}
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Ładowanie firm...</h3>
-          </div>
-        </div>
-      )}
+      {/* Loading handled by skeleton cards below */}
 
       {/* HERO */}
       <section className="relative overflow-hidden rounded-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-500">
@@ -779,43 +762,22 @@ export default function HomePage() {
         </div>
         {loading ? (
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {[...Array(6)].map((_, idx) => (
-              <div key={idx} className="animate-pulse space-y-4">
-                <div className="h-60 rounded-3xl bg-slate-100 dark:bg-slate-800" />
-                <div className="h-4 w-2/3 rounded-lg bg-slate-100 dark:bg-slate-800" />
-                <div className="h-4 w-1/2 rounded-lg bg-slate-100 dark:bg-slate-800" />
-              </div>
-            ))}
-          </div>
-        ) : loading ? (
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
                 className="group flex flex-col overflow-hidden rounded-4xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm animate-pulse"
               >
-                {/* Image skeleton */}
                 <div className="relative h-60 bg-slate-200 dark:bg-slate-800" />
-
-                {/* Content skeleton */}
                 <div className="flex flex-1 flex-col p-6 space-y-4">
                   <div className="flex items-start justify-between gap-4">
-                    {/* Title skeleton */}
                     <div className="h-7 bg-slate-200 dark:bg-slate-800 rounded-lg w-3/4" />
-                    {/* Rating skeleton */}
                     <div className="h-7 w-12 bg-slate-200 dark:bg-slate-800 rounded-lg shrink-0" />
                   </div>
-
-                  {/* Location skeleton */}
                   <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-lg w-1/2" />
-
-                  {/* Description skeleton */}
                   <div className="space-y-2">
                     <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-lg w-full" />
                     <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-lg w-4/5" />
                   </div>
-
-                  {/* Button skeleton */}
                   <div className="pt-4 mt-auto border-t border-slate-100 dark:border-slate-800">
                     <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-lg w-1/3" />
                   </div>
