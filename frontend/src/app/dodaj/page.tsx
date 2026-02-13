@@ -102,20 +102,31 @@ export default function AddCompanyPage() {
     }
   }, [form]);
 
-  // Clear draft on successful submit
+  // Clear draft and scroll to top on successful submit
   useEffect(() => {
     if (submitStatus === "success") {
       localStorage.removeItem("company_draft");
+      // Delay scroll to ensure DOM has re-rendered with success message
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0; // iOS Safari fallback
+      }, 100);
     }
   }, [submitStatus]);
 
+  const scrollTop = () => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  };
   const goNext = () => {
     setStep((s) => Math.min(s + 1, steps.length - 1));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollTop();
   };
   const goPrev = () => {
     setStep((s) => Math.max(s - 1, 0));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollTop();
   };
 
   const handleChange =
@@ -206,7 +217,7 @@ export default function AddCompanyPage() {
     const errs = validateStep(step);
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollTop();
       return;
     }
     goNext();
@@ -310,7 +321,6 @@ export default function AddCompanyPage() {
         setCreatedEditToken(createdCompany.edit_token);
       }
       setSubmitStatus("success");
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err: any) {
       setSubmitStatus("error");
       setSubmitError(err.message || "Nie udało się zapisać. Upewnij się, że backend działa.");
