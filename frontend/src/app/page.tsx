@@ -104,7 +104,7 @@ export default function HomePage() {
   const mapInitializedRef = useRef(false);
   const idleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const userInteractingRef = useRef(false); // Track if user is interacting with map
-  const PAGE_SIZE = 12;
+  const PAGE_SIZE = 24;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
   // Category icons mapping
