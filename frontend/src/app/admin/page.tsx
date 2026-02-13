@@ -486,6 +486,7 @@ export default function AdminPage() {
     const [visibleLines, setVisibleLines] = useState<Record<string, boolean>>({
         views: true, unique_ips: true, new_companies: true, new_reviews: true
     });
+    const [hoveredDay, setHoveredDay] = useState<number | null>(null);
 
     // Show login form if not logged in
     if (!isLoggedIn) {
@@ -596,19 +597,37 @@ export default function AdminPage() {
 
                     {/* Analytics Line Chart */}
                     <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 border border-slate-200 dark:border-slate-700 shadow-sm">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                        <div className="flex flex-col gap-4 mb-6">
                             <h3 className="text-lg font-bold text-slate-900 dark:text-white">Statystyki (ostatnie 30 dni)</h3>
-                            <div className="flex flex-wrap gap-3">
-                                {chartLines.map(line => (
-                                    <button
-                                        key={line.key}
-                                        onClick={() => setVisibleLines(prev => ({ ...prev, [line.key]: !prev[line.key] }))}
-                                        className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg transition-all ${visibleLines[line.key] ? "opacity-100" : "opacity-40"}`}
-                                    >
-                                        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: line.color }} />
-                                        {line.label}
-                                    </button>
-                                ))}
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                {chartLines.map(line => {
+                                    const total = analytics.reduce((s, d) => s + (d[line.key as keyof AnalyticsDay] as number), 0);
+                                    const firstHalf = analytics.slice(0, 15).reduce((s, d) => s + (d[line.key as keyof AnalyticsDay] as number), 0);
+                                    const secondHalf = analytics.slice(15).reduce((s, d) => s + (d[line.key as keyof AnalyticsDay] as number), 0);
+                                    const pctChange = firstHalf > 0 ? Math.round(((secondHalf - firstHalf) / firstHalf) * 100) : secondHalf > 0 ? 100 : 0;
+                                    return (
+                                        <button
+                                            key={line.key}
+                                            onClick={() => setVisibleLines(prev => ({ ...prev, [line.key]: !prev[line.key] }))}
+                                            className={`flex flex-col gap-1 p-3 rounded-xl border transition-all text-left ${visibleLines[line.key]
+                                                ? "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50"
+                                                : "border-slate-100 dark:border-slate-700 opacity-40"}`}
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: line.color }} />
+                                                <span className="text-xs font-bold text-slate-600 dark:text-slate-300 truncate">{line.label}</span>
+                                            </div>
+                                            <div className="flex items-baseline gap-2 pl-5">
+                                                <span className="text-xl font-black text-slate-900 dark:text-white">{total}</span>
+                                                {pctChange !== 0 && (
+                                                    <span className={`text-xs font-bold ${pctChange > 0 ? "text-green-500" : "text-red-500"}`}>
+                                                        {pctChange > 0 ? "+" : ""}{pctChange}%
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
                         {analytics.length > 0 ? (() => {
@@ -627,13 +646,17 @@ export default function AdminPage() {
                                 }).join(" ");
                             };
 
-                            // Y-axis labels
                             const ySteps = 4;
                             const yLabels = Array.from({ length: ySteps + 1 }, (_, i) => Math.round((maxY / ySteps) * i));
 
                             return (
-                                <div className="overflow-x-auto">
-                                    <svg viewBox={`0 0 ${W} ${H + 30}`} className="w-full min-w-[600px]" style={{ height: 300 }}>
+                                <div className="overflow-x-auto relative">
+                                    <svg
+                                        viewBox={`0 0 ${W} ${H + 30}`}
+                                        className="w-full min-w-[600px]"
+                                        style={{ height: 300 }}
+                                        onMouseLeave={() => setHoveredDay(null)}
+                                    >
                                         {/* Grid lines */}
                                         {yLabels.map((val, i) => {
                                             const y = H - PY - (val / maxY) * (H - 2 * PY);
@@ -661,9 +684,59 @@ export default function AdminPage() {
                                             days.map((d, i) => {
                                                 const x = PX + i * stepX;
                                                 const y = H - PY - ((d[line.key as keyof AnalyticsDay] as number) / maxY) * (H - 2 * PY);
-                                                return <circle key={`${line.key}-${i}`} cx={x} cy={y} r={3} fill={line.color} opacity={0.8} />;
+                                                const isHovered = hoveredDay === i;
+                                                return <circle key={`${line.key}-${i}`} cx={x} cy={y} r={isHovered ? 5 : 3} fill={line.color} opacity={isHovered ? 1 : 0.8} />;
                                             })
                                         )}
+                                        {/* Hover vertical line */}
+                                        {hoveredDay !== null && (
+                                            <line
+                                                x1={PX + hoveredDay * stepX}
+                                                y1={PY}
+                                                x2={PX + hoveredDay * stepX}
+                                                y2={H - PY}
+                                                stroke="#94a3b8"
+                                                strokeWidth={1}
+                                                strokeDasharray="4 4"
+                                            />
+                                        )}
+                                        {/* Invisible hover rectangles for each day */}
+                                        {days.map((_, i) => {
+                                            const x = PX + i * stepX - stepX / 2;
+                                            return (
+                                                <rect
+                                                    key={`hover-${i}`}
+                                                    x={Math.max(x, 0)}
+                                                    y={0}
+                                                    width={stepX}
+                                                    height={H + 30}
+                                                    fill="transparent"
+                                                    onMouseEnter={() => setHoveredDay(i)}
+                                                />
+                                            );
+                                        })}
+                                        {/* Tooltip */}
+                                        {hoveredDay !== null && (() => {
+                                            const d = days[hoveredDay];
+                                            const tx = PX + hoveredDay * stepX;
+                                            const tooltipX = tx > W / 2 ? tx - 160 : tx + 10;
+                                            return (
+                                                <foreignObject x={tooltipX} y={10} width={150} height={120}>
+                                                    <div className="bg-white dark:bg-slate-700 rounded-xl shadow-lg border border-slate-200 dark:border-slate-600 p-3 text-xs">
+                                                        <div className="font-bold text-slate-900 dark:text-white mb-2">{d.date}</div>
+                                                        {chartLines.filter(l => visibleLines[l.key]).map(line => (
+                                                            <div key={line.key} className="flex items-center justify-between gap-2 py-0.5">
+                                                                <div className="flex items-center gap-1.5">
+                                                                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: line.color }} />
+                                                                    <span className="text-slate-500 dark:text-slate-300">{line.label.split(" ")[0]}</span>
+                                                                </div>
+                                                                <span className="font-bold text-slate-900 dark:text-white">{d[line.key as keyof AnalyticsDay]}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </foreignObject>
+                                            );
+                                        })()}
                                         {/* X-axis labels (every 5 days) */}
                                         {days.map((d, i) => {
                                             if (i % 5 !== 0 && i !== days.length - 1) return null;
