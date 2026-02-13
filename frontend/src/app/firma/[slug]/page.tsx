@@ -55,7 +55,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       type: "website",
       url: `https://polacyszwajcaria.com/uslugi/firma/${params.slug}`,
-      images: company.img ? [{ url: company.img, alt: company.name }] : [],
+      siteName: "Polskie Usługi w Szwajcarii",
+      locale: "pl_PL",
+      images: company.img
+        ? [{ url: company.img, alt: company.name }]
+        : [{ url: "https://polacyszwajcaria.com/uslugi/logo.png", width: 512, height: 512, alt: company.name }],
     },
     twitter: {
       card: "summary_large_image",

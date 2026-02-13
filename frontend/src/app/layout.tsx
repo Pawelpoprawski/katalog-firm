@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     locale: "pl_PL",
     images: [
       {
-        url: "logo.png",
+        url: "https://polacyszwajcaria.com/uslugi/logo.png",
         width: 512,
         height: 512,
         alt: "Polskie Usługi w Szwajcarii - Logo",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Polskie usługi w Szwajcarii | Katalog Firm",
     description: "Katalog polskich firm i usług w Szwajcarii",
-    images: ["logo.png"],
+    images: ["https://polacyszwajcaria.com/uslugi/logo.png"],
   },
   alternates: {
     canonical: "https://polacyszwajcaria.com/uslugi",
@@ -72,7 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         url: "https://polacyszwajcaria.com/uslugi",
         logo: {
           "@type": "ImageObject",
-          url: "logo.png",
+          url: "https://polacyszwajcaria.com/uslugi/logo.png",
           width: 512,
           height: 512,
         },
@@ -101,6 +101,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="pl">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
+        <meta name="theme-color" content="#E30613" />
+        <link rel="manifest" href="/uslugi/manifest.json" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

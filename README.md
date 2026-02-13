@@ -144,13 +144,20 @@ katalog-firm/
 |   |   |   |-- login/page.tsx       # Logowanie uzytkownika
 |   |   |   |-- konto/               # Panel uzytkownika
 |   |   |   |-- ulubione/page.tsx    # Ulubione firmy
-|   |   |   |-- kategoria/[slug]/    # Filtr po kategorii
+|   |   |   |-- kategoria/[slug]/    # Filtr po kategorii (SSR metadata)
 |   |   |   |-- polityka-prywatnosci/ # Polityka prywatnosci
 |   |   |-- hooks/
 |   |   |   |-- useFavorites.ts      # Hook ulubionych (localStorage)
 |   |   |-- components/
 |   |       |-- ErrorBoundary.tsx     # Obsluga bledow
-|   |-- public/                      # Pliki statyczne
+|   |-- public/
+|   |   |-- favicon.ico              # Ikona przegladarki
+|   |   |-- favicon.svg              # Ikona SVG
+|   |   |-- icon.png                 # Ikona 512x512 (apple-touch-icon)
+|   |   |-- logo.png                 # Logo (Open Graph, sharing)
+|   |   |-- default-company.png      # Domyslne zdjecie firmy
+|   |   |-- manifest.json            # PWA manifest (mobile)
+|   |   |-- robots.txt               # Reguly dla crawlerow
 |   |-- next.config.mjs              # Konfiguracja Next.js
 |   |-- tailwind.config.cjs          # Konfiguracja Tailwind
 |   |-- tsconfig.json                # Konfiguracja TypeScript
@@ -690,12 +697,22 @@ Pelna dokumentacja interaktywna: http://localhost:8000/docs (Swagger UI)
 
 - **Automatyczny**: Generowany dynamicznie przez Next.js
 - **URL**: https://polacyszwajcaria.com/uslugi/sitemap.xml
-- **Zawiera**: Strona glowna, strony firm, kategorie, formularz dodawania
+- **Zawiera**: Strona glowna, strony firm, kategorie, formularz dodawania, polityka prywatnosci
 - **Rewalidacja**: co 1 godzine
 
 ### Robots.txt
 
-Dodaj do `/var/www/polacyszwajcaria.com/robots.txt`:
+Plik `frontend/public/robots.txt` (serwowany automatycznie przez Next.js):
+```
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Sitemap: https://polacyszwajcaria.com/uslugi/sitemap.xml
+```
+
+Dodatkowo na glownym serwerze WordPress (`/var/www/polacyszwajcaria.com/robots.txt`):
 ```
 User-agent: *
 Allow: /
@@ -710,13 +727,27 @@ Sitemap: https://polacyszwajcaria.com/sitemap.xml
 Sitemap: https://polacyszwajcaria.com/uslugi/sitemap.xml
 ```
 
+### Metadata i Open Graph
+
+Zaimplementowane na kazdej stronie:
+
+| Strona | Metadata | Open Graph | Twitter Card |
+|--------|----------|------------|--------------|
+| Strona glowna (layout) | title, description, keywords, robots | og:title, og:image, og:url, og:locale | summary_large_image |
+| Strona firmy (/firma/[slug]) | Dynamiczne per firma | Dynamiczne + zdjecie firmy | Dynamiczne |
+| Kategoria (/kategoria/[slug]) | Dynamiczne per kategoria | Dynamiczne | Dynamiczne |
+| Inne strony | Dziedziczone z layout | Dziedziczone z layout | Dziedziczone z layout |
+
+- **og:image**: Absolutne URL (`https://polacyszwajcaria.com/uslugi/logo.png`)
+- **theme-color**: `#E30613` (czerwony - kolor marki)
+- **manifest.json**: PWA manifest dla mobilnych przegladarek
+
 ### Structured Data (JSON-LD)
 
 Zaimplementowane automatycznie w `layout.tsx`:
-- Schema.org Organization
-- Schema.org WebSite
-- Open Graph (Facebook)
-- Twitter Cards
+- Schema.org Organization (nazwa, logo, social media)
+- Schema.org WebSite (url, jezyk, wydawca)
+- Schema.org LocalBusiness na stronach firm
 
 ### Google Search Console
 
