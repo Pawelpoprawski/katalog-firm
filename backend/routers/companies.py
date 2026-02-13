@@ -14,6 +14,7 @@ from ..storage import increment_view as storage_increment_view
 from ..storage import increment_click as storage_increment_click
 from ..storage import verify_edit_token as storage_verify_edit_token
 from ..storage import get_newsletter_count
+from ..storage import track_impressions
 from ..security_middleware import limiter, sanitize_html
 
 
@@ -144,8 +145,12 @@ def get_company(company_id: int):
 @router.post("/batch-view", status_code=status.HTTP_204_NO_CONTENT)
 def batch_increment_views(company_ids: list[int] = Body(...)):
     """Batch increment views for multiple companies (from scroll impressions)."""
-    for cid in company_ids[:50]:  # Limit to 50 per request
+    limited = company_ids[:50]  # Limit to 50 per request
+    for cid in limited:
         storage_increment_view(cid)
+    # Track scroll impressions in analytics (for admin chart)
+    if limited:
+        track_impressions(len(limited))
     return None
 
 

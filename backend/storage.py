@@ -907,21 +907,21 @@ def track_page_view(ip_address: str) -> None:
     with _lock:
         analytics = _read_analytics()
         if today not in analytics:
-            analytics[today] = {"views": 0, "ips": [], "new_companies": 0, "new_reviews": 0}
+            analytics[today] = {"views": 0, "impressions": 0, "ips": [], "new_companies": 0, "new_reviews": 0}
         analytics[today]["views"] = analytics[today].get("views", 0) + 1
         if ip_address and ip_address not in analytics[today].get("ips", []):
             analytics[today].setdefault("ips", []).append(ip_address)
         _write_analytics(analytics)
 
 
-def track_impression(ip_address: str | None = None) -> None:
-    """Track a card impression (scroll view)."""
+def track_impressions(count: int = 1) -> None:
+    """Track card impressions from scroll views (batch)."""
     today = _get_today_str()
     with _lock:
         analytics = _read_analytics()
         if today not in analytics:
-            analytics[today] = {"views": 0, "ips": [], "new_companies": 0, "new_reviews": 0}
-        analytics[today]["views"] = analytics[today].get("views", 0) + 1
+            analytics[today] = {"views": 0, "impressions": 0, "ips": [], "new_companies": 0, "new_reviews": 0}
+        analytics[today]["impressions"] = analytics[today].get("impressions", 0) + count
         _write_analytics(analytics)
 
 
@@ -960,7 +960,7 @@ def get_analytics(days: int = 30) -> list[dict]:
         day_data = analytics.get(date, {})
         result.append({
             "date": date,
-            "views": day_data.get("views", 0),
+            "views": day_data.get("impressions", 0),  # Scroll impressions = "wyświetlenia"
             "unique_ips": len(day_data.get("ips", [])),
             "new_companies": day_data.get("new_companies", 0),
             "new_reviews": day_data.get("new_reviews", 0),
