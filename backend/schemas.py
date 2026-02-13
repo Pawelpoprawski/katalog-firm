@@ -39,7 +39,7 @@ class CompanyBase(BaseModel):
     description: Optional[str] = None  # Merged: Firma & Usługi (20-10,000 chars when required)
     phone: Optional[str] = None
     whatsapp: Optional[str] = None  # WhatsApp number
-    email: Optional[str] = None  # Generic base is optional, specific schemas will strict it
+    email: Optional[str] = None
     website: Optional[str] = None
     facebook: Optional[str] = None
     instagram: Optional[str] = None
@@ -50,7 +50,6 @@ class CompanyBase(BaseModel):
     country: Optional[str] = "Switzerland"
     latitude: Optional[float] = None
     longitude: Optional[float] = None
-    email: Optional[EmailStr] = None
     website: Optional[str] = None
     category_id: Optional[int] = None
     tags: Optional[str] = None
