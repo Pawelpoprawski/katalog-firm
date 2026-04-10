@@ -64,5 +64,17 @@
     "name": "TestKategoria",
     "slug": "test-kategoria",
     "description": "Testowa kategoria"
+  },
+  {
+    "id": 12,
+    "name": "Test Kat",
+    "slug": "test-kat",
+    "description": "🏢 Test"
+  },
+  {
+    "id": 13,
+    "name": "Test Kat XYZ",
+    "slug": "test-kat-xyz",
+    "description": "T Test"
   }
 ]

@@ -14,5 +14,21 @@
     "full_name": "Audit User",
     "is_admin": false,
     "created_at": 1770922897.2927737
+  },
+  {
+    "id": 3,
+    "email": "sectest@example.com",
+    "hashed_password": "$2b$12$YxlZ8pHpfO2T7VUKQFfnTu70lbgGzhulXvL3Rv5.5Oq4B19PWr6lS",
+    "full_name": null,
+    "is_admin": false,
+    "created_at": 1773574021.5336478
+  },
+  {
+    "id": 4,
+    "email": "test201@example.com",
+    "hashed_password": "$2b$12$AlD7HzcAWcZgTcFoY2wQxeINvkzRzaIWWdC0jwQxnXwGfpvW9HJey",
+    "full_name": null,
+    "is_admin": false,
+    "created_at": 1773574243.937722
   }
 ]

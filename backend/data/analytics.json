@@ -1,1 +1,11 @@
-{}
+{
+  "2026-03-15": {
+    "views": 15,
+    "impressions": 6,
+    "ips": [
+      "127.0.0.1"
+    ],
+    "new_companies": 8,
+    "new_reviews": 0
+  }
+}

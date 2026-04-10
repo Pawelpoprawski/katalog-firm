@@ -514,5 +514,23 @@
     "company_id": 102,
     "views": 1,
     "clicks": 1
+  },
+  {
+    "date": "2026-03-15",
+    "company_id": 1,
+    "views": 2,
+    "clicks": 0
+  },
+  {
+    "date": "2026-03-15",
+    "company_id": 2,
+    "views": 2,
+    "clicks": 0
+  },
+  {
+    "date": "2026-03-15",
+    "company_id": 3,
+    "views": 2,
+    "clicks": 0
   }
 ]
