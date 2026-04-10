@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Warunkowy basePath: pusty dla dev, /uslugi dla produkcji
-  basePath: process.env.NODE_ENV === 'production' ? '/uslugi' : '',
+  // basePath configurable via env var: empty for standalone, /uslugi for polacyszwajcaria.com
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
   reactStrictMode: true,
   // Removed basePath and assetPrefix - they were causing redirect loops
   // The app should work directly on / for local development
