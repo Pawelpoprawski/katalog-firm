@@ -75,8 +75,15 @@ def list_companies(
     # Apply limit
     limited = all_companies[:limit]
     
-    # Enrich with ratings
-    return [_enrich_company(c.copy()) for c in limited]
+    # Enrich with ratings, strip heavy fields for listing performance
+    results = []
+    for c in limited:
+        enriched = _enrich_company(c.copy())
+        enriched.pop("photos", None)  # Remove base64 photos array (~MB each)
+        enriched.pop("description", None)  # Remove full HTML description for listing
+        enriched.pop("offer", None)  # Remove full offer text for listing
+        results.append(enriched)
+    return results
 
 
 def _get_random_promoted_companies(companies: list[dict], limit: int = 5) -> list[dict]:
