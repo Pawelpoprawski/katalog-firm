@@ -98,16 +98,25 @@ def validate_phone(phone: str) -> bool:
 
 def validate_url(url: str) -> bool:
     """
-    Validate URL format.
-    
-    Args:
-        url: The URL to validate
-    
-    Returns:
-        True if valid, False otherwise
+    Validate URL format and block private/reserved IP ranges (SSRF prevention).
     """
     pattern = r'^https?://[a-zA-Z0-9\-._~:/?#\[\]@!$&\'()*+,;=]+$'
-    return bool(re.match(pattern, url))
+    if not re.match(pattern, url):
+        return False
+    # Block private/reserved IPs to prevent SSRF
+    from urllib.parse import urlparse
+    try:
+        hostname = urlparse(url).hostname or ""
+    except Exception:
+        return False
+    blocked = ["localhost", "127.", "10.", "192.168.", "172.16.", "172.17.",
+               "172.18.", "172.19.", "172.20.", "172.21.", "172.22.", "172.23.",
+               "172.24.", "172.25.", "172.26.", "172.27.", "172.28.", "172.29.",
+               "172.30.", "172.31.", "169.254.", "0.0.0.0", "[::1]"]
+    for prefix in blocked:
+        if hostname.startswith(prefix) or hostname == prefix.rstrip("."):
+            return False
+    return True
 
 
 def sanitize_filename(filename: str) -> str:

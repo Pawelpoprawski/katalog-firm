@@ -15,7 +15,7 @@ from ..storage import increment_click as storage_increment_click
 from ..storage import verify_edit_token as storage_verify_edit_token
 from ..storage import get_newsletter_count
 from ..storage import track_impressions
-from ..security_middleware import limiter, sanitize_html
+from ..security_middleware import limiter, sanitize_html, validate_url
 
 
 router = APIRouter()
@@ -52,7 +52,7 @@ def _enrich_company(company: dict) -> dict:
 
 @router.get("/", response_model=list[CompanyRead])
 def list_companies(
-    limit: int = Query(default=100, le=1000),
+    limit: int = Query(default=100, ge=1, le=100),
     category_id: int | None = None,
     status: str | None = None,
 ) -> list[dict]:
@@ -121,6 +121,9 @@ def create_company(
         data["short_description"] = sanitize_html(data["short_description"])
     if data.get("offer"):
         data["offer"] = sanitize_html(data["offer"], allowed_tags=["p", "br", "b", "strong", "i", "em", "ul", "ol", "li"])
+    # Block SSRF: reject private/internal IPs in website field
+    if data.get("website") and not validate_url(data["website"]):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid website URL")
     company = storage_create_company(data)
     from ..storage import track_new_company
     track_new_company()
