@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-const basePath = process.env.NODE_ENV === 'production' ? '/uslugi' : '';
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 
 const steps = ["Dane firmy", "Kontakt", "Zdjęcia", "Podsumowanie"];

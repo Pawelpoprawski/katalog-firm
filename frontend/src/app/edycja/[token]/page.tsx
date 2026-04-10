@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
-const basePath = process.env.NODE_ENV === 'production' ? '/uslugi' : '';
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const steps = ["Dane firmy", "Kontakt", "Zdjęcia", "Podsumowanie"];
 const DESC_LIMIT = 10000; // Merged: description + offer
 

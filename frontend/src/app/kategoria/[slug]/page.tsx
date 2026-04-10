@@ -46,12 +46,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       type: "website",
-      url: `https://polacyszwajcaria.com/uslugi/kategoria/${params.slug}`,
+      url: `https://katalog-firm.ch/kategoria/${params.slug}`,
       siteName: "Polskie Usługi w Szwajcarii",
       locale: "pl_PL",
       images: [
         {
-          url: "https://polacyszwajcaria.com/uslugi/logo.png",
+          url: "https://katalog-firm.ch/logo.png",
           width: 512,
           height: 512,
           alt: `${category.name} - Polskie Usługi w Szwajcarii`,
@@ -62,10 +62,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: ["https://polacyszwajcaria.com/uslugi/logo.png"],
+      images: ["https://katalog-firm.ch/logo.png"],
     },
     alternates: {
-      canonical: `https://polacyszwajcaria.com/uslugi/kategoria/${params.slug}`,
+      canonical: `https://katalog-firm.ch/kategoria/${params.slug}`,
     },
   };
 }

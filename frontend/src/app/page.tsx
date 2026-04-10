@@ -6,7 +6,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 
-const basePath = process.env.NODE_ENV === 'production' ? '/uslugi' : '';
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 // Google Maps types
 declare global {

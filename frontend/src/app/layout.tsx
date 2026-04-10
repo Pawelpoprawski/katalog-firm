@@ -3,7 +3,7 @@ import "./globals.css";
 import AppShell from "./AppShell";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://polacyszwajcaria.com/uslugi'),
+  metadataBase: new URL('https://katalog-firm.ch'),
   title: "Polskie usługi w Szwajcarii | Katalog Firm",
   description: "Katalog polskich firm i usług w Szwajcarii. Znajdź sprawdzone firmy polonijne – budownictwo, transport, gastronomia, IT i więcej.",
   keywords: ["polskie usługi", "Szwajcaria", "firmy polskie", "Polonia", "katalog firm", "usługi polonijne", "polscy przedsiębiorcy", "Polacy w Szwajcarii", "polskie firmy w Szwajcarii"],
@@ -28,12 +28,12 @@ export const metadata: Metadata = {
     title: "Polskie usługi w Szwajcarii | Katalog Firm",
     description: "Katalog polskich firm i usług w Szwajcarii. Najlepsza baza polskich przedsiębiorców.",
     type: "website",
-    url: "https://polacyszwajcaria.com/uslugi",
+    url: "https://katalog-firm.ch",
     siteName: "Polskie Usługi w Szwajcarii",
     locale: "pl_PL",
     images: [
       {
-        url: "https://polacyszwajcaria.com/uslugi/logo.png",
+        url: "https://katalog-firm.ch/logo.png",
         width: 512,
         height: 512,
         alt: "Polskie Usługi w Szwajcarii - Logo",
@@ -44,18 +44,18 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Polskie usługi w Szwajcarii | Katalog Firm",
     description: "Katalog polskich firm i usług w Szwajcarii",
-    images: ["https://polacyszwajcaria.com/uslugi/logo.png"],
+    images: ["https://katalog-firm.ch/logo.png"],
   },
   alternates: {
-    canonical: "https://polacyszwajcaria.com/uslugi",
+    canonical: "https://katalog-firm.ch",
   },
   icons: {
     icon: [
-      { url: '/uslugi/favicon.ico', sizes: 'any' },
-      { url: '/uslugi/favicon.svg', type: 'image/svg+xml' },
-      { url: '/uslugi/icon.png', type: 'image/png', sizes: '512x512' },
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon.png', type: 'image/png', sizes: '512x512' },
     ],
-    apple: { url: '/uslugi/icon.png', type: 'image/png', sizes: '512x512' },
+    apple: { url: '/icon.png', type: 'image/png', sizes: '512x512' },
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
@@ -68,12 +68,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://polacyszwajcaria.com/uslugi#organization",
+        "@id": "https://katalog-firm.ch#organization",
         name: "Polskie Usługi w Szwajcarii",
-        url: "https://polacyszwajcaria.com/uslugi",
+        url: "https://katalog-firm.ch",
         logo: {
           "@type": "ImageObject",
-          url: "https://polacyszwajcaria.com/uslugi/logo.png",
+          url: "https://katalog-firm.ch/logo.png",
           width: 512,
           height: 512,
         },
@@ -86,12 +86,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       },
       {
         "@type": "WebSite",
-        "@id": "https://polacyszwajcaria.com/uslugi#website",
-        url: "https://polacyszwajcaria.com/uslugi",
+        "@id": "https://katalog-firm.ch#website",
+        url: "https://katalog-firm.ch",
         name: "Polskie Usługi w Szwajcarii",
         description: "Katalog polskich firm i usług w Szwajcarii. Znajdź sprawdzone firmy polonijne",
         publisher: {
-          "@id": "https://polacyszwajcaria.com/uslugi#organization"
+          "@id": "https://katalog-firm.ch#organization"
         },
         inLanguage: "pl-PL",
       }
@@ -103,7 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
         <meta name="theme-color" content="#E30613" />
-        <link rel="manifest" href="/uslugi/manifest.json" />
+        <link rel="manifest" href="/manifest.json" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

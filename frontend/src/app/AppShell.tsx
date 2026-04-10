@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const basePath = process.env.NODE_ENV === 'production' ? '/uslugi' : '';
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

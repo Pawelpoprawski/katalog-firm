@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
-const baseUrl = "https://polacyszwajcaria.com/uslugi";
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://katalog-firm.ch";
 
 async function getCompanies() {
   try {
