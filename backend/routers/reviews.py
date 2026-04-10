@@ -20,8 +20,7 @@ def list_reviews(company_id: Optional[int] = None):
 
 
 @router.post("/", response_model=ReviewRead, status_code=status.HTTP_201_CREATED)
-# TEMPORARY: Rate limiting disabled - caused issues on production
-# @limiter.limit("5/minute")  # Max 5 reviews per minute per IP
+@limiter.limit("5/minute")
 def create_review(request: Request, payload: ReviewCreate):
     logger.info("POST /reviews/ payload=%s", payload.dict())
     
@@ -43,4 +42,4 @@ def create_review(request: Request, payload: ReviewCreate):
         return result
     except Exception as exc:
         logger.exception("Failed to create review: %s", exc)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Review create failed: {exc}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Review create failed")

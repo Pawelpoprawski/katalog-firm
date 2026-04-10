@@ -26,18 +26,17 @@ async def security_headers_middleware(request: Request, call_next: Callable) -> 
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     
-    # Only add HSTS in production (when using HTTPS)
-    # Uncomment when deployed with HTTPS:
-    # response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-    
-    # Content Security Policy - restrictive but allows necessary resources
+    # HSTS - enforce HTTPS
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+
+    # Content Security Policy - allows Google Maps and necessary inline styles
     csp_policy = (
         "default-src 'self'; "
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval'; "
-        "style-src 'self' 'unsafe-inline'; "
+        "script-src 'self' 'unsafe-inline' https://maps.googleapis.com https://maps.gstatic.com; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
         "img-src 'self' data: https:; "
-        "font-src 'self' data:; "
-        "connect-src 'self'; "
+        "font-src 'self' data: https://fonts.gstatic.com; "
+        "connect-src 'self' https://maps.googleapis.com; "
         "frame-ancestors 'none';"
     )
     response.headers["Content-Security-Policy"] = csp_policy

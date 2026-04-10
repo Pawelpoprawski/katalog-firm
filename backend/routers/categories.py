@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from ..schemas import CategoryCreate, CategoryRead
 from ..storage import create_category as storage_create_category
 from ..storage import list_categories as storage_list_categories
+from ..security_middleware import limiter
 
 
 router = APIRouter()
@@ -14,7 +15,8 @@ def list_categories():
 
 
 @router.post("/", response_model=CategoryRead, status_code=status.HTTP_201_CREATED)
-def create_category(payload: CategoryCreate):
+@limiter.limit("10/hour")
+def create_category(request: Request, payload: CategoryCreate):
     try:
         return storage_create_category(payload.dict())
     except ValueError:

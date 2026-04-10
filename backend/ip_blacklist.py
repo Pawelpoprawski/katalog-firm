@@ -3,6 +3,7 @@ IP Blacklist Middleware
 
 Blocks requests from blacklisted IP addresses.
 """
+import threading
 from pathlib import Path
 from fastapi import Request, HTTPException, status
 from fastapi.responses import JSONResponse
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Path to blacklist file
 BLACKLIST_FILE = Path(__file__).parent / "data" / "ip_blacklist.txt"
+_blacklist_lock = threading.Lock()
 
 
 def load_blacklist() -> set[str]:
@@ -60,44 +62,42 @@ async def ip_blacklist_middleware(request: Request, call_next):
 
 
 def add_ip_to_blacklist(ip_address: str) -> bool:
-    """Add an IP address to the blacklist file."""
-    try:
-        # Ensure data directory exists
-        BLACKLIST_FILE.parent.mkdir(parents=True, exist_ok=True)
-        
-        # Check if IP already in blacklist
-        blacklist = load_blacklist()
-        if ip_address in blacklist:
-            return False  # Already exists
-        
-        # Append to file
-        with open(BLACKLIST_FILE, "a", encoding="utf-8") as f:
-            f.write(f"\n{ip_address}")
-        
-        logger.info(f"Added IP to blacklist: {ip_address}")
-        return True
-    except Exception as e:
-        logger.error(f"Failed to add IP to blacklist: {e}")
-        return False
+    """Add an IP address to the blacklist file (thread-safe)."""
+    with _blacklist_lock:
+        try:
+            BLACKLIST_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+            blacklist = load_blacklist()
+            if ip_address in blacklist:
+                return False
+
+            with open(BLACKLIST_FILE, "a", encoding="utf-8") as f:
+                f.write(f"\n{ip_address}")
+
+            logger.info(f"Added IP to blacklist: {ip_address}")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to add IP to blacklist: {e}")
+            return False
 
 
 def remove_ip_from_blacklist(ip_address: str) -> bool:
-    """Remove an IP address from the blacklist file."""
-    try:
-        blacklist = load_blacklist()
-        if ip_address not in blacklist:
-            return False  # Not in blacklist
-        
-        blacklist.remove(ip_address)
-        
-        # Rewrite file
-        with open(BLACKLIST_FILE, "w", encoding="utf-8") as f:
-            f.write("# IP Blacklist Management\n# Add one IP address per line.\n# Lines starting with # are comments.\n\n")
-            for ip in sorted(blacklist):
-                f.write(f"{ip}\n")
-        
-        logger.info(f"Removed IP from blacklist: {ip_address}")
-        return True
-    except Exception as e:
-        logger.error(f"Failed to remove IP from blacklist: {e}")
-        return False
+    """Remove an IP address from the blacklist file (thread-safe)."""
+    with _blacklist_lock:
+        try:
+            blacklist = load_blacklist()
+            if ip_address not in blacklist:
+                return False
+
+            blacklist.remove(ip_address)
+
+            with open(BLACKLIST_FILE, "w", encoding="utf-8") as f:
+                f.write("# IP Blacklist Management\n# Add one IP address per line.\n# Lines starting with # are comments.\n\n")
+                for ip in sorted(blacklist):
+                    f.write(f"{ip}\n")
+
+            logger.info(f"Removed IP from blacklist: {ip_address}")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to remove IP from blacklist: {e}")
+            return False

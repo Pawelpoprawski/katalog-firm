@@ -37,6 +37,7 @@ class CompanyBase(BaseModel):
     slug: Optional[str] = None  # Auto-generated if not provided
     short_description: Optional[str] = None  # Krótki opis dla kart
     description: Optional[str] = None  # Merged: Firma & Usługi (20-10,000 chars when required)
+    offer: Optional[str] = None  # Legacy separate offer/services field
     phone: Optional[str] = None
     whatsapp: Optional[str] = None  # WhatsApp number
     email: Optional[str] = None
@@ -50,7 +51,6 @@ class CompanyBase(BaseModel):
     country: Optional[str] = "Switzerland"
     latitude: Optional[float] = None
     longitude: Optional[float] = None
-    website: Optional[str] = None
     category_id: Optional[int] = None
     tags: Optional[str] = None
     img: Optional[str] = None

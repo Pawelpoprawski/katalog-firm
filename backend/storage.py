@@ -677,8 +677,9 @@ def create_company(payload: dict) -> dict:
         
         # Geocode address if coordinates not provided
         if not payload.get('latitude') or not payload.get('longitude'):
-            settings = get_settings()
-            api_key = settings.get('google_maps_api_key')
+            from .settings import get_settings as get_app_settings
+            app_settings = get_app_settings()
+            api_key = app_settings.google_maps_api_key
             if api_key:
                 full_address = build_full_address(
                     address=payload.get('address', ''),
@@ -998,13 +999,13 @@ def get_settings() -> dict:
 
 
 def update_social_media(social_media: dict) -> dict:
-    """Update social media links."""
-    settings = get_settings()
-    settings["social_media"] = social_media
-    
-    with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
-        json.dump(settings, f, indent=2, ensure_ascii=False)
-    
+    """Update social media links (thread-safe)."""
+    with _lock:
+        settings = get_settings()
+        settings["social_media"] = social_media
+        tmp = SETTINGS_FILE.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(settings, indent=2, ensure_ascii=False), encoding="utf-8")
+        tmp.replace(SETTINGS_FILE)
     return settings
 
 
@@ -1015,21 +1016,21 @@ def get_newsletter_count() -> int:
 
 
 def update_newsletter_count(count: int) -> dict:
-    """Update the number of random companies for newsletter."""
-    settings = get_settings()
-    settings["newsletter_count"] = max(1, min(count, 50))  # Clamp between 1 and 50
-    
-    with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
-        json.dump(settings, f, indent=2, ensure_ascii=False)
-    
+    """Update the number of random companies for newsletter (thread-safe)."""
+    with _lock:
+        settings = get_settings()
+        settings["newsletter_count"] = max(1, min(count, 50))  # Clamp between 1 and 50
+        tmp = SETTINGS_FILE.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(settings, indent=2, ensure_ascii=False), encoding="utf-8")
+        tmp.replace(SETTINGS_FILE)
     return settings
 
 def update_sort_order(sort_order: str) -> dict:
-    """Update the sort order for homepage company display."""
-    settings = get_settings()
-    settings["sort_order"] = sort_order
-    
-    with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
-        json.dump(settings, f, indent=2, ensure_ascii=False)
-    
+    """Update the sort order for homepage company display (thread-safe)."""
+    with _lock:
+        settings = get_settings()
+        settings["sort_order"] = sort_order
+        tmp = SETTINGS_FILE.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(settings, indent=2, ensure_ascii=False), encoding="utf-8")
+        tmp.replace(SETTINGS_FILE)
     return settings

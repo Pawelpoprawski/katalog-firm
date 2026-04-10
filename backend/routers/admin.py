@@ -9,6 +9,7 @@ from ..storage import (
     delete_review as storage_delete_review
 )
 from ..settings import get_settings
+from ..security_middleware import sanitize_html
 
 
 def verify_admin(authorization: Optional[str] = Header(None)):
@@ -160,26 +161,30 @@ def update_company_fields(
     postal_code: Optional[str] = Body(None)
 ):
     """Update company fields (email, name, etc). Admin only."""
-    # Build update payload from non-None values
+    # Build update payload from non-None values with sanitization and length validation
     updates = {}
     if email is not None:
-        updates["email"] = email.strip() if email else None
+        updates["email"] = email.strip()[:254] if email else None
     if name is not None:
-        updates["name"] = name
+        if len(name) > 200:
+            raise HTTPException(status_code=400, detail="Name too long (max 200 chars)")
+        updates["name"] = sanitize_html(name)
     if phone is not None:
-        updates["phone"] = phone
+        updates["phone"] = phone[:30]
     if website is not None:
-        updates["website"] = website
+        updates["website"] = website[:500]
     if description is not None:
-        updates["description"] = description
+        if len(description) > 10000:
+            raise HTTPException(status_code=400, detail="Description too long (max 10000 chars)")
+        updates["description"] = sanitize_html(description, allowed_tags=["p", "br", "b", "strong", "i", "em", "ul", "ol", "li"])
     if address is not None:
-        updates["address"] = address
+        updates["address"] = address[:300]
     if city is not None:
-        updates["city"] = city
+        updates["city"] = city[:100]
     if canton is not None:
-        updates["canton"] = canton
+        updates["canton"] = canton[:50]
     if postal_code is not None:
-        updates["postal_code"] = postal_code
+        updates["postal_code"] = postal_code[:10]
     
     if not updates:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No fields to update")

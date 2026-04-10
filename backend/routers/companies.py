@@ -64,12 +64,13 @@ def list_companies(
     - **status**: Filter by status (published, draft, etc.)
     """
     all_companies = storage_list_companies()
-    
+
     # Apply filters
     if category_id is not None:
         all_companies = [c for c in all_companies if c.get("category_id") == category_id]
-    if status:
-        all_companies = [c for c in all_companies if c.get("status") == status]
+    # Default to published-only for public endpoint; admin uses /admin/companies for all
+    effective_status = status if status is not None else "published"
+    all_companies = [c for c in all_companies if c.get("status") == effective_status]
     
     # Apply limit
     limited = all_companies[:limit]
@@ -105,8 +106,7 @@ def _sort_by_newest(companies: list[dict]) -> list[dict]:
 
 
 @router.post("/", response_model=CompanyReadWithToken, status_code=status.HTTP_201_CREATED)
-# TEMPORARY: Rate limiting disabled - caused issues on production  
-# @limiter.limit("3/hour")  # Max 3 companies per hour per IP - prevent spam
+@limiter.limit("3/hour")
 def create_company(
     request: Request,
     payload: CompanyCreate,
@@ -119,6 +119,8 @@ def create_company(
         data["description"] = sanitize_html(data["description"], allowed_tags=["p", "br", "b", "strong", "i", "em", "ul", "ol", "li"])
     if data.get("short_description"):
         data["short_description"] = sanitize_html(data["short_description"])
+    if data.get("offer"):
+        data["offer"] = sanitize_html(data["offer"], allowed_tags=["p", "br", "b", "strong", "i", "em", "ul", "ol", "li"])
     company = storage_create_company(data)
     from ..storage import track_new_company
     track_new_company()
@@ -184,7 +186,17 @@ def update_company(
         )
     
     try:
-        updated = storage_update_company(company_id, payload.dict(exclude_unset=True))
+        update_data = payload.dict(exclude_unset=True)
+        # Sanitize HTML fields on update to prevent XSS
+        if update_data.get("description"):
+            update_data["description"] = sanitize_html(update_data["description"], allowed_tags=["p", "br", "b", "strong", "i", "em", "ul", "ol", "li"])
+        if update_data.get("offer"):
+            update_data["offer"] = sanitize_html(update_data["offer"], allowed_tags=["p", "br", "b", "strong", "i", "em", "ul", "ol", "li"])
+        if update_data.get("name"):
+            update_data["name"] = sanitize_html(update_data["name"])
+        if update_data.get("short_description"):
+            update_data["short_description"] = sanitize_html(update_data["short_description"])
+        updated = storage_update_company(company_id, update_data)
         return _enrich_company(updated.copy())
     except KeyError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
@@ -232,7 +244,7 @@ def get_company_with_edit_token(company_id: int, token: str):
     if not company:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     
-    if not storage_verify_edit_token(company_id, token):
+    if company.get("edit_token") != token:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid token")
     
     return _enrich_company(company.copy())
@@ -273,32 +285,33 @@ def get_company_photo(company_id: int, photo_index: int):
     raise HTTPException(status_code=500, detail="Unknown photo format")
 
 @router.post("/confirm")
-def confirm_company_activity(body: dict[str, str]) -> dict[str, str]:
+@limiter.limit("5/minute")
+def confirm_company_activity(request: Request, body: dict[str, str]) -> dict[str, str]:
     """
     Confirm company activity by email.
     Updates last_confirmed_at to current datetime.
+    Returns same response regardless of whether email exists (prevents enumeration).
     """
     from datetime import datetime
-    
+
     email = body.get("email")
     if not email:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email jest wymagany"
         )
-    
-    # Find company by email
+
+    # Find company by email (case-insensitive)
     all_companies = storage_list_companies()
-    company = next((c for c in all_companies if c.get("email") == email), None)
-    
-    if not company:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Nie ma takiego adresu email w bazie. Skontaktuj się z kontakt@polacyszwajcaria.com"
-        )
-    
-    # Update last_confirmed_at
-    company["last_confirmed_at"] = datetime.now().isoformat()
-    storage_update_company(company["id"], company)
-    
-    return {"status": "confirmed", "message": "Dziękujemy! Twoje ogłoszenie zostało potwierdzone."}
+    company = next(
+        (c for c in all_companies if (c.get("email") or "").strip().lower() == email.strip().lower()),
+        None,
+    )
+
+    if company:
+        # Update last_confirmed_at
+        company["last_confirmed_at"] = datetime.now().isoformat()
+        storage_update_company(company["id"], company)
+
+    # Always return success to prevent email enumeration
+    return {"status": "confirmed", "message": "Jeśli podany email istnieje w bazie, ogłoszenie zostało potwierdzone."}
