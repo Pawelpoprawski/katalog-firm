@@ -40,7 +40,8 @@ type Company = {
   id: number;
   name: string;
   slug?: string;
-  description: string;
+  short_description?: string;
+  description?: string;
   offer?: string;
   phone?: string;
   whatsapp?: string;
