@@ -200,11 +200,12 @@ export default function HomePage() {
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       const hit =
-        c.name.toLowerCase().includes(q) ||
-        c.description.toLowerCase().includes(q) ||
-        (c.city && c.city.toLowerCase().includes(q)) ||
-        (c.canton && c.canton.toLowerCase().includes(q)) ||
-        (c.category && c.category.toLowerCase().includes(q));
+        (c.name || "").toLowerCase().includes(q) ||
+        (c.short_description || "").toLowerCase().includes(q) ||
+        (c.description || "").toLowerCase().includes(q) ||
+        (c.city || "").toLowerCase().includes(q) ||
+        (c.canton || "").toLowerCase().includes(q) ||
+        (c.category || "").toLowerCase().includes(q);
       if (!hit) return false;
     }
     // Canton
@@ -935,7 +936,7 @@ export default function HomePage() {
                         </div>
                       )}
                       <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                        {(item as any).short_description || item.description?.replace(/<[^>]*>/g, '') || "Brak opisu firmy w katalogu."}
+                        {item.short_description || (item.description || "").replace(/<[^>]*>/g, '') || "Brak opisu firmy w katalogu."}
                       </p>
 
                       <div className="pt-4 mt-auto border-t border-slate-100 dark:border-slate-800 flex justify-between items-center group/btn">
