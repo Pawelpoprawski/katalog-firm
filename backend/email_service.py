@@ -20,7 +20,7 @@ def _get_api_key() -> str:
     return RESEND_API_KEY
 
 
-def send_email(to: str, subject: str, html: str, from_email: str = "Katalog Firm <onboarding@resend.dev>") -> bool:
+def send_email(to: str, subject: str, html: str, from_email: str = "Katalog Firm <kontakt@katalog-firm.ch>") -> bool:
     """Send email via Resend API."""
     api_key = _get_api_key()
     if not api_key:
