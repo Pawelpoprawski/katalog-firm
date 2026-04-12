@@ -108,6 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
+        <script defer src="/umami/script.js" data-website-id="29e9d993-03f9-4c30-976b-bc2fc1cd1f20" />
       </head>
       <body className="bg-slate-50 text-slate-900 antialiased">
         <AppShell>{children}</AppShell>
