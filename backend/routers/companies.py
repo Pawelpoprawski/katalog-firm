@@ -137,6 +137,19 @@ def create_company(
     # Clear nginx cache so new company appears immediately
     from ..clear_cache import clear_nginx_cache
     clear_nginx_cache()
+    # Send email with edit link
+    if company.get("email") and company.get("edit_token"):
+        try:
+            from ..email_service import send_company_created_email
+            send_company_created_email(
+                email=company["email"],
+                company_name=company.get("name", ""),
+                edit_token=company["edit_token"],
+                company_slug=company.get("slug", ""),
+            )
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning(f"Failed to send email: {e}")
     return _enrich_company(company.copy())
 
 

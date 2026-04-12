@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     mapbox_token: Optional[str] = Field(default=None, validation_alias="MAPBOX_TOKEN")
     google_maps_api_key: Optional[str] = Field(default=None, validation_alias="GOOGLE_MAPS_API_KEY")
     admin_password: Optional[str] = Field(default=None, validation_alias="ADMIN_PASSWORD")
+    resend_api_key: Optional[str] = Field(default=None, validation_alias="RESEND_API_KEY")
     
     @field_validator('cors_origins', mode='before')
     @classmethod
