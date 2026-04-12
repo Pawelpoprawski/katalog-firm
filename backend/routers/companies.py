@@ -134,6 +134,9 @@ def create_company(
     company = storage_create_company(data)
     from ..storage import track_new_company
     track_new_company()
+    # Clear nginx cache so new company appears immediately
+    from ..clear_cache import clear_nginx_cache
+    clear_nginx_cache()
     return _enrich_company(company.copy())
 
 

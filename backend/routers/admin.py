@@ -118,6 +118,9 @@ def update_company_status(
     
     try:
         updated = storage_update_company(company_id, {"status": status_value})
+        # Clear nginx cache so status change reflects immediately
+        from ..clear_cache import clear_nginx_cache
+        clear_nginx_cache()
         return {"message": "Status updated", "company": updated}
     except KeyError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
