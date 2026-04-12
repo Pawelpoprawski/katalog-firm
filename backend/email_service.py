@@ -1,8 +1,7 @@
 """Email service using Resend API."""
 import logging
 import json
-from urllib.request import Request, urlopen
-from urllib.error import URLError
+import subprocess
 
 logger = logging.getLogger(__name__)
 
@@ -21,37 +20,40 @@ def _get_api_key() -> str:
 
 
 def send_email(to: str, subject: str, html: str, from_email: str = "Katalog Firm <kontakt@katalog-firm.ch>") -> bool:
-    """Send email via Resend API."""
+    """Send email via Resend API using curl (most reliable method)."""
     api_key = _get_api_key()
     if not api_key:
         logger.warning("RESEND_API_KEY not set, skipping email")
         return False
 
     try:
-        data = json.dumps({
+        payload = json.dumps({
             "from": from_email,
             "to": [to],
             "subject": subject,
             "html": html,
-        }).encode("utf-8")
+        })
 
-        req = Request(
-            "https://api.resend.com/emails",
-            data=data,
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json",
-            },
+        result = subprocess.run(
+            [
+                "curl", "-s", "-X", "POST",
+                "https://api.resend.com/emails",
+                "-H", f"Authorization: Bearer {api_key}",
+                "-H", "Content-Type: application/json",
+                "-d", payload,
+            ],
+            capture_output=True, text=True, timeout=15,
         )
-        response = urlopen(req, timeout=10)
-        result = json.loads(response.read().decode())
-        logger.info(f"Email sent to {to}: {result.get('id')}")
-        return True
-    except URLError as e:
-        logger.error(f"Failed to send email to {to}: {e}")
-        return False
+
+        response = json.loads(result.stdout)
+        if response.get("id"):
+            logger.info(f"Email sent to {to}: {response['id']}")
+            return True
+        else:
+            logger.error(f"Resend error for {to}: {response}")
+            return False
     except Exception as e:
-        logger.error(f"Email error: {e}")
+        logger.error(f"Email error for {to}: {e}")
         return False
 
 
