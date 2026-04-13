@@ -30,6 +30,7 @@ def send_email(to: str, subject: str, html: str, from_email: str = "Katalog Firm
         payload = json.dumps({
             "from": from_email,
             "to": [to],
+            "reply_to": "kontakt@polacyszwajcaria.com",
             "subject": subject,
             "html": html,
         })
