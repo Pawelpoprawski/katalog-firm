@@ -80,6 +80,49 @@ export default async function CompanyPage({ params }: Props) {
     notFound();
   }
 
-  return <CompanyPageClient company={company} slug={params.slug} />;
+  const location = [company.city, company.canton].filter(Boolean).join(", ");
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: company.name,
+    description: company.short_description || company.description?.replace(/<[^>]*>/g, "").slice(0, 200) || "",
+    url: `https://katalog-firm.ch/firma/${params.slug}`,
+    ...(company.img ? { image: company.img } : {}),
+    ...(company.phone ? { telephone: company.phone } : {}),
+    ...(company.email ? { email: company.email } : {}),
+    ...(company.website ? { url: company.website } : {}),
+    address: {
+      "@type": "PostalAddress",
+      ...(company.address ? { streetAddress: company.address } : {}),
+      ...(company.city ? { addressLocality: company.city } : {}),
+      ...(company.canton ? { addressRegion: company.canton } : {}),
+      ...(company.postal_code ? { postalCode: company.postal_code } : {}),
+      addressCountry: "CH",
+    },
+    ...(company.latitude && company.longitude ? {
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: company.latitude,
+        longitude: company.longitude,
+      },
+    } : {}),
+    ...(company.rating ? {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: company.rating,
+        bestRating: 5,
+      },
+    } : {}),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <CompanyPageClient company={company} slug={params.slug} />
+    </>
+  );
 }
 

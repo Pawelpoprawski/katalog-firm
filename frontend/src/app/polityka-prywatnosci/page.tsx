@@ -1,6 +1,16 @@
-export const metadata = {
-  title: "Polityka prywatności | Polskie usługi w Szwajcarii",
-  description: "Informacje o przetwarzaniu danych w katalogu polskich firm w Szwajcarii.",
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Polityka prywatności | Katalog Firm w Szwajcarii",
+  description: "Informacje o przetwarzaniu danych osobowych w katalogu polskich firm w Szwajcarii. RODO, cookies, prawa użytkownika.",
+  openGraph: {
+    title: "Polityka prywatności | Katalog Firm",
+    description: "Informacje o przetwarzaniu danych osobowych w katalogu polskich firm w Szwajcarii.",
+    url: "https://katalog-firm.ch/polityka-prywatnosci",
+  },
+  alternates: {
+    canonical: "https://katalog-firm.ch/polityka-prywatnosci",
+  },
 };
 
 export default function PrivacyPolicyPage() {
