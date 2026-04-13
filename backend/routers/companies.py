@@ -112,6 +112,125 @@ def _sort_by_newest(companies: list[dict]) -> list[dict]:
     return sorted(companies, key=lambda c: c.get("created_at", 0), reverse=True)
 
 
+@router.get("/newsletter-preview")
+def get_newsletter_preview(count: int = Query(default=5, ge=1, le=20)):
+    """
+    Returns a full HTML page with newsletter preview + copy button.
+    Open in browser: /api/companies/newsletter-preview?count=5
+    """
+    from fastapi.responses import HTMLResponse
+
+    all_companies = storage_list_companies()
+    published = [c for c in all_companies if c.get("status") == "published"]
+    selected = _get_random_companies(published, limit=count)
+    enriched = [_enrich_company(c.copy()) for c in selected]
+
+    base_url = "https://katalog-firm.ch"
+    cards_html = ""
+    for c in enriched:
+        name = c.get("name", "")
+        slug = c.get("slug", "")
+        city = c.get("city", "")
+        canton = c.get("canton", "")
+        location = ", ".join(filter(None, [city, canton]))
+        category = c.get("category", "Usługi")
+        short_desc = (c.get("short_description") or "")[:120]
+        if short_desc and len(c.get("short_description", "")) > 120:
+            short_desc += "..."
+        img_html = ""
+        if c.get("img"):
+            img_html = f'<img src="{c["img"]}" alt="{name}" style="width:100%;height:160px;object-fit:cover;" />'
+        else:
+            img_html = '<div style="width:100%;height:160px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:14px;">Brak zdjęcia</div>'
+
+        cards_html += f"""<tr><td style="padding:8px;" valign="top">
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#fff;">
+    <tr><td>{img_html}</td></tr>
+    <tr><td style="padding:14px 16px;">
+      <div style="font-size:11px;color:#E30613;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">{category}</div>
+      <a href="{base_url}/firma/{slug}" style="font-size:16px;font-weight:700;color:#1e293b;text-decoration:none;display:block;margin:6px 0;">{name}</a>
+      <div style="font-size:12px;color:#64748b;">📍 {location}</div>
+      <div style="font-size:13px;color:#475569;margin-top:8px;line-height:1.5;">{short_desc}</div>
+      <a href="{base_url}/firma/{slug}" style="display:inline-block;margin-top:12px;padding:8px 20px;background:#E30613;color:#fff;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">Zobacz firmę →</a>
+    </td></tr>
+  </table>
+</td></tr>
+"""
+
+    newsletter_snippet = f"""<table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;">
+  <tr><td style="text-align:center;padding:24px 0;">
+    <h2 style="color:#1e293b;font-size:22px;margin:0 0 8px;">🇵🇱 Polecane firmy z katalogu</h2>
+    <p style="color:#64748b;font-size:14px;margin:0;">Odkryj polskie usługi w Szwajcarii</p>
+  </td></tr>
+  {cards_html}
+  <tr><td style="text-align:center;padding:24px 0;">
+    <a href="{base_url}" style="display:inline-block;padding:14px 36px;background:#E30613;color:#fff;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;">Zobacz wszystkie firmy →</a>
+  </td></tr>
+</table>"""
+
+    # Escape for textarea
+    escaped = newsletter_snippet.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+    page_html = f"""<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<title>Newsletter - Katalog Firm</title>
+<style>
+body {{ font-family: Arial, sans-serif; background: #f8fafc; margin: 0; padding: 20px; }}
+.container {{ max-width: 700px; margin: 0 auto; }}
+.toolbar {{ background: #1e293b; color: white; padding: 16px 24px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center; }}
+.toolbar h1 {{ margin: 0; font-size: 18px; }}
+.btn {{ padding: 10px 24px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; font-size: 14px; }}
+.btn-copy {{ background: #E30613; color: white; }}
+.btn-refresh {{ background: #334155; color: white; text-decoration: none; }}
+.preview {{ background: white; border: 1px solid #e2e8f0; border-radius: 0 0 12px 12px; padding: 20px; }}
+.code {{ margin-top: 20px; }}
+textarea {{ width: 100%; height: 200px; font-family: monospace; font-size: 11px; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; resize: vertical; }}
+.info {{ background: #fef9c3; border: 1px solid #fde047; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 14px; color: #854d0e; }}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="info">
+    <strong>Instrukcja:</strong> Kliknij "Kopiuj HTML" → wklej w WordPress newsletter jako blok HTML → wyślij.
+    Każde odświeżenie strony = inne losowe firmy.
+  </div>
+  <div class="toolbar">
+    <h1>Newsletter Preview ({count} firm)</h1>
+    <div>
+      <a href="/api/companies/newsletter-preview?count={count}" class="btn btn-refresh">🔄 Losuj nowe</a>
+      <button class="btn btn-copy" onclick="copyHTML()">📋 Kopiuj HTML</button>
+    </div>
+  </div>
+  <div class="preview">
+    {newsletter_snippet}
+  </div>
+  <div class="code">
+    <h3>Kod HTML do skopiowania:</h3>
+    <textarea id="html-code">{escaped}</textarea>
+  </div>
+</div>
+<script>
+function copyHTML() {{
+  const ta = document.getElementById('html-code');
+  // Decode escaped HTML
+  const temp = document.createElement('div');
+  temp.innerHTML = ta.value;
+  const decoded = temp.textContent;
+  navigator.clipboard.writeText(decoded).then(() => {{
+    const btn = document.querySelector('.btn-copy');
+    btn.textContent = '✅ Skopiowano!';
+    setTimeout(() => btn.textContent = '📋 Kopiuj HTML', 2000);
+  }});
+}}
+</script>
+</body>
+</html>"""
+
+    return HTMLResponse(content=page_html)
+
+
 @router.get("/newsletter")
 def get_newsletter_companies(count: int = Query(default=5, ge=1, le=20)):
     """
