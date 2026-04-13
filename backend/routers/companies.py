@@ -139,17 +139,19 @@ def _build_newsletter_html(enriched: list[dict], cols: int = 3) -> str:
             if not c.get("img") and not c.get("photos"):
                 img_html = f'<div style="width:100%;height:140px;background:#f1f5f9;text-align:center;line-height:140px;color:#94a3b8;font-size:13px;">Brak zdjecia</div>'
 
+            link = f"{base_url}/firma/{slug}"
             cells += f"""<td width="{col_width}" valign="top" style="padding:6px;">
+  <a href="{link}" style="text-decoration:none;color:inherit;display:block;">
   <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff;">
-    <tr><td>{img_html}</td></tr>
+    <tr><td><a href="{link}" style="display:block;">{img_html}</a></td></tr>
     <tr><td style="padding:12px;">
       <div style="font-size:10px;color:#E30613;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">{category}</div>
-      <a href="{base_url}/firma/{slug}" style="font-size:14px;font-weight:700;color:#1e293b;text-decoration:none;display:block;margin:4px 0;">{name}</a>
+      <a href="{link}" style="font-size:14px;font-weight:700;color:#1e293b;text-decoration:none;display:block;margin:4px 0;">{name}</a>
       <div style="font-size:11px;color:#64748b;">{location}</div>
       <div style="font-size:12px;color:#475569;margin-top:6px;line-height:1.4;">{short_desc}</div>
-      <a href="{base_url}/firma/{slug}" style="display:inline-block;margin-top:10px;padding:6px 16px;background:#E30613;color:#fff;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;">Zobacz firme</a>
     </td></tr>
   </table>
+  </a>
 </td>"""
 
         # Pad empty cells if row not full
