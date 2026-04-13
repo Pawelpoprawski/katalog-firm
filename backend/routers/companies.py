@@ -161,10 +161,6 @@ def _build_newsletter_html(enriched: list[dict], cols: int = 3) -> str:
         rows_html += f"<tr>{cells}</tr>\n"
 
     return f"""<table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;">
-  <tr><td style="text-align:center;padding:20px 0;">
-    <h2 style="color:#1e293b;font-size:20px;margin:0 0 6px;">Polecane firmy z katalogu</h2>
-    <p style="color:#64748b;font-size:13px;margin:0;">Odkryj polskie uslugi w Szwajcarii</p>
-  </td></tr>
   <tr><td>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
       {rows_html}
@@ -413,10 +409,14 @@ def get_company_photo(company_id: int, photo_index: int):
         raise HTTPException(status_code=404, detail="Company not found")
     
     photos = company.get("photos") or []
-    if photo_index < 0 or photo_index >= len(photos):
+
+    # Fallback: if requesting photo/0 and photos is empty, use main img field
+    if photo_index == 0 and not photos and company.get("img"):
+        photo_data = company["img"]
+    elif photo_index < 0 or photo_index >= len(photos):
         raise HTTPException(status_code=404, detail="Photo not found")
-    
-    photo_data = photos[photo_index]
+    else:
+        photo_data = photos[photo_index]
     
     # If it's a base64 data URL, decode and return
     if photo_data.startswith("data:image"):
