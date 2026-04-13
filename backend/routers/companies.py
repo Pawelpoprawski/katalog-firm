@@ -142,13 +142,13 @@ def _build_newsletter_html(enriched: list[dict], cols: int = 3) -> str:
             link = f"{base_url}/firma/{slug}"
             cells += f"""<td width="{col_width}" valign="top" style="padding:6px;">
   <a href="{link}" style="text-decoration:none;color:inherit;display:block;">
-  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff;">
-    <tr><td><a href="{link}" style="display:block;">{img_html}</a></td></tr>
-    <tr><td style="padding:12px;">
-      <div style="font-size:10px;color:#E30613;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">{category}</div>
-      <a href="{link}" style="font-size:14px;font-weight:700;color:#1e293b;text-decoration:none;display:block;margin:4px 0;">{name}</a>
-      <div style="font-size:11px;color:#64748b;">{location}</div>
-      <div style="font-size:12px;color:#475569;margin-top:6px;line-height:1.4;">{short_desc}</div>
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff;height:320px;">
+    <tr><td style="height:140px;">{img_html}</td></tr>
+    <tr><td style="padding:12px;height:180px;vertical-align:top;">
+      <div style="font-size:10px;color:#E30613;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;height:14px;overflow:hidden;">{category}</div>
+      <div style="font-size:14px;font-weight:700;color:#1e293b;margin:4px 0;height:36px;overflow:hidden;line-height:18px;">{name}</div>
+      <div style="font-size:11px;color:#64748b;height:16px;overflow:hidden;">{location}</div>
+      <div style="font-size:12px;color:#475569;margin-top:6px;line-height:1.4;overflow:hidden;height:84px;">{short_desc}</div>
     </td></tr>
   </table>
   </a>
