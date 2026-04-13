@@ -112,12 +112,71 @@ def _sort_by_newest(companies: list[dict]) -> list[dict]:
     return sorted(companies, key=lambda c: c.get("created_at", 0), reverse=True)
 
 
+def _build_newsletter_html(enriched: list[dict], cols: int = 3) -> str:
+    """Build email-safe HTML for newsletter with N columns per row. Uses URL images instead of base64."""
+    base_url = "https://katalog-firm.ch"
+    api_url = "https://katalog-firm.ch/api"
+    col_width = f"{100 // cols}%"
+
+    rows_html = ""
+    for i in range(0, len(enriched), cols):
+        row_companies = enriched[i:i + cols]
+        cells = ""
+        for c in row_companies:
+            name = c.get("name", "")
+            slug = c.get("slug", "")
+            cid = c.get("id", 0)
+            city = c.get("city", "")
+            canton = c.get("canton", "")
+            location = ", ".join(filter(None, [city, canton]))
+            category = c.get("category", "Uslugi")
+            short_desc = (c.get("short_description") or "")[:100]
+            if short_desc and len(c.get("short_description", "")) > 100:
+                short_desc += "..."
+
+            # Use photo endpoint URL (serves actual image, not base64)
+            img_html = f'<img src="{api_url}/companies/{cid}/photo/0" alt="{name}" style="width:100%;height:140px;object-fit:cover;display:block;" />'
+            if not c.get("img") and not c.get("photos"):
+                img_html = f'<div style="width:100%;height:140px;background:#f1f5f9;text-align:center;line-height:140px;color:#94a3b8;font-size:13px;">Brak zdjecia</div>'
+
+            cells += f"""<td width="{col_width}" valign="top" style="padding:6px;">
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff;">
+    <tr><td>{img_html}</td></tr>
+    <tr><td style="padding:12px;">
+      <div style="font-size:10px;color:#E30613;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">{category}</div>
+      <a href="{base_url}/firma/{slug}" style="font-size:14px;font-weight:700;color:#1e293b;text-decoration:none;display:block;margin:4px 0;">{name}</a>
+      <div style="font-size:11px;color:#64748b;">{location}</div>
+      <div style="font-size:12px;color:#475569;margin-top:6px;line-height:1.4;">{short_desc}</div>
+      <a href="{base_url}/firma/{slug}" style="display:inline-block;margin-top:10px;padding:6px 16px;background:#E30613;color:#fff;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;">Zobacz firme</a>
+    </td></tr>
+  </table>
+</td>"""
+
+        # Pad empty cells if row not full
+        for _ in range(cols - len(row_companies)):
+            cells += f'<td width="{col_width}" valign="top" style="padding:6px;"></td>'
+
+        rows_html += f"<tr>{cells}</tr>\n"
+
+    return f"""<table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;">
+  <tr><td style="text-align:center;padding:20px 0;">
+    <h2 style="color:#1e293b;font-size:20px;margin:0 0 6px;">Polecane firmy z katalogu</h2>
+    <p style="color:#64748b;font-size:13px;margin:0;">Odkryj polskie uslugi w Szwajcarii</p>
+  </td></tr>
+  <tr><td>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+      {rows_html}
+    </table>
+  </td></tr>
+  <tr><td style="text-align:center;padding:20px 0;">
+    <a href="{base_url}" style="display:inline-block;padding:12px 32px;background:#E30613;color:#fff;border-radius:8px;font-size:15px;font-weight:700;text-decoration:none;">Zobacz wszystkie firmy</a>
+  </td></tr>
+</table>"""
+
+
 @router.get("/newsletter-preview")
-def get_newsletter_preview(count: int = Query(default=5, ge=1, le=20)):
-    """
-    Returns a full HTML page with newsletter preview + copy button.
-    Open in browser: /api/companies/newsletter-preview?count=5
-    """
+def get_newsletter_preview(count: int = Query(default=6, ge=1, le=20)):
+    """Visual preview page with copy button. Open in browser."""
     from fastapi.responses import HTMLResponse
 
     all_companies = storage_list_companies()
@@ -125,171 +184,53 @@ def get_newsletter_preview(count: int = Query(default=5, ge=1, le=20)):
     selected = _get_random_companies(published, limit=count)
     enriched = [_enrich_company(c.copy()) for c in selected]
 
-    base_url = "https://katalog-firm.ch"
-    cards_html = ""
-    for c in enriched:
-        name = c.get("name", "")
-        slug = c.get("slug", "")
-        city = c.get("city", "")
-        canton = c.get("canton", "")
-        location = ", ".join(filter(None, [city, canton]))
-        category = c.get("category", "Usługi")
-        short_desc = (c.get("short_description") or "")[:120]
-        if short_desc and len(c.get("short_description", "")) > 120:
-            short_desc += "..."
-        img_html = ""
-        if c.get("img"):
-            img_html = f'<img src="{c["img"]}" alt="{name}" style="width:100%;height:160px;object-fit:cover;" />'
-        else:
-            img_html = '<div style="width:100%;height:160px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:14px;">Brak zdjęcia</div>'
-
-        cards_html += f"""<tr><td style="padding:8px;" valign="top">
-  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#fff;">
-    <tr><td>{img_html}</td></tr>
-    <tr><td style="padding:14px 16px;">
-      <div style="font-size:11px;color:#E30613;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">{category}</div>
-      <a href="{base_url}/firma/{slug}" style="font-size:16px;font-weight:700;color:#1e293b;text-decoration:none;display:block;margin:6px 0;">{name}</a>
-      <div style="font-size:12px;color:#64748b;">📍 {location}</div>
-      <div style="font-size:13px;color:#475569;margin-top:8px;line-height:1.5;">{short_desc}</div>
-      <a href="{base_url}/firma/{slug}" style="display:inline-block;margin-top:12px;padding:8px 20px;background:#E30613;color:#fff;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">Zobacz firmę →</a>
-    </td></tr>
-  </table>
-</td></tr>
-"""
-
-    newsletter_snippet = f"""<table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;">
-  <tr><td style="text-align:center;padding:24px 0;">
-    <h2 style="color:#1e293b;font-size:22px;margin:0 0 8px;">🇵🇱 Polecane firmy z katalogu</h2>
-    <p style="color:#64748b;font-size:14px;margin:0;">Odkryj polskie usługi w Szwajcarii</p>
-  </td></tr>
-  {cards_html}
-  <tr><td style="text-align:center;padding:24px 0;">
-    <a href="{base_url}" style="display:inline-block;padding:14px 36px;background:#E30613;color:#fff;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;">Zobacz wszystkie firmy →</a>
-  </td></tr>
-</table>"""
-
-    # Escape for textarea
+    newsletter_snippet = _build_newsletter_html(enriched, cols=3)
     escaped = newsletter_snippet.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
     page_html = f"""<!DOCTYPE html>
-<html lang="pl">
-<head>
-<meta charset="utf-8" />
-<title>Newsletter - Katalog Firm</title>
+<html lang="pl"><head><meta charset="utf-8" /><title>Newsletter Preview</title>
 <style>
-body {{ font-family: Arial, sans-serif; background: #f8fafc; margin: 0; padding: 20px; }}
-.container {{ max-width: 700px; margin: 0 auto; }}
-.toolbar {{ background: #1e293b; color: white; padding: 16px 24px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center; }}
-.toolbar h1 {{ margin: 0; font-size: 18px; }}
-.btn {{ padding: 10px 24px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; font-size: 14px; }}
-.btn-copy {{ background: #E30613; color: white; }}
-.btn-refresh {{ background: #334155; color: white; text-decoration: none; }}
-.preview {{ background: white; border: 1px solid #e2e8f0; border-radius: 0 0 12px 12px; padding: 20px; }}
-.code {{ margin-top: 20px; }}
-textarea {{ width: 100%; height: 200px; font-family: monospace; font-size: 11px; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; resize: vertical; }}
-.info {{ background: #fef9c3; border: 1px solid #fde047; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 14px; color: #854d0e; }}
-</style>
-</head>
-<body>
-<div class="container">
-  <div class="info">
-    <strong>Instrukcja:</strong> Kliknij "Kopiuj HTML" → wklej w WordPress newsletter jako blok HTML → wyślij.
-    Każde odświeżenie strony = inne losowe firmy.
-  </div>
-  <div class="toolbar">
-    <h1>Newsletter Preview ({count} firm)</h1>
-    <div>
-      <a href="/api/companies/newsletter-preview?count={count}" class="btn btn-refresh">🔄 Losuj nowe</a>
-      <button class="btn btn-copy" onclick="copyHTML()">📋 Kopiuj HTML</button>
-    </div>
-  </div>
-  <div class="preview">
-    {newsletter_snippet}
-  </div>
-  <div class="code">
-    <h3>Kod HTML do skopiowania:</h3>
-    <textarea id="html-code">{escaped}</textarea>
-  </div>
+body {{ font-family: Arial; background: #f8fafc; margin: 0; padding: 20px; }}
+.c {{ max-width: 700px; margin: 0 auto; }}
+.bar {{ background: #1e293b; color: white; padding: 14px 20px; border-radius: 10px 10px 0 0; display: flex; justify-content: space-between; align-items: center; }}
+.bar h1 {{ margin: 0; font-size: 16px; }}
+.btn {{ padding: 8px 20px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; font-size: 13px; }}
+.bc {{ background: #E30613; color: white; }}
+.br {{ background: #334155; color: white; text-decoration: none; margin-right: 8px; display: inline-block; padding: 8px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; }}
+.pv {{ background: white; border: 1px solid #e2e8f0; border-radius: 0 0 10px 10px; padding: 16px; }}
+textarea {{ width: 100%; height: 150px; font-family: monospace; font-size: 10px; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 16px; }}
+</style></head><body>
+<div class="c">
+<div class="bar"><h1>Newsletter ({count} firm, 3 kolumny)</h1><div>
+<a href="/api/companies/newsletter-preview?count={count}" class="br">Losuj nowe</a>
+<button class="btn bc" onclick="copyHTML()">Kopiuj HTML</button>
+</div></div>
+<div class="pv">{newsletter_snippet}</div>
+<textarea id="code">{escaped}</textarea>
 </div>
 <script>
-function copyHTML() {{
-  const ta = document.getElementById('html-code');
-  // Decode escaped HTML
-  const temp = document.createElement('div');
-  temp.innerHTML = ta.value;
-  const decoded = temp.textContent;
-  navigator.clipboard.writeText(decoded).then(() => {{
-    const btn = document.querySelector('.btn-copy');
-    btn.textContent = '✅ Skopiowano!';
-    setTimeout(() => btn.textContent = '📋 Kopiuj HTML', 2000);
-  }});
-}}
-</script>
-</body>
-</html>"""
-
+function copyHTML(){{const t=document.getElementById('code'),d=document.createElement('div');d.innerHTML=t.value;navigator.clipboard.writeText(d.textContent).then(()=>{{const b=document.querySelector('.bc');b.textContent='Skopiowano!';setTimeout(()=>b.textContent='Kopiuj HTML',2000)}})}}
+</script></body></html>"""
     return HTMLResponse(content=page_html)
 
 
 @router.get("/newsletter")
-def get_newsletter_companies(count: int = Query(default=5, ge=1, le=20)):
+def get_newsletter_companies(count: int = Query(default=6, ge=1, le=20)):
     """
-    Get random published companies for newsletter embedding.
-    Returns JSON data + ready-to-use HTML snippet.
+    Get random published companies for newsletter (3 columns per row).
+    Returns JSON + email-safe HTML snippet with URL images.
     """
     all_companies = storage_list_companies()
     published = [c for c in all_companies if c.get("status") == "published"]
     selected = _get_random_companies(published, limit=count)
     enriched = [_enrich_company(c.copy()) for c in selected]
 
-    # Strip heavy fields
     for c in enriched:
         c.pop("photos", None)
         c.pop("description", None)
         c.pop("offer", None)
 
-    # Generate HTML snippet
-    base_url = "https://katalog-firm.ch"
-    cards_html = ""
-    for c in enriched:
-        name = c.get("name", "")
-        slug = c.get("slug", "")
-        city = c.get("city", "")
-        canton = c.get("canton", "")
-        location = ", ".join(filter(None, [city, canton]))
-        category = c.get("category", "Usługi")
-        short_desc = (c.get("short_description") or "")[:120]
-        img_html = ""
-        if c.get("img") and c["img"].startswith("http"):
-            img_html = f'<img src="{c["img"]}" alt="{name}" style="width:100%;height:140px;object-fit:cover;border-radius:8px 8px 0 0;" />'
-        elif c.get("img") and c["img"].startswith("data:"):
-            img_html = f'<img src="{c["img"]}" alt="{name}" style="width:100%;height:140px;object-fit:cover;border-radius:8px 8px 0 0;" />'
-
-        cards_html += f"""
-    <div style="width:100%;max-width:280px;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#fff;font-family:Arial,sans-serif;">
-      {img_html}
-      <div style="padding:12px 16px;">
-        <div style="font-size:11px;color:#E30613;font-weight:700;text-transform:uppercase;margin-bottom:4px;">{category}</div>
-        <a href="{base_url}/firma/{slug}" style="font-size:15px;font-weight:700;color:#1e293b;text-decoration:none;display:block;margin-bottom:6px;">{name}</a>
-        <div style="font-size:12px;color:#64748b;margin-bottom:8px;">{location}</div>
-        <div style="font-size:13px;color:#475569;line-height:1.4;">{short_desc}</div>
-        <a href="{base_url}/firma/{slug}" style="display:inline-block;margin-top:10px;padding:6px 16px;background:#E30613;color:#fff;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;">Zobacz firmę</a>
-      </div>
-    </div>
-"""
-
-    newsletter_html = f"""<div style="max-width:640px;margin:0 auto;font-family:Arial,sans-serif;">
-  <div style="text-align:center;padding:20px 0;">
-    <h2 style="color:#1e293b;font-size:22px;margin:0 0 8px;">Polecane firmy z katalogu</h2>
-    <p style="color:#64748b;font-size:14px;margin:0;">Odkryj polskie usługi w Szwajcarii</p>
-  </div>
-  <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;">
-    {cards_html}
-  </div>
-  <div style="text-align:center;padding:24px 0;">
-    <a href="{base_url}" style="display:inline-block;padding:12px 32px;background:#E30613;color:#fff;border-radius:8px;font-size:15px;font-weight:700;text-decoration:none;">Zobacz wszystkie firmy</a>
-  </div>
-</div>"""
+    newsletter_html = _build_newsletter_html(enriched, cols=3)
 
     return {
         "companies": enriched,
