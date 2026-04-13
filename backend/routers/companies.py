@@ -112,6 +112,73 @@ def _sort_by_newest(companies: list[dict]) -> list[dict]:
     return sorted(companies, key=lambda c: c.get("created_at", 0), reverse=True)
 
 
+@router.get("/newsletter")
+def get_newsletter_companies(count: int = Query(default=5, ge=1, le=20)):
+    """
+    Get random published companies for newsletter embedding.
+    Returns JSON data + ready-to-use HTML snippet.
+    """
+    all_companies = storage_list_companies()
+    published = [c for c in all_companies if c.get("status") == "published"]
+    selected = _get_random_companies(published, limit=count)
+    enriched = [_enrich_company(c.copy()) for c in selected]
+
+    # Strip heavy fields
+    for c in enriched:
+        c.pop("photos", None)
+        c.pop("description", None)
+        c.pop("offer", None)
+
+    # Generate HTML snippet
+    base_url = "https://katalog-firm.ch"
+    cards_html = ""
+    for c in enriched:
+        name = c.get("name", "")
+        slug = c.get("slug", "")
+        city = c.get("city", "")
+        canton = c.get("canton", "")
+        location = ", ".join(filter(None, [city, canton]))
+        category = c.get("category", "Usługi")
+        short_desc = (c.get("short_description") or "")[:120]
+        img_html = ""
+        if c.get("img") and c["img"].startswith("http"):
+            img_html = f'<img src="{c["img"]}" alt="{name}" style="width:100%;height:140px;object-fit:cover;border-radius:8px 8px 0 0;" />'
+        elif c.get("img") and c["img"].startswith("data:"):
+            img_html = f'<img src="{c["img"]}" alt="{name}" style="width:100%;height:140px;object-fit:cover;border-radius:8px 8px 0 0;" />'
+
+        cards_html += f"""
+    <div style="width:100%;max-width:280px;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#fff;font-family:Arial,sans-serif;">
+      {img_html}
+      <div style="padding:12px 16px;">
+        <div style="font-size:11px;color:#E30613;font-weight:700;text-transform:uppercase;margin-bottom:4px;">{category}</div>
+        <a href="{base_url}/firma/{slug}" style="font-size:15px;font-weight:700;color:#1e293b;text-decoration:none;display:block;margin-bottom:6px;">{name}</a>
+        <div style="font-size:12px;color:#64748b;margin-bottom:8px;">{location}</div>
+        <div style="font-size:13px;color:#475569;line-height:1.4;">{short_desc}</div>
+        <a href="{base_url}/firma/{slug}" style="display:inline-block;margin-top:10px;padding:6px 16px;background:#E30613;color:#fff;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;">Zobacz firmę</a>
+      </div>
+    </div>
+"""
+
+    newsletter_html = f"""<div style="max-width:640px;margin:0 auto;font-family:Arial,sans-serif;">
+  <div style="text-align:center;padding:20px 0;">
+    <h2 style="color:#1e293b;font-size:22px;margin:0 0 8px;">Polecane firmy z katalogu</h2>
+    <p style="color:#64748b;font-size:14px;margin:0;">Odkryj polskie usługi w Szwajcarii</p>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;">
+    {cards_html}
+  </div>
+  <div style="text-align:center;padding:24px 0;">
+    <a href="{base_url}" style="display:inline-block;padding:12px 32px;background:#E30613;color:#fff;border-radius:8px;font-size:15px;font-weight:700;text-decoration:none;">Zobacz wszystkie firmy</a>
+  </div>
+</div>"""
+
+    return {
+        "companies": enriched,
+        "count": len(enriched),
+        "html": newsletter_html,
+    }
+
+
 @router.post("/", response_model=CompanyReadWithToken, status_code=status.HTTP_201_CREATED)
 @limiter.limit("3/hour")
 def create_company(
