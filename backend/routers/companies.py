@@ -123,7 +123,8 @@ def _build_newsletter_html(enriched: list[dict], cols: int = 3) -> str:
         row_companies = enriched[i:i + cols]
         cells = ""
         for c in row_companies:
-            name = c.get("name", "")
+            full_name = c.get("name", "")
+            name = full_name[:38] + "..." if len(full_name) > 40 else full_name
             slug = c.get("slug", "")
             cid = c.get("id", 0)
             city = c.get("city", "")
