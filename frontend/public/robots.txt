@@ -8,5 +8,5 @@ Disallow: /api/
 Disallow: /_next/
 
 # Sitemap
-Sitemap: https://polacyszwajcaria.com/uslugi/sitemap.xml
+Sitemap: https://katalog-firm.ch/sitemap.xml
 
