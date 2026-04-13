@@ -46,7 +46,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2 group">
             <span className="p-1.5 rounded-lg group-hover:rotate-12 transition-transform duration-300 inline-block">
-              <Image src={`${basePath}/logo.png`} alt="Logo" width={24} height={24} className="w-6 h-6" />
+              <Image src={`${basePath}/logo.png`} alt="Logo" width={40} height={40} className="w-8 h-8 sm:w-10 sm:h-10" />
             </span>
             <span className="flex flex-col">
               <span className="text-base sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
@@ -80,7 +80,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <div className="col-span-2">
               <Link href="/" className="flex items-center gap-2 mb-6">
                 <span className="p-1 rounded-lg inline-block">
-                  <Image src={`${basePath}/logo.png`} alt="Logo" width={20} height={20} className="w-5 h-5" />
+                  <Image src={`${basePath}/logo.png`} alt="Logo" width={32} height={32} className="w-8 h-8" />
                 </span>
                 <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
                   Polskie <span className="text-primary">usługi</span>
