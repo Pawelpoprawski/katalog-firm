@@ -170,9 +170,6 @@ def _build_newsletter_html(enriched: list[dict], cols: int = 3) -> str:
       {rows_html}
     </table>
   </td></tr>
-  <tr><td style="text-align:center;padding:20px 0;">
-    <a href="{base_url}" style="display:inline-block;padding:12px 32px;background:#E30613;color:#fff;border-radius:8px;font-size:15px;font-weight:700;text-decoration:none;">Zobacz wszystkie firmy</a>
-  </td></tr>
 </table>"""
 
 
