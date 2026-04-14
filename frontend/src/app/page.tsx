@@ -407,31 +407,38 @@ export default function HomePage() {
     markersRef.current.forEach((marker) => marker.setMap(null));
     markersRef.current = [];
 
-    // Create custom marker icon (red pin with white border)
+    // Create custom marker icon (red pin)
     const createMarkerIcon = () => {
-      // Use a custom SVG icon for better appearance
       const svgIcon = `
-        <svg width="32" height="40" viewBox="0 0 32 40" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16 0C10.48 0 6 4.48 6 10c0 5.4 8.5 18 10 18s10-12.6 10-18c0-5.52-4.48-10-10-10z" fill="#dc2626" stroke="#ffffff" stroke-width="2"/>
-          <circle cx="16" cy="10" r="4" fill="#ffffff"/>
+        <svg width="28" height="36" viewBox="0 0 28 36" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 0C8.48 0 4 4.48 4 10c0 5.4 8.5 16 10 16s10-10.6 10-16c0-5.52-4.48-10-10-10z" fill="#dc2626" stroke="#ffffff" stroke-width="2"/>
+          <circle cx="14" cy="10" r="3.5" fill="#ffffff"/>
         </svg>
       `;
-
       return {
         url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svgIcon)}`,
-        scaledSize: new window.google.maps.Size(32, 40),
-        anchor: new window.google.maps.Point(16, 40),
+        scaledSize: new window.google.maps.Size(28, 36),
+        anchor: new window.google.maps.Point(14, 36),
+        labelOrigin: new window.google.maps.Point(14, -8),
       };
     };
 
-    // Add markers for each company
+    // Add markers for each company with name label
     companiesWithCoordsAll.forEach((company) => {
+      const shortName = company.name.length > 20 ? company.name.slice(0, 18) + "..." : company.name;
       const marker = new window.google.maps.Marker({
         position: { lat: company.coords.lat, lng: company.coords.lng },
-        map: null, // Don't add directly to map, clusterer will handle it
+        map: null,
         title: company.name,
         icon: createMarkerIcon(),
-        animation: window.google.maps.Animation.DROP,
+        label: {
+          text: shortName,
+          color: "#1e293b",
+          fontSize: "11px",
+          fontWeight: "600",
+          fontFamily: "Arial, sans-serif",
+          className: "marker-label",
+        },
       });
 
       marker.addListener("click", () => {
@@ -846,7 +853,7 @@ export default function HomePage() {
           </div>
         ) : (
           <div className="space-y-12">
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 grid-cols-2 lg:grid-cols-3">
               {paginatedCompanies.map((item) => {
                 const categoryName = categories.find(c => c.id === item.category_id)?.name || item.category || "Inne";
                 return (
@@ -870,68 +877,50 @@ export default function HomePage() {
                       );
                       observer.observe(el);
                     }}
-                    className={`group flex flex-col overflow-hidden rounded-4xl border bg-white dark:bg-slate-900 shadow-sm hover:shadow-2xl hover-lift transition-all duration-500 ${item.is_promoted
-                      ? "border-yellow-400 ring-2 ring-yellow-400/50 shadow-yellow-100"
-                      : "border-slate-200 dark:border-slate-800 hover:border-primary/20"
+                    className={`group flex flex-col overflow-hidden rounded-xl border bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow ${item.is_promoted
+                      ? "border-yellow-400 ring-1 ring-yellow-400/50"
+                      : "border-slate-200 dark:border-slate-800"
                       }`}
                   >
-                    <div className="relative h-60 overflow-hidden">
+                    <div className="relative h-36 sm:h-48 overflow-hidden">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={item.img || "/default-company.png"}
                         alt={item.name}
-                        className="h-full w-full object-contain transition-transform duration-700 group-hover:scale-110"
+                        className="h-full w-full object-contain"
                         loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                      <div className="absolute top-4 left-4 flex gap-2">
+                      <div className="absolute top-2 left-2 flex gap-1.5">
                         {item.is_promoted && (
-                          <span className="bg-yellow-400 text-yellow-900 py-1.5 px-3 rounded-xl text-[10px] font-bold uppercase tracking-wider">
-                            ⭐ Promowana
+                          <span className="bg-yellow-400 text-yellow-900 py-1 px-2 rounded-md text-[9px] font-bold uppercase">
+                            Promowana
                           </span>
                         )}
-                        <span className="glass py-1.5 px-3 rounded-xl text-[10px] font-bold text-slate-900 dark:text-white uppercase tracking-wider backdrop-blur-md">
+                        <span className="bg-white/90 py-1 px-2 rounded-md text-[9px] font-semibold text-slate-700 uppercase">
                           {categoryName}
                         </span>
                       </div>
-
                     </div>
 
-                    <div className="flex flex-1 flex-col p-6 space-y-4">
-                      <div className="flex items-start justify-between gap-4">
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors leading-tight line-clamp-2">
+                    <div className="flex flex-1 flex-col p-3 sm:p-5 space-y-2 sm:space-y-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight line-clamp-2">
                           {item.name}
                         </h3>
                         {item.rating && (
-                          <div className="flex items-center gap-1 shrink-0 rounded-lg bg-green-50 dark:bg-green-900/30 px-2 py-1 text-green-700 dark:text-green-400 font-bold text-sm">
+                          <div className="flex items-center gap-0.5 shrink-0 text-green-600 font-bold text-xs sm:text-sm">
                             ★ {item.rating.toFixed(1)}
                           </div>
                         )}
                       </div>
-                      {(item.city || item.canton || item.address) && (
-                        <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                          <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                          {[item.city, item.canton].filter(Boolean).join(", ") || item.address}
+                      {(item.city || item.canton) && (
+                        <div className="text-xs sm:text-sm text-slate-500">
+                          {[item.city, item.canton].filter(Boolean).join(", ")}
                         </div>
                       )}
-                      <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                        {item.short_description || (item.description || "").replace(/<[^>]*>/g, '') || "Brak opisu firmy w katalogu."}
+                      <p className="hidden sm:block text-sm text-slate-500 line-clamp-2">
+                        {item.short_description || (item.description || "").replace(/<[^>]*>/g, '') || ""}
                       </p>
-
-                      <div className="pt-4 mt-auto border-t border-slate-100 dark:border-slate-800 flex justify-between items-center group/btn">
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Zobacz szczegóły</span>
-                          {(item.views || 0) > 0 && (
-                            <span className="flex items-center gap-1 text-xs text-slate-400">
-                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                              {item.views}
-                            </span>
-                          )}
-                        </div>
-                        <div className="h-8 w-8 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover/btn:bg-primary group-hover/btn:text-white transition-all transform group-hover/btn:translate-x-1">
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                        </div>
-                      </div>
                     </div>
                   </Link>
                 );
