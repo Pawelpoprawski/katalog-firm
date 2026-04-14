@@ -145,20 +145,7 @@ export default function HomePage() {
     flushTimerRef.current = setTimeout(flushImpressions, 3000);
   }, [flushImpressions]);
 
-  // Category icons mapping
-  const categoryIcons: Record<string, string> = {
-    "Beauty": "💄",
-    "CV & Tłumaczenia": "📝",
-    "Edukacja": "📚",
-    "Fotografia": "📸",
-    "Gastronomia": "🍽️",
-    "Remont": "🔨",
-    "Różne": "🌟",
-    "Transport": "🚚",
-    "Sprzątanie": "🧹",
-    "Zdrowie": "⚕️",
-    "default": "🏢"
-  };
+  // Category icons removed - cleaner look without emojis
 
   const goToCompany = (slug?: string, id?: number) => {
     const target = `/firma/${slug || id}`;
@@ -671,17 +658,15 @@ export default function HomePage() {
       {/* Loading handled by skeleton cards below */}
 
       {/* HERO */}
-      <section className="relative overflow-hidden rounded-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-500">
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+      <section className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
 
         <div className="relative grid gap-12 p-8 md:p-12 lg:grid-cols-[1.2fr,1fr] items-center">
-          <div className="space-y-8 animate-fade-in">
-            <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-6xl leading-[1.1]">
-              Znajdź <span className="bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">sprawdzone</span> firmy w Szwajcarii
+          <div className="space-y-8">
+            <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-5xl leading-[1.15]">
+              Znajdź <span className="text-primary">sprawdzone</span> polskie firmy w Szwajcarii
             </h1>
-            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl">
-              {loading ? "Największa baza" : <><span className="font-bold text-primary">{filteredCompanies.length}</span></>} polskich usług w bazie. Przeglądaj na mapie i filtruj po branży. Dołącz do największej społeczności polskich przedsiębiorców w Szwajcarii.
+            <p className="text-lg text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
+              {loading ? "" : <><span className="font-semibold text-slate-700">{filteredCompanies.length}</span> firm w bazie. </>}Przeglądaj na mapie, filtruj po branży i znajdź to czego szukasz.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
@@ -690,7 +675,7 @@ export default function HomePage() {
                   e.preventDefault();
                   goToAdd();
                 }}
-                className="rounded-2xl bg-primary px-8 py-4 font-bold text-white shadow-xl shadow-primary/20 hover:bg-primary-dark transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                className="rounded-xl bg-primary px-6 py-3.5 font-semibold text-white hover:bg-red-700 transition-colors flex items-center gap-2"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                 Dodaj usługę za darmo
@@ -726,12 +711,6 @@ export default function HomePage() {
               onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
               className="group flex items-center gap-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-5 py-3 text-sm font-bold text-slate-800 dark:text-slate-200 hover:border-primary/50 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none cursor-pointer transition-all shadow-sm hover:shadow-md w-full sm:w-auto sm:min-w-[200px]"
             >
-              <span className="text-lg">
-                {selectedCategory
-                  ? (categoryIcons[categories.find(c => c.id === selectedCategory)?.name || ""] || categoryIcons.default)
-                  : categoryIcons.default
-                }
-              </span>
               <span className="flex-1 text-left">
                 {selectedCategory
                   ? categories.find(c => c.id === selectedCategory)?.name
@@ -770,7 +749,6 @@ export default function HomePage() {
                         : 'text-slate-700 dark:text-slate-300'
                         }`}
                     >
-                      <span className="text-xl">{categoryIcons.default}</span>
                       <span className="flex-1">Wszystkie branże</span>
                       {!selectedCategory && (
                         <svg className="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
@@ -795,7 +773,6 @@ export default function HomePage() {
                           : 'text-slate-700 dark:text-slate-300'
                           }`}
                       >
-                        <span className="text-xl">{categoryIcons[cat.name] || categoryIcons.default}</span>
                         <span className="flex-1">{cat.name}</span>
                         <span className="text-xs font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full">{companies.filter(c => c.category_id === cat.id).length}</span>
                         {selectedCategory === cat.id && (
@@ -998,24 +975,23 @@ export default function HomePage() {
       </section>
 
       {/* CTA SECTION */}
-      <section className="animate-slide-up">
-        <div className="relative overflow-hidden rounded-4xl bg-primary px-8 py-16 dark:bg-primary/90">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
-          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 text-center lg:text-left">
-            <div className="space-y-4">
-              <h2 className="text-4xl font-extrabold text-white">Rozwijaj swój biznes z nami</h2>
-              <p className="text-xl text-white/80 max-w-lg">
-                Dodaj swoją usługę do katalogu i dotrzyj do tysięcy Polaków mieszkających w Szwajcarii.
+      <section>
+        <div className="rounded-2xl bg-slate-900 px-8 py-14">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-10 text-center lg:text-left">
+            <div className="space-y-3">
+              <h2 className="text-3xl font-bold text-white">Masz firmę w Szwajcarii?</h2>
+              <p className="text-lg text-slate-400 max-w-lg">
+                Dodaj się do katalogu za darmo i dotrzyj do tysięcy Polaków szukających usług.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-6">
+            <div>
               <Link
                 href="/dodaj"
                 onClick={(e) => {
                   e.preventDefault();
                   goToAdd();
                 }}
-                className="rounded-2xl bg-white px-10 py-5 text-lg font-bold text-primary shadow-2xl transition-all hover:scale-105 active:scale-95"
+                className="rounded-xl bg-primary px-8 py-4 text-base font-semibold text-white hover:bg-red-700 transition-colors"
               >
                 + Dodaj swoją usługę za darmo
               </Link>
