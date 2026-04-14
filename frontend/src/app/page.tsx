@@ -691,7 +691,7 @@ export default function HomePage() {
           </div>
 
           {/* MAPA - Interactive Map */}
-          <div id="mapa" className="relative h-[500px] overflow-hidden rounded-3xl border-2 border-slate-200 dark:border-slate-700 shadow-2xl group transition-all duration-500 hover:shadow-primary/20">
+          <div id="mapa" className="relative aspect-square sm:h-[400px] sm:aspect-auto overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700">
             {googleMapsKey ? (
               <div ref={mapRef} className="h-full w-full" aria-label="Mapa firm na Google Maps" />
             ) : (
