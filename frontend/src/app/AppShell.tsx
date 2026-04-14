@@ -93,6 +93,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <div>
               <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-6">Informacje</h3>
               <ul className="space-y-4">
+                <li><Link href="/jak-to-dziala" className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Jak to działa?</Link></li>
+                <li><Link href="/dodaj" className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Dodaj firmę</Link></li>
                 <li><a href="mailto:kontakt@polacyszwajcaria.com" className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Kontakt</a></li>
                 <li><Link href="/polityka-prywatnosci" className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Polityka prywatności</Link></li>
               </ul>
