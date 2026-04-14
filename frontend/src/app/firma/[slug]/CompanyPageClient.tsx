@@ -325,22 +325,20 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
             {/* Social Media Icons */}
             {(company.facebook || company.instagram) && (
               <div className="flex gap-3 pt-2">
-                {company.facebook && (
+                {company.facebook && company.facebook !== "-" && (
                   <a
                     href={company.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    onClick={(e) => { e.preventDefault(); window.location.href = company.facebook!; }}
                     className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                     aria-label="Facebook"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" /></svg>
                   </a>
                 )}
-                {company.instagram && (
+                {company.instagram && company.instagram !== "-" && (
                   <a
                     href={company.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    onClick={(e) => { e.preventDefault(); window.location.href = company.instagram!; }}
                     className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 text-white hover:opacity-90 transition-opacity"
                     aria-label="Instagram"
                   >
