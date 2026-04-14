@@ -428,7 +428,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
 
           {/* Description */}
           <div
-            className="prose prose-slate prose-sm max-w-none text-base text-slate-700"
+            className="company-description max-w-none text-base text-slate-700"
             dangerouslySetInnerHTML={{ __html: company.description || "Brak opisu" }}
           />
 
@@ -437,7 +437,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <h3 className="text-sm font-semibold text-slate-900 mb-2">Oferta</h3>
               <div
-                className="prose prose-slate prose-sm max-w-none text-sm text-slate-700"
+                className="company-description max-w-none text-sm text-slate-700"
                 dangerouslySetInnerHTML={{ __html: company.offer || "" }}
               />
             </div>
