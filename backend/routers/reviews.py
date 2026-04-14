@@ -39,6 +39,20 @@ def create_review(request: Request, payload: ReviewCreate):
         from ..storage import track_new_review
         track_new_review()
         logger.info("Created review id=%s company_id=%s ip=%s", result.get("id"), result.get("company_id"), client_ip)
+        # Notify admin about new review
+        try:
+            from ..storage import get_company as storage_get_company
+            from ..email_service import send_new_review_email
+            company = storage_get_company(result.get("company_id"))
+            if company:
+                send_new_review_email(
+                    company_name=company.get("name", ""),
+                    company_slug=company.get("slug", ""),
+                    rating=result.get("rating", 0),
+                    comment=result.get("comment"),
+                )
+        except Exception as e:
+            logger.warning(f"Failed to send review notification: {e}")
         return result
     except Exception as exc:
         logger.exception("Failed to create review: %s", exc)

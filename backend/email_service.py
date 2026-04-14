@@ -29,7 +29,7 @@ def send_email(to: str, subject: str, html: str, from_email: str = "Katalog Firm
     try:
         payload = json.dumps({
             "from": from_email,
-            "to": [to],
+            "to": [to] if isinstance(to, str) else to,
             "reply_to": "kontakt@polacyszwajcaria.com",
             "subject": subject,
             "html": html,
@@ -110,8 +110,48 @@ def send_company_created_email(email: str, company_name: str, edit_token: str, c
     </div>
     """
 
-    return send_email(
-        to=email,
+    # Send to company owner + CC to admin
+    send_email(
+        to=[email, "kontakt@polacyszwajcaria.com"],
         subject=f"Twoja firma {company_name} została dodana do katalogu",
+        html=html,
+    )
+    return True
+
+
+def send_new_review_email(company_name: str, company_slug: str, rating: int, comment: str | None) -> bool:
+    """Notify admin about a new review."""
+    stars = "★" * rating + "☆" * (5 - rating)
+    company_url = f"https://katalog-firm.ch/firma/{company_slug}"
+
+    html = f"""
+    <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+      <div style="background: linear-gradient(135deg, #E30613 0%, #c00510 100%); padding: 24px; text-align: center;">
+        <h1 style="color: white; margin: 0; font-size: 20px;">Nowa recenzja w katalogu</h1>
+      </div>
+
+      <div style="padding: 32px;">
+        <h2 style="color: #1e293b; margin: 0 0 16px;">Ktoś dodał recenzję!</h2>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 16px 0;">
+          <p style="margin: 0 0 8px;"><strong>Firma:</strong> <a href="{company_url}" style="color: #E30613;">{company_name}</a></p>
+          <p style="margin: 0 0 8px;"><strong>Ocena:</strong> <span style="color: #f59e0b; font-size: 18px;">{stars}</span> ({rating}/5)</p>
+          <p style="margin: 0;"><strong>Komentarz:</strong> {comment or '<em style="color:#94a3b8;">brak komentarza</em>'}</p>
+        </div>
+
+        <p style="color: #475569; font-size: 14px;">
+          <a href="https://katalog-firm.ch/admin" style="color: #E30613; font-weight: 600;">Otwórz panel admina</a> aby zarządzać recenzjami.
+        </p>
+      </div>
+
+      <div style="background: #f8fafc; padding: 16px; text-align: center; border-top: 1px solid #e2e8f0;">
+        <p style="color: #94a3b8; font-size: 11px; margin: 0;">Katalog Firm Polonijnych w Szwajcarii</p>
+      </div>
+    </div>
+    """
+
+    return send_email(
+        to="kontakt@polacyszwajcaria.com",
+        subject=f"Nowa recenzja: {company_name} ({rating}/5)",
         html=html,
     )
