@@ -853,7 +853,7 @@ export default function HomePage() {
           </div>
         ) : (
           <div className="space-y-12">
-            <div className="grid gap-4 grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {paginatedCompanies.map((item) => {
                 const categoryName = categories.find(c => c.id === item.category_id)?.name || item.category || "Inne";
                 return (
@@ -918,7 +918,7 @@ export default function HomePage() {
                           {[item.city, item.canton].filter(Boolean).join(", ")}
                         </div>
                       )}
-                      <p className="hidden sm:block text-sm text-slate-500 line-clamp-2">
+                      <p className="text-xs sm:text-sm text-slate-500 line-clamp-2">
                         {item.short_description || (item.description || "").replace(/<[^>]*>/g, '') || ""}
                       </p>
                     </div>
