@@ -28,13 +28,12 @@ npm run lint     # ESLint
 ```
 
 ### Production Deploy
-Deploy script at `C:\Users\popra\fix_katalog.py` uses paramiko SSH to:
-1. `git stash && git pull` on server
-2. `pm2 restart katalog-backend`
-3. `npm run build` in frontend
-4. `pm2 restart katalog-frontend`
+Deploy via paramiko SSH to 54.38.54.237:
+1. `git stash && git pull` on server (stash protects local data files)
+2. `npm run build` in frontend
+3. `pm2 restart all`
 
-Run with: `"C:\Python314\python.exe" "C:\Users\popra\fix_katalog.py"`
+**IMPORTANT**: `backend/data/*.json` is in `.gitignore` — data lives ONLY on the server. Never commit data files. If `git pull` deletes them, `git stash pop` restores them.
 
 ## Architecture
 
