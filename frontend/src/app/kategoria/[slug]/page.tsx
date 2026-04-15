@@ -1,16 +1,11 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import CategoryPageClient from "./CategoryPageClient";
+import { Category } from "@/types";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
 type Props = { params: { slug: string } };
-
-type Category = {
-  id: number;
-  name: string;
-  slug: string;
-  description?: string;
-};
 
 async function getCategory(slug: string): Promise<Category | null> {
   try {
@@ -30,6 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!category) {
     return {
       title: "Kategoria nie znaleziona | PolacySzwajcaria",
+      robots: { index: false, follow: false },
     };
   }
 
@@ -70,6 +66,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function CategoryPage({ params }: Props) {
+export default async function CategoryPage({ params }: Props) {
+  const category = await getCategory(params.slug);
+  if (!category) {
+    notFound();
+  }
   return <CategoryPageClient categorySlug={params.slug} />;
 }

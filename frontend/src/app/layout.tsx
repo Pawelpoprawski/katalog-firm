@@ -2,6 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 import AppShell from "./AppShell";
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://katalog-firm.ch'),
   title: "Polskie usługi w Szwajcarii | Katalog Firm",
@@ -101,7 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pl">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
+        {/* viewport set via metadata export — no duplicate here */}
         <meta name="theme-color" content="#E30613" />
         <link rel="manifest" href="/manifest.json" />
         <script

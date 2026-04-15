@@ -20,26 +20,17 @@ async def security_headers_middleware(request: Request, call_next: Callable) -> 
     """Add security headers to all responses."""
     response = await call_next(request)
     
-    # Security headers
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-Frame-Options"] = "DENY"
-    response.headers["X-XSS-Protection"] = "1; mode=block"
-    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-    
-    # HSTS - enforce HTTPS
-    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-
-    # Content Security Policy - allows Google Maps and necessary inline styles
-    csp_policy = (
-        "default-src 'self'; "
-        "script-src 'self' 'unsafe-inline' https://maps.googleapis.com https://maps.gstatic.com; "
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-        "img-src 'self' data: https:; "
-        "font-src 'self' data: https://fonts.gstatic.com; "
-        "connect-src 'self' https://maps.googleapis.com; "
-        "frame-ancestors 'none';"
-    )
-    response.headers["Content-Security-Policy"] = csp_policy
+    # Security headers — only set if not already present (nginx adds these in production)
+    if "X-Content-Type-Options" not in response.headers:
+        response.headers["X-Content-Type-Options"] = "nosniff"
+    if "X-Frame-Options" not in response.headers:
+        response.headers["X-Frame-Options"] = "DENY"
+    if "X-XSS-Protection" not in response.headers:
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+    if "Referrer-Policy" not in response.headers:
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    if "Strict-Transport-Security" not in response.headers:
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     
     return response
 

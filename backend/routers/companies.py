@@ -225,6 +225,7 @@ def get_newsletter_companies(count: int = Query(default=6, ge=1, le=20)):
         c.pop("photos", None)
         c.pop("description", None)
         c.pop("offer", None)
+        c.pop("edit_token", None)
 
     newsletter_html = _build_newsletter_html(enriched, cols=3)
 

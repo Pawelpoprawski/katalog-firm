@@ -46,6 +46,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `${company.name} – ${categoryName}, ${location} | PolacySzwajcaria`;
   const description = company.short_description || company.description || `Polska firma ${company.name} w Szwajcarii. ${categoryName}. ${location}.`;
 
+  const ogImage = company.img
+    ? (company.img.startsWith("/images/") ? `https://katalog-firm.ch${company.img}` : company.img)
+    : "https://katalog-firm.ch/logo.png";
+
   return {
     title,
     description,
@@ -57,15 +61,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `https://katalog-firm.ch/firma/${params.slug}`,
       siteName: "Polskie Usługi w Szwajcarii",
       locale: "pl_PL",
-      images: company.img
-        ? [{ url: company.img, alt: company.name }]
-        : [{ url: "https://katalog-firm.ch/logo.png", width: 512, height: 512, alt: company.name }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: company.name }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: company.img ? [company.img] : [],
+      images: [ogImage],
     },
     alternates: {
       canonical: `https://katalog-firm.ch/firma/${params.slug}`,
@@ -86,17 +88,16 @@ export default async function CompanyPage({ params }: Props) {
     "@type": "LocalBusiness",
     name: company.name,
     description: company.short_description || company.description?.replace(/<[^>]*>/g, "").slice(0, 200) || "",
-    url: `https://katalog-firm.ch/firma/${params.slug}`,
-    ...(company.img ? { image: company.img } : {}),
+    url: company.website || `https://katalog-firm.ch/firma/${params.slug}`,
+    ...(company.img ? { image: company.img.startsWith("/images/") ? `https://katalog-firm.ch${company.img}` : company.img } : {}),
     ...(company.phone ? { telephone: company.phone } : {}),
     ...(company.email ? { email: company.email } : {}),
-    ...(company.website ? { url: company.website } : {}),
     address: {
       "@type": "PostalAddress",
       ...(company.address ? { streetAddress: company.address } : {}),
       ...(company.city ? { addressLocality: company.city } : {}),
       ...(company.canton ? { addressRegion: company.canton } : {}),
-      ...(company.postal_code ? { postalCode: company.postal_code } : {}),
+      ...(company.postal_code && company.postal_code.trim() ? { postalCode: company.postal_code } : {}),
       addressCountry: "CH",
     },
     ...(company.latitude && company.longitude ? {
