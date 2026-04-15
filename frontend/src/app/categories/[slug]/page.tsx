@@ -3,27 +3,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Company, Category } from "@/types";
+import { resolveImageUrl } from "@/lib/utils";
 
 type Props = { params: { slug: string } };
-
-type Category = {
-  id: number;
-  name: string;
-  slug: string;
-  description?: string;
-};
-
-type Company = {
-  id: number;
-  name: string;
-  slug?: string;
-  description: string;
-  city: string;
-  canton: string;
-  category_id?: number;
-  rating?: number;
-  img?: string;
-};
 
 export default function CategoryPage({ params }: Props) {
   const [category, setCategory] = useState<Category | null>(null);
@@ -285,7 +268,7 @@ export default function CategoryPage({ params }: Props) {
                 <div className="h-20 w-28 overflow-hidden rounded-xl bg-slate-100">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={item.img || "https://via.placeholder.com/112x80?text=Brak+zdjęcia"}
+                    src={resolveImageUrl(item.img, apiUrl)}
                     alt={item.name}
                     className="h-full w-full object-cover"
                     loading="lazy"

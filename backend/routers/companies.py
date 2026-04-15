@@ -419,6 +419,17 @@ def get_company_photo(company_id: int, photo_index: int):
     else:
         photo_data = photos[photo_index]
     
+    # If it's a local file path, read from disk
+    if photo_data.startswith("/images/"):
+        from ..image_utils import IMAGES_DIR
+        filename = photo_data.replace("/images/", "")
+        filepath = IMAGES_DIR / filename
+        if filepath.exists():
+            image_bytes = filepath.read_bytes()
+            return Response(content=image_bytes, media_type="image/webp",
+                           headers={"Cache-Control": "public, max-age=31536000, immutable"})
+        raise HTTPException(status_code=404, detail="Image file not found")
+
     # If it's a base64 data URL, decode and return
     if photo_data.startswith("data:image"):
         # Format: data:image/jpeg;base64,/9j/4AAQ...
@@ -429,7 +440,7 @@ def get_company_photo(company_id: int, photo_index: int):
             return Response(content=image_bytes, media_type=mime_type)
         except Exception:
             raise HTTPException(status_code=500, detail="Invalid photo format")
-    
+
     # If it's a URL, redirect to it
     if photo_data.startswith("http"):
         from fastapi.responses import RedirectResponse

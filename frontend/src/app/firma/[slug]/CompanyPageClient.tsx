@@ -2,37 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-type Company = {
-  id: number;
-  name: string;
-  slug: string;
-  description: string;
-  short_description?: string;
-  offer?: string;
-  phone?: string;
-  whatsapp?: string;
-  email?: string;
-  website?: string;
-  facebook?: string;
-  instagram?: string;
-  address?: string;
-  city: string;
-  canton: string;
-  postal_code?: string;
-  country: string;
-  latitude?: number;
-  longitude?: number;
-  tags?: string;
-  is_verified: boolean;
-  is_active: boolean;
-  owner_id: number;
-  category_id?: number;
-  category?: string;
-  rating?: number;
-  img?: string;
-  photos?: string[] | null;
-};
+import { Company } from "@/types";
+import { resolveImageUrl } from "@/lib/utils";
 
 type Props = {
   company: Company;
@@ -285,7 +256,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={company.img || "/default-company.png"}
+              src={resolveImageUrl(company.img, apiUrl)}
               alt={company.name}
               className="max-h-full max-w-full object-contain"
               loading="lazy"

@@ -1,7 +1,9 @@
 import logging
+import os
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.staticfiles import StaticFiles
 from slowapi.middleware import SlowAPIMiddleware
 
 # Allow running both as module (`python -m backend.main`) and as script (`python main.py` inside backend/)
@@ -26,6 +28,11 @@ logger = logging.getLogger(__name__)
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name, debug=settings.debug)
+
+# Serve images from static directory
+images_dir = os.path.join(os.path.dirname(__file__), "static", "images")
+os.makedirs(images_dir, exist_ok=True)
+app.mount("/images", StaticFiles(directory=images_dir), name="images")
 
 # Add rate limiting state
 app.state.limiter = limiter

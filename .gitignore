@@ -36,3 +36,17 @@ coverage/
 
 # Misc
 *.tsbuildinfo
+
+# Temporary files
+tmp_*.json
+nul
+
+# Image uploads (served by backend)
+backend/static/images/
+
+# Backup files
+*.bak
+waldmann_catering.json
+
+# Logo
+Logo.jpg

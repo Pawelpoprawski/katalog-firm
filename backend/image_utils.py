@@ -3,8 +3,12 @@ Image processing utilities for converting images to WebP format.
 """
 
 import base64
+import hashlib
 import io
+from pathlib import Path
 from PIL import Image
+
+IMAGES_DIR = Path(__file__).resolve().parent / "static" / "images"
 
 
 def convert_base64_to_webp(
@@ -84,4 +88,42 @@ def convert_base64_to_webp(
     except Exception as e:
         # If conversion fails, return original
         print(f"Warning: Failed to convert image to WebP: {e}")
+        return base64_str
+
+
+def save_image_to_disk(base64_str: str, company_id: int, image_type: str = "main", index: int = 0) -> str:
+    """
+    Convert base64 image to WebP and save to disk. Returns URL path.
+    image_type: "main" or "photo"
+    Returns: "/images/company_{id}_{type}_{index}.webp" or original string if not base64
+    """
+    if not base64_str or not base64_str.startswith("data:image"):
+        return base64_str  # External URL or already processed
+
+    # Already a file path
+    if base64_str.startswith("/images/"):
+        return base64_str
+
+    IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+
+    try:
+        # Convert to WebP first
+        webp_data_uri = convert_base64_to_webp(base64_str)
+
+        # Extract binary data
+        if ";base64," not in webp_data_uri:
+            return base64_str
+
+        encoded = webp_data_uri.split(";base64,")[1]
+        image_bytes = base64.b64decode(encoded)
+
+        # Generate filename
+        filename = f"company_{company_id}_{image_type}_{index}.webp"
+        filepath = IMAGES_DIR / filename
+
+        filepath.write_bytes(image_bytes)
+
+        return f"/images/{filename}"
+    except Exception as e:
+        print(f"Warning: Failed to save image to disk: {e}")
         return base64_str

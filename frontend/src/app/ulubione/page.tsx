@@ -3,20 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useFavorites } from "../../hooks/useFavorites";
-
-type Company = {
-    id: number;
-    name: string;
-    slug: string;
-    description: string;
-    city: string;
-    canton: string;
-    address?: string;
-    category_id?: number;
-    rating?: number;
-    img?: string;
-    is_promoted?: boolean;
-};
+import { Company } from "@/types";
+import { resolveImageUrl } from "@/lib/utils";
 
 export default function FavoritesPage() {
     const { favorites, toggleFavorite, isLoaded } = useFavorites();
@@ -82,7 +70,7 @@ export default function FavoritesPage() {
                                 <div className="h-20 w-28 overflow-hidden rounded-xl bg-slate-100">
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
-                                        src={item.img || "https://via.placeholder.com/112x80?text=Brak+zdjęcia"}
+                                        src={resolveImageUrl(item.img, apiUrl)}
                                         alt={item.name}
                                         className="h-full w-full object-contain"
                                         loading="lazy"

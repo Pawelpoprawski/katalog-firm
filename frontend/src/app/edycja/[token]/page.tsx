@@ -8,11 +8,7 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const steps = ["Dane firmy", "Kontakt", "Zdjęcia", "Podsumowanie"];
 const DESC_LIMIT = 10000; // Merged: description + offer
 
-type Category = {
-    id: number;
-    name: string;
-    slug: string;
-};
+import { Category } from "@/types";
 
 export default function EditCompanyPage() {
     const { token } = useParams<{ token: string }>();

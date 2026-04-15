@@ -3,36 +3,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Company } from "@/types";
+import { resolveImageUrl } from "@/lib/utils";
 
 type Props = { params: { slug: string } };
-
-type Company = {
-  id: number;
-  name: string;
-  description: string;
-  offer?: string;
-  phone?: string;
-  email?: string;
-  website?: string;
-  facebook?: string;
-  instagram?: string;
-  address?: string;
-  city: string;
-  canton: string;
-  postal_code?: string;
-  country: string;
-  latitude?: number;
-  longitude?: number;
-  tags?: string;
-  is_verified: boolean;
-  is_active: boolean;
-  owner_id: number;
-  category_id?: number;
-  category?: string;
-  rating?: number;
-  img?: string;
-  photos?: string[] | null;
-};
 
 const CANTON_COORDS: Record<string, { lat: number; lng: number }> = {
   ZH: { lat: 47.3769, lng: 8.5417 },
@@ -262,7 +236,7 @@ export default function CompanyPage({ params }: Props) {
             <div className="h-64 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={company.img || "https://via.placeholder.com/600x400?text=Brak+zdjęcia"}
+                src={resolveImageUrl(company.img, apiUrl)}
                 alt={company.name}
                 className="h-full w-full object-cover"
               />

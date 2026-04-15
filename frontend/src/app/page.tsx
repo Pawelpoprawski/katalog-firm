@@ -1,29 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { MarkerClusterer } from "@googlemaps/markerclusterer";
+import { Company, Category } from "@/types";
+import { resolveImageUrl } from "@/lib/utils";
+import CompanyCard from "@/components/CompanyCard";
+import Filters from "@/components/Filters";
+import GoogleMap from "@/components/GoogleMap";
+import Pagination from "@/components/Pagination";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-
-// Google Maps types
-declare global {
-  interface Window {
-    google?: any;
-  }
-}
-
-const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 const googleMapsKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
-
-const MAP_BOUNDS = {
-  minLat: 45.5,
-  maxLat: 48.5,
-  minLng: 5.5,
-  maxLng: 11.0
-};
 
 const CANTON_COORDS: Record<string, { lat: number; lng: number }> = {
   ZH: { lat: 47.3769, lng: 8.5417 },
@@ -32,53 +20,11 @@ const CANTON_COORDS: Record<string, { lat: number; lng: number }> = {
   LU: { lat: 47.0502, lng: 8.3093 },
   BS: { lat: 47.5596, lng: 7.5886 },
   ZG: { lat: 47.1662, lng: 8.5155 },
-  VD: { lat: 46.5197, lng: 6.6323 }
-};
-
-// Define Company type to match backend schema
-type Company = {
-  id: number;
-  name: string;
-  slug?: string;
-  short_description?: string;
-  description?: string;
-  offer?: string;
-  phone?: string;
-  whatsapp?: string;
-  email?: string;
-  website?: string;
-  address?: string;
-  city: string;
-  canton: string;
-  postal_code?: string;
-  country: string;
-  latitude?: number;
-  longitude?: number;
-  tags?: string;
-  is_verified: boolean;
-  is_active: boolean;
-  owner_id: number;
-  category_id?: number;
-  // Computed fields for display
-  category?: string;
-  rating?: number;
-  img?: string;
-  is_promoted?: boolean;
-  created_at?: number;
-  views?: number;
-  clicks?: number;
-};
-
-type Category = {
-  id: number;
-  name: string;
-  slug: string;
-  description?: string;
+  VD: { lat: 46.5197, lng: 6.6323 },
 };
 
 type MapBounds = { north: number; south: number; east: number; west: number };
 const DEFAULT_CH_BOUNDS: MapBounds = { north: 48.5, south: 45.5, east: 11.0, west: 5.5 };
-const DEFAULT_CENTER = { lat: 46.8, lng: 8.2 };
 
 export default function HomePage() {
   const router = useRouter();
@@ -98,19 +44,10 @@ export default function HomePage() {
   const [mapsReady, setMapsReady] = useState(false);
   const [mapBounds, setMapBounds] = useState<MapBounds | null>(DEFAULT_CH_BOUNDS);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
-  const [showMap, setShowMap] = useState(true); // Always show map (changed from false)
-  const [isMobile, setIsMobile] = useState(false); // Mobile detection
-  const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
-  const markersRef = useRef<any[]>([]);
-  const clustererRef = useRef<MarkerClusterer | null>(null);
-  const mapInitializedRef = useRef(false);
-  const idleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const userInteractingRef = useRef(false); // Track if user is interacting with map
+  const [isMobile, setIsMobile] = useState(false);
   const PAGE_SIZE = 24;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
-  // Impression tracking - batch send viewed company IDs
   const viewedIdsRef = useRef<Set<number>>(new Set());
   const flushTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -125,7 +62,6 @@ export default function HomePage() {
     }).catch(() => {});
   }, [apiUrl]);
 
-  // Flush on unmount or page hide
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) flushImpressions();
@@ -140,23 +76,20 @@ export default function HomePage() {
   const trackImpression = useCallback((companyId: number) => {
     if (viewedIdsRef.current.has(companyId)) return;
     viewedIdsRef.current.add(companyId);
-    // Debounce flush - send batch every 3 seconds
     if (flushTimerRef.current) clearTimeout(flushTimerRef.current);
     flushTimerRef.current = setTimeout(flushImpressions, 3000);
   }, [flushImpressions]);
 
-  // Category icons removed - cleaner look without emojis
-
   const goToCompany = (slug?: string, id?: number) => {
-    const target = `/firma/${slug || id}`;
-    router.push(target); // Next.js router automatycznie dodaje basePath
+    router.push(`/firma/${slug || id}`);
   };
 
   const goToAdd = () => {
     router.push(`/dodaj`);
   };
 
-  // Enrich companies with approximate coordinates (based on canton)
+  const resolveImage = (img?: string) => resolveImageUrl(img, apiUrl);
+
   const withCoords = (company: Company) => {
     if (
       company.latitude !== undefined &&
@@ -168,7 +101,6 @@ export default function HomePage() {
     }
     const coords = CANTON_COORDS[company.canton as keyof typeof CANTON_COORDS];
     if (!coords || !Number.isFinite(coords.lat) || !Number.isFinite(coords.lng)) {
-      // Return company without coords instead of null - will be shown in list but not on map
       return { ...company, coords: null };
     }
     return { ...company, coords };
@@ -177,14 +109,11 @@ export default function HomePage() {
   const isBoundsValid = (b: MapBounds | null) => {
     if (!b) return false;
     const spansOk = (b.north - b.south) < 30 && (b.east - b.west) < 30;
-    const inRegion =
-      b.north <= 55 && b.south >= 40 && b.east <= 15 && b.west >= 0;
+    const inRegion = b.north <= 55 && b.south >= 40 && b.east <= 15 && b.west >= 0;
     return Number.isFinite(b.north) && Number.isFinite(b.south) && Number.isFinite(b.east) && Number.isFinite(b.west) && spansOk && inRegion;
   };
 
-  // Base filtered list for list/map (search/category/canton/rating)
   const baseFiltered = companies.filter((c) => {
-    // Search
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       const hit =
@@ -196,52 +125,33 @@ export default function HomePage() {
         (c.category || "").toLowerCase().includes(q);
       if (!hit) return false;
     }
-    // Canton
     if (selectedCanton && c.canton !== selectedCanton) return false;
-    // Category
     if (selectedCategory && c.category_id !== selectedCategory) return false;
-    // Rating (currently minRating=0, kept for future)
     if (minRating > 0 && (c.rating || 0) < minRating) return false;
     return true;
   });
 
-  // Apply map bounds if valid to keep list == map (but include companies without coords in list)
   const filteredWithBounds = isBoundsValid(mapBounds) && mapsReady
     ? baseFiltered.map(withCoords).filter((enriched) => {
-      // Companies without coords are included in list
-      if (!enriched.coords) return true;
-      const { lat, lng } = enriched.coords;
-      return (
-        lat <= (mapBounds as MapBounds).north &&
-        lat >= (mapBounds as MapBounds).south &&
-        lng <= (mapBounds as MapBounds).east &&
-        lng >= (mapBounds as MapBounds).west
-      );
-    })
+        if (!enriched.coords) return true;
+        const { lat, lng } = enriched.coords;
+        return (
+          lat <= (mapBounds as MapBounds).north &&
+          lat >= (mapBounds as MapBounds).south &&
+          lng <= (mapBounds as MapBounds).east &&
+          lng >= (mapBounds as MapBounds).west
+        );
+      })
     : baseFiltered.map(withCoords);
 
-  // Only companies with valid coords go on the map
-  const companiesWithCoordsAll = filteredWithBounds
-    .filter((c) => c.coords !== null)
-    .filter(
-      (c): c is Company & { coords: { lat: number; lng: number } } =>
-        c.coords !== null && Number.isFinite(c.coords.lat) && Number.isFinite(c.coords.lng)
-    );
-
-  const projectToPercent = (lat: number, lng: number) => {
-    const latRange = MAP_BOUNDS.maxLat - MAP_BOUNDS.minLat;
-    const lngRange = MAP_BOUNDS.maxLng - MAP_BOUNDS.minLng;
-    const latPercent = 100 - ((lat - MAP_BOUNDS.minLat) / latRange) * 100;
-    const lngPercent = ((lng - MAP_BOUNDS.minLng) / lngRange) * 100;
-    return { top: `${latPercent}%`, left: `${lngPercent}%` };
-  };
+  const companiesWithCoordsAll = filteredWithBounds.filter(
+    (c): c is Company & { coords: { lat: number; lng: number } } =>
+      c.coords !== null && Number.isFinite(c.coords?.lat) && Number.isFinite(c.coords?.lng)
+  );
 
   // Mobile detection
   useEffect(() => {
-    const checkMobile = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-    };
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -249,7 +159,7 @@ export default function HomePage() {
 
   // Fetch companies with stale-while-revalidate caching
   useEffect(() => {
-    const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+    const CACHE_TTL = 5 * 60 * 1000;
 
     const getCached = <T,>(key: string): T | null => {
       try {
@@ -265,7 +175,6 @@ export default function HomePage() {
       try { localStorage.setItem(key, JSON.stringify({ data, ts: Date.now() })); } catch {}
     };
 
-    // Show cached data immediately
     const cachedCompanies = getCached<Company[]>('swr_companies');
     const cachedCategories = getCached<Category[]>('swr_categories');
     const cachedSortOrder = getCached<"newest" | "random" | "alphabetical">('swr_sort_order');
@@ -283,7 +192,6 @@ export default function HomePage() {
       setSortOrder(cachedSortOrder);
     }
 
-    // Fetch fresh data in background
     const fetchData = async () => {
       try {
         const res = await fetch(`${apiUrl}/companies/`);
@@ -331,11 +239,7 @@ export default function HomePage() {
     if (typeof window === "undefined") return;
     const stored = window.localStorage.getItem("favorites");
     if (stored) {
-      try {
-        setFavorites(JSON.parse(stored));
-      } catch {
-        setFavorites([]);
-      }
+      try { setFavorites(JSON.parse(stored)); } catch { setFavorites([]); }
     }
   }, []);
 
@@ -350,11 +254,7 @@ export default function HomePage() {
     });
   };
 
-  // Get unique cantons and categories for filters
-  const cantons = Array.from(new Set(companies.map((c) => c.canton).filter(Boolean))).sort();
-
-  // Load Google Maps API script with delay for better performance
-  // List loads immediately, map loads 2 seconds later
+  // Load Google Maps API script with delay
   useEffect(() => {
     if (!googleMapsKey || typeof window === "undefined") return;
     if (window.google?.maps) {
@@ -362,7 +262,6 @@ export default function HomePage() {
       return;
     }
 
-    // Delay map loading to prioritize list rendering (especially on mobile)
     const delayTimer = setTimeout(() => {
       const script = document.createElement("script");
       script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsKey}`;
@@ -371,246 +270,14 @@ export default function HomePage() {
       script.onload = () => setMapsReady(true);
       script.onerror = () => console.error("Failed to load Google Maps API");
       document.head.appendChild(script);
-    }, 2000); // 2 second delay - list shows immediately, map loads after
+    }, 2000);
 
     return () => clearTimeout(delayTimer);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Initialize Google Maps with markers
-  useEffect(() => {
-    if (!mapsReady || !mapRef.current || !window.google?.maps || companiesWithCoordsAll.length === 0) return;
-
-    // Initialize map
-    if (!mapInstanceRef.current) {
-      mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
-        center: DEFAULT_CENTER,
-        zoom: 7,
-        mapTypeId: window.google.maps.MapTypeId.ROADMAP,
-        disableDefaultUI: false,
-        zoomControl: true,
-        mapTypeControl: false,
-        scaleControl: true,
-        streetViewControl: false,
-        rotateControl: false,
-        fullscreenControl: true,
-      });
-    }
-
-    const map = mapInstanceRef.current;
-
-    // Clear existing clusterer and markers
-    if (clustererRef.current) {
-      clustererRef.current.clearMarkers();
-      clustererRef.current = null;
-    }
-    markersRef.current.forEach((marker) => marker.setMap(null));
-    markersRef.current = [];
-
-    // Create custom marker icon (red pin)
-    const createMarkerIcon = () => {
-      const svgIcon = `
-        <svg width="28" height="36" viewBox="0 0 28 36" xmlns="http://www.w3.org/2000/svg">
-          <path d="M14 0C8.48 0 4 4.48 4 10c0 5.4 8.5 16 10 16s10-10.6 10-16c0-5.52-4.48-10-10-10z" fill="#dc2626" stroke="#ffffff" stroke-width="2"/>
-          <circle cx="14" cy="10" r="3.5" fill="#ffffff"/>
-        </svg>
-      `;
-      return {
-        url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svgIcon)}`,
-        scaledSize: new window.google.maps.Size(28, 36),
-        anchor: new window.google.maps.Point(14, 36),
-        labelOrigin: new window.google.maps.Point(14, -8),
-      };
-    };
-
-    // Add markers for each company with name label
-    companiesWithCoordsAll.forEach((company) => {
-      const shortName = company.name.length > 20 ? company.name.slice(0, 18) + "..." : company.name;
-      const marker = new window.google.maps.Marker({
-        position: { lat: company.coords.lat, lng: company.coords.lng },
-        map: null,
-        title: company.name,
-        icon: createMarkerIcon(),
-        label: {
-          text: shortName,
-          color: "#1e293b",
-          fontSize: "11px",
-          fontWeight: "600",
-          fontFamily: "Arial, sans-serif",
-          className: "marker-label",
-        },
-      });
-
-      marker.addListener("click", () => {
-        goToCompany(company.slug, company.id);
-      });
-
-      markersRef.current.push(marker);
-    });
-
-    // Create marker clusterer with custom renderer
-    if (markersRef.current.length > 0) {
-      // Custom cluster renderer with click handler
-      const renderClusterWithClick = ({ count, position }: { count: number; position: any }) => {
-        const color = count > 10 ? "#dc2626" : count > 5 ? "#f97316" : "#3b82f6";
-        const size = count > 10 ? 56 : count > 5 ? 50 : 44;
-
-        const clusterMarker = new window.google.maps.Marker({
-          position,
-          icon: {
-            url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-              <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="${size / 2}" cy="${size / 2}" r="${size / 2 - 3}" fill="${color}" stroke="#ffffff" stroke-width="3"/>
-                <text x="${size / 2}" y="${size / 2}" font-family="Arial, sans-serif" font-size="${count > 10 ? 16 : 14}" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="central">${count}</text>
-              </svg>
-            `)}`,
-            scaledSize: new window.google.maps.Size(size, size),
-            anchor: new window.google.maps.Point(size / 2, size / 2),
-          },
-          zIndex: Number(window.google.maps.Marker.MAX_ZINDEX) + count,
-        });
-
-        // Add click handler to cluster marker
-        clusterMarker.addListener("click", () => {
-          // Find markers in this cluster
-          const clusterMarkers = markersRef.current.filter(m => {
-            const mPos = m.getPosition();
-            const cPos = clusterMarker.getPosition();
-            if (!mPos || !cPos) return false;
-            // Check if marker is close to cluster position (within ~0.1 degrees)
-            const latDiff = Math.abs(mPos.lat() - cPos.lat());
-            const lngDiff = Math.abs(mPos.lng() - cPos.lng());
-            return latDiff < 0.1 && lngDiff < 0.1;
-          });
-
-          if (clusterMarkers.length === 1) {
-            // Single marker - go to company page
-            const marker = clusterMarkers[0];
-            const company = companiesWithCoordsAll.find(c => {
-              const mPos = marker.getPosition();
-              return mPos && Math.abs(mPos.lat() - c.coords.lat) < 0.01 && Math.abs(mPos.lng() - c.coords.lng) < 0.01;
-            });
-            if (company) {
-              goToCompany(company.slug, company.id);
-            }
-          } else {
-            // Multiple markers - zoom in but limit max zoom
-            const bounds = new window.google.maps.LatLngBounds();
-            clusterMarkers.forEach((marker) => {
-              const pos = marker.getPosition();
-              if (pos) bounds.extend(pos);
-            });
-
-            // Fit bounds with padding
-            map.fitBounds(bounds, {
-              top: 50,
-              right: 50,
-              bottom: 50,
-              left: 50,
-            });
-
-            // Limit zoom to max level 13
-            setTimeout(() => {
-              const currentZoom = map.getZoom() || 7;
-              if (currentZoom > 13) {
-                map.setZoom(13);
-              }
-            }, 100);
-          }
-        });
-
-        return clusterMarker;
-      };
-
-      clustererRef.current = new MarkerClusterer({
-        map: map,
-        markers: markersRef.current,
-        renderer: {
-          render: renderClusterWithClick,
-        },
-        algorithmOptions: {
-          maxZoom: 13, // Maksymalny zoom dla klastrów - nie będzie grupować powyżej zoom 13
-        },
-      });
-
-      // Listen for zoom changes to prevent over-zooming when clicking clusters
-      map.addListener("zoom_changed", () => {
-        const currentZoom = map.getZoom() || 7;
-        if (currentZoom > 13) {
-          map.setZoom(13);
-        }
-      });
-
-      // Track user interactions to enable bounds sync only after user action
-      map.addListener("dragstart", () => {
-        userInteractingRef.current = true;
-      });
-
-      map.addListener("zoom_changed", () => {
-        // Only set interacting flag if map is already initialized (user zoom, not programmatic)
-        if (mapInitializedRef.current) {
-          userInteractingRef.current = true;
-        }
-      });
-
-      // Sync map bounds to filter list only when user interacts
-      map.addListener("idle", () => {
-        if (!userInteractingRef.current) return; // Skip if programmatic change
-
-        if (idleTimeoutRef.current) {
-          clearTimeout(idleTimeoutRef.current);
-        }
-        idleTimeoutRef.current = setTimeout(() => {
-          const bounds = map.getBounds();
-          if (!bounds) return;
-          const json = bounds.toJSON();
-          const next = {
-            north: json.north,
-            south: json.south,
-            east: json.east,
-            west: json.west,
-          };
-          if (isBoundsValid(next)) {
-            setMapBounds(next);
-          }
-          userInteractingRef.current = false; // Reset after processing
-        }, 300);
-      });
-      // Fit bounds only once on init to avoid bouncing on user zoom/pan
-      if (!mapInitializedRef.current) {
-        const bounds = new window.google.maps.LatLngBounds();
-        markersRef.current.forEach((marker) => {
-          const pos = marker.getPosition();
-          if (pos) bounds.extend(pos);
-        });
-        if (!bounds.isEmpty()) {
-          const padding = { top: 50, right: 50, bottom: 50, left: 50 };
-          map.fitBounds(bounds, padding);
-        } else {
-          map.setCenter(DEFAULT_CENTER);
-          map.setZoom(7);
-        }
-        mapInitializedRef.current = true;
-      }
-    } else {
-      // No markers: reset to Switzerland view
-      map.setCenter(DEFAULT_CENTER);
-      map.setZoom(7);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mapsReady, companies.length, selectedCategory, searchQuery, selectedCanton, router]);
-
-  useEffect(() => {
-    return () => {
-      if (idleTimeoutRef.current) {
-        clearTimeout(idleTimeoutRef.current);
-      }
-    };
-  }, []);
-
   // Filter and sort companies
   useEffect(() => {
-    // Stable ordering: promoted first, then by rating desc, then name
     const sorted = [...filteredWithBounds].sort((a, b) => {
       if (a.is_promoted && !b.is_promoted) return -1;
       if (!a.is_promoted && b.is_promoted) return 1;
@@ -627,12 +294,9 @@ export default function HomePage() {
 
   const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / PAGE_SIZE));
 
-  // Apply sorting based on admin settings
-  // Separate promoted and non-promoted companies
   const promotedCompanies = filteredCompanies.filter(c => c.is_promoted);
   const regularCompanies = filteredCompanies.filter(c => !c.is_promoted);
 
-  // Apply sorting to each group separately
   if (sortOrder === 'newest') {
     promotedCompanies.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
     regularCompanies.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
@@ -640,21 +304,17 @@ export default function HomePage() {
     promotedCompanies.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
     regularCompanies.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
   } else if (sortOrder === 'random') {
-    // Fisher-Yates shuffle for promoted companies
     for (let i = promotedCompanies.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [promotedCompanies[i], promotedCompanies[j]] = [promotedCompanies[j], promotedCompanies[i]];
     }
-    // Fisher-Yates shuffle for regular companies
     for (let i = regularCompanies.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [regularCompanies[i], regularCompanies[j]] = [regularCompanies[j], regularCompanies[i]];
     }
   }
 
-  // Combine: promoted companies first, then regular companies
   const sortedCompanies = [...promotedCompanies, ...regularCompanies];
-
   const paginatedCompanies = sortedCompanies.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE
@@ -662,11 +322,8 @@ export default function HomePage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 space-y-24 sm:px-6 lg:px-8">
-      {/* Loading handled by skeleton cards below */}
-
       {/* HERO */}
       <section className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-
         <div className="relative grid gap-12 p-8 md:p-12 lg:grid-cols-[1.2fr,1fr] items-center">
           <div className="space-y-8">
             <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-5xl leading-[1.15]">
@@ -678,10 +335,7 @@ export default function HomePage() {
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/dodaj"
-                onClick={(e) => {
-                  e.preventDefault();
-                  goToAdd();
-                }}
+                onClick={(e) => { e.preventDefault(); goToAdd(); }}
                 className="rounded-xl bg-primary px-6 py-3.5 font-semibold text-white hover:bg-red-700 transition-colors flex items-center gap-2"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
@@ -690,133 +344,39 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* MAPA - Interactive Map */}
+          {/* MAP */}
           <div id="mapa" className="relative aspect-square sm:h-[400px] sm:aspect-auto overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700">
-            {googleMapsKey ? (
-              <div ref={mapRef} className="h-full w-full" aria-label="Mapa firm na Google Maps" />
-            ) : (
-              <div className="flex items-center justify-center h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900">
-                <div className="text-center">
-                  <svg className="w-16 h-16 mx-auto mb-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                  </svg>
-                  <p className="text-slate-500 dark:text-slate-400 font-medium">Mapa wymaga klucza API</p>
-                </div>
-              </div>
-            )}
+            <GoogleMap
+              companies={filteredWithBounds}
+              onBoundsChange={setMapBounds}
+              onCompanyClick={goToCompany}
+              isMobile={isMobile}
+              mapsReady={mapsReady}
+            />
           </div>
         </div>
       </section>
 
-      {/* LISTA FIRM */}
+      {/* COMPANY LIST */}
       <section id="oferty" className="space-y-8">
-        {/* Search and Category Filter - responsive row */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-          {/* Category Dropdown */}
-          <div className="relative flex-shrink-0">
-            <button
-              onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
-              className="group flex items-center gap-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-5 py-3 text-sm font-bold text-slate-800 dark:text-slate-200 hover:border-primary/50 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none cursor-pointer transition-all shadow-sm hover:shadow-md w-full sm:w-auto sm:min-w-[200px]"
-            >
-              <span className="flex-1 text-left">
-                {selectedCategory
-                  ? categories.find(c => c.id === selectedCategory)?.name
-                  : "Wszystkie branże"
-                }
-              </span>
-              <svg
-                className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${isCategoryDropdownOpen ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+        <Filters
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          selectedCanton={selectedCanton}
+          setSelectedCanton={setSelectedCanton}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          categories={categories}
+          loadingCategories={loadingCategories}
+          isCategoryDropdownOpen={isCategoryDropdownOpen}
+          setIsCategoryDropdownOpen={setIsCategoryDropdownOpen}
+          totalResults={filteredCompanies.length}
+          companies={companies}
+          loading={loading}
+        />
 
-            {isCategoryDropdownOpen && (
-              <>
-                {/* Backdrop to close dropdown */}
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setIsCategoryDropdownOpen(false)}
-                />
-
-                {/* Dropdown menu */}
-                <div className="absolute z-20 mt-2 w-full min-w-[280px] rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-2xl overflow-hidden animate-fade-in">
-                  <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
-                    {/* All categories option */}
-                    <button
-                      onClick={() => {
-                        setSelectedCategory(null);
-                        setIsCategoryDropdownOpen(false);
-                      }}
-                      className={`w-full flex items-center gap-3 px-6 py-3 text-left text-sm font-bold transition-all hover:bg-primary/10 ${!selectedCategory
-                        ? 'bg-primary/20 text-primary dark:text-primary-light'
-                        : 'text-slate-700 dark:text-slate-300'
-                        }`}
-                    >
-                      <span className="flex-1">Wszystkie branże</span>
-                      {!selectedCategory && (
-                        <svg className="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      )}
-                    </button>
-
-                    {/* Divider */}
-                    <div className="border-t border-slate-200 dark:border-slate-700" />
-
-                    {/* Category options */}
-                    {categories.map((cat) => (
-                      <button
-                        key={cat.id}
-                        onClick={() => {
-                          setSelectedCategory(cat.id);
-                          setIsCategoryDropdownOpen(false);
-                        }}
-                        className={`w-full flex items-center gap-3 px-6 py-3 text-left text-sm font-bold transition-all hover:bg-primary/10 ${selectedCategory === cat.id
-                          ? 'bg-primary/20 text-primary dark:text-primary-light'
-                          : 'text-slate-700 dark:text-slate-300'
-                          }`}
-                      >
-                        <span className="flex-1">{cat.name}</span>
-                        <span className="text-xs font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full">{companies.filter(c => c.category_id === cat.id).length}</span>
-                        {selectedCategory === cat.id && (
-                          <svg className="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Search Bar - narrower on desktop */}
-          <div className="relative w-full sm:w-80 md:w-96 group">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-            </div>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Szukaj..."
-              className="w-full pl-10 pr-4 py-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-base font-medium focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none dark:text-white"
-            />
-          </div>
-
-          {/* Results count - pushed to right on desktop */}
-          {!loading && (
-            <div className="hidden md:flex items-center gap-2 ml-auto text-sm text-slate-500">
-              <span className="font-bold text-primary">{filteredCompanies.length}</span>
-              <span>wyników</span>
-            </div>
-          )}
-        </div>
         {loading ? (
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {[...Array(6)].map((_, i) => (
@@ -857,108 +417,25 @@ export default function HomePage() {
               {paginatedCompanies.map((item) => {
                 const categoryName = categories.find(c => c.id === item.category_id)?.name || item.category || "Inne";
                 return (
-                  <Link
+                  <CompanyCard
                     key={item.id}
-                    href={`/firma/${item.slug || item.id}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      goToCompany(item.slug, item.id);
-                    }}
-                    ref={(el) => {
-                      if (!el) return;
-                      const observer = new IntersectionObserver(
-                        ([entry]) => {
-                          if (entry.isIntersecting) {
-                            trackImpression(item.id);
-                            observer.disconnect();
-                          }
-                        },
-                        { threshold: 0.5 }
-                      );
-                      observer.observe(el);
-                    }}
-                    className={`group flex flex-col overflow-hidden rounded-xl border bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow ${item.is_promoted
-                      ? "border-yellow-400 ring-1 ring-yellow-400/50"
-                      : "border-slate-200 dark:border-slate-800"
-                      }`}
-                  >
-                    <div className="relative h-36 sm:h-48 overflow-hidden">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={item.img || "/default-company.png"}
-                        alt={item.name}
-                        className="h-full w-full object-contain"
-                        loading="lazy"
-                      />
-                      <div className="absolute top-2 left-2 flex gap-1.5">
-                        {item.is_promoted && (
-                          <span className="bg-yellow-400 text-yellow-900 py-1 px-2 rounded-md text-[9px] font-bold uppercase">
-                            Promowana
-                          </span>
-                        )}
-                        <span className="bg-white/90 py-1 px-2 rounded-md text-[9px] font-semibold text-slate-700 uppercase">
-                          {categoryName}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-1 flex-col p-3 sm:p-5 space-y-2 sm:space-y-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight line-clamp-2">
-                          {item.name}
-                        </h3>
-                        {item.rating && (
-                          <div className="flex items-center gap-0.5 shrink-0 text-green-600 font-bold text-xs sm:text-sm">
-                            ★ {item.rating.toFixed(1)}
-                          </div>
-                        )}
-                      </div>
-                      {(item.city || item.canton) && (
-                        <div className="text-xs sm:text-sm text-slate-500">
-                          {[item.city, item.canton].filter(Boolean).join(", ")}
-                        </div>
-                      )}
-                      <p className="text-xs sm:text-sm text-slate-500 line-clamp-2">
-                        {item.short_description || (item.description || "").replace(/<[^>]*>/g, '') || ""}
-                      </p>
-                    </div>
-                  </Link>
+                    company={item}
+                    onNavigate={goToCompany}
+                    onToggleFavorite={toggleFavorite}
+                    isFavorite={favorites.includes(item.id)}
+                    resolveImage={resolveImage}
+                    trackImpression={trackImpression}
+                    categoryName={categoryName}
+                  />
                 );
               })}
             </div>
 
-            {/* PAGINACJA */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 pt-8">
-                <button
-                  type="button"
-                  onClick={() => { setCurrentPage((p) => Math.max(1, p - 1)); document.getElementById('oferty')?.scrollIntoView({ behavior: 'smooth' }); }}
-                  disabled={currentPage === 1}
-                  className="p-3 rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-30 transition-all"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-                </button>
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {[...Array(totalPages)].map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => { setCurrentPage(i + 1); document.getElementById('oferty')?.scrollIntoView({ behavior: 'smooth' }); }}
-                      className={`h-11 w-11 rounded-2xl font-bold transition-all ${currentPage === i + 1 ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-110' : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-primary/50'}`}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => { setCurrentPage((p) => Math.min(totalPages, p + 1)); document.getElementById('oferty')?.scrollIntoView({ behavior: 'smooth' }); }}
-                  disabled={currentPage === totalPages}
-                  className="p-3 rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-30 transition-all"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                </button>
-              </div>
-            )}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           </div>
         )}
       </section>
@@ -976,10 +453,7 @@ export default function HomePage() {
             <div>
               <Link
                 href="/dodaj"
-                onClick={(e) => {
-                  e.preventDefault();
-                  goToAdd();
-                }}
+                onClick={(e) => { e.preventDefault(); goToAdd(); }}
                 className="rounded-xl bg-primary px-8 py-4 text-base font-semibold text-white hover:bg-red-700 transition-colors"
               >
                 + Dodaj swoją usługę za darmo
@@ -991,4 +465,3 @@ export default function HomePage() {
     </div>
   );
 }
-

@@ -21,12 +21,7 @@ const ADDRESS_SUGGESTIONS = [
   { label: "Via Nassa 5, Lugano", canton: "TI" }
 ];
 
-type Category = {
-  id: number;
-  name: string;
-  slug: string;
-  description?: string;
-};
+import { Category } from "@/types";
 
 export default function AddCompanyPage() {
   const [form, setForm] = useState({

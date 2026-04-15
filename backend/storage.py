@@ -15,6 +15,36 @@ from .settings import get_settings
 
 logger = logging.getLogger(__name__)
 
+import time as _time_module
+
+
+class _Cache:
+    """Simple in-memory cache with TTL."""
+    def __init__(self):
+        self._data: dict[str, tuple[float, Any]] = {}
+        self._ttl = 60  # 60 seconds default TTL
+
+    def get(self, key: str) -> Any | None:
+        if key in self._data:
+            ts, val = self._data[key]
+            if _time_module.time() - ts < self._ttl:
+                return val
+            del self._data[key]
+        return None
+
+    def set(self, key: str, value: Any) -> None:
+        self._data[key] = (_time_module.time(), value)
+
+    def invalidate(self, *keys: str) -> None:
+        for key in keys:
+            self._data.pop(key, None)
+
+    def invalidate_all(self) -> None:
+        self._data.clear()
+
+
+_cache = _Cache()
+
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
@@ -586,8 +616,13 @@ def create_user(email: str, hashed_password: str, full_name: Optional[str]) -> d
 
 # ---------- Categories ----------
 def list_categories() -> list[dict]:
+    cached = _cache.get("categories")
+    if cached is not None:
+        return cached
     with _lock:
-        return _read_list(CATEGORIES_FILE)
+        cats = _read_list(CATEGORIES_FILE)
+        _cache.set("categories", cats)
+        return cats
 
 
 def create_category(payload: dict) -> dict:
@@ -599,6 +634,7 @@ def create_category(payload: dict) -> dict:
         cat = {"id": _next_id(cats), **payload}
         cats.append(cat)
         _write_list(CATEGORIES_FILE, cats)
+        _cache.invalidate("categories")
         return cat
 
 
@@ -610,6 +646,7 @@ def update_category(category_id: int, payload: dict) -> dict:
             if cat.get("id") == category_id:
                 cat.update(payload)
                 _write_list(CATEGORIES_FILE, cats)
+                _cache.invalidate("categories")
                 return cat
         raise KeyError("Category not found")
 
@@ -623,11 +660,15 @@ def delete_category(category_id: int) -> None:
         if len(cats) == original_len:
             raise KeyError("Category not found")
         _write_list(CATEGORIES_FILE, cats)
+        _cache.invalidate("categories")
 
 
 # ---------- Companies ----------
 def list_companies() -> list[dict]:
     """List all companies, ensuring they have slugs."""
+    cached = _cache.get("companies")
+    if cached is not None:
+        return cached
     with _lock:
         companies = _read_list(COMPANIES_FILE)
         # Ensure all companies have slugs
@@ -638,6 +679,7 @@ def list_companies() -> list[dict]:
                 updated = True
         if updated:
             _write_list(COMPANIES_FILE, companies)
+        _cache.set("companies", companies)
         return companies
 
 
@@ -656,7 +698,7 @@ def get_company_by_slug(slug: str) -> Optional[dict]:
 
 def create_company(payload: dict) -> dict:
     from datetime import datetime
-    from .image_utils import convert_base64_to_webp
+    from .image_utils import convert_base64_to_webp, save_image_to_disk
     
     with _lock:
         companies = _read_list(COMPANIES_FILE)
@@ -693,12 +735,13 @@ def create_company(payload: dict) -> dict:
                     payload['latitude'] = coords[0]
                     payload['longitude'] = coords[1]
         
-        # Convert images to WebP
+        # Convert images to WebP and save to disk
+        company_id_for_img = _next_id(companies)
         if payload.get('img'):
-            payload['img'] = convert_base64_to_webp(payload['img'])
+            payload['img'] = save_image_to_disk(payload['img'], company_id_for_img, "main", 0)
         if payload.get('photos') and isinstance(payload['photos'], list):
-            payload['photos'] = [convert_base64_to_webp(photo) for photo in payload['photos'] if photo]
-        
+            payload['photos'] = [save_image_to_disk(photo, company_id_for_img, "photo", idx) for idx, photo in enumerate(payload['photos']) if photo]
+
         company = {
             **payload,  # Apply payload first
             "id": _next_id(companies),
@@ -715,18 +758,19 @@ def create_company(payload: dict) -> dict:
         }
         companies.append(company)
         _write_list(COMPANIES_FILE, companies)
+        _cache.invalidate("companies")
         return company
 
 
 def update_company(company_id: int, updates: dict) -> dict:
     from datetime import datetime
-    from .image_utils import convert_base64_to_webp
-    
-    # Convert images to WebP before updating
+    from .image_utils import save_image_to_disk
+
+    # Convert images to WebP and save to disk
     if updates.get('img'):
-        updates['img'] = convert_base64_to_webp(updates['img'])
+        updates['img'] = save_image_to_disk(updates['img'], company_id, "main", 0)
     if updates.get('photos') and isinstance(updates['photos'], list):
-        updates['photos'] = [convert_base64_to_webp(photo) for photo in updates['photos'] if photo]
+        updates['photos'] = [save_image_to_disk(photo, company_id, "photo", idx) for idx, photo in enumerate(updates['photos']) if photo]
     
     with _lock:
         companies = _read_list(COMPANIES_FILE)
@@ -736,6 +780,7 @@ def update_company(company_id: int, updates: dict) -> dict:
             merged = {**c, **updates, "id": company_id, "updated_at": _now_ts(), "last_confirmed_at": datetime.now().isoformat()}
             companies[idx] = merged
             _write_list(COMPANIES_FILE, companies)
+            _cache.invalidate("companies")
             return merged
         raise KeyError("Not found")
 
@@ -747,6 +792,7 @@ def delete_company(company_id: int) -> None:
         if len(new_list) == len(companies):
             raise KeyError("Not found")
         _write_list(COMPANIES_FILE, new_list)
+        _cache.invalidate("companies")
 
 
 # ---------- Stats ----------
@@ -758,7 +804,8 @@ def increment_view(company_id: int) -> None:
                 c["views"] = (c.get("views") or 0) + 1
                 companies[idx] = c
                 _write_list(COMPANIES_FILE, companies)
-                
+                _cache.invalidate("companies")
+
                 # Update granular stats
                 _update_stats(company_id, "views")
                 return
@@ -772,7 +819,8 @@ def increment_click(company_id: int) -> None:
                 c["clicks"] = (c.get("clicks") or 0) + 1
                 companies[idx] = c
                 _write_list(COMPANIES_FILE, companies)
-                
+                _cache.invalidate("companies")
+
                 # Update granular stats
                 _update_stats(company_id, "clicks")
                 return
