@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // basePath configurable via env var: empty for standalone, /uslugi for polacyszwajcaria.com
+  // basePath configurable via env var: empty for katalog-firm.ch standalone
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
   reactStrictMode: true,
   poweredByHeader: false,

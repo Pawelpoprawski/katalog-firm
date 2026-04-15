@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Polish business directory for Switzerland ("Katalog Firm Polonijnych w Szwajcarii"). Production URL: `https://polacyszwajcaria.com/uslugi`
+Polish business directory for Switzerland ("Katalog Firm Polonijnych w Szwajcarii"). Production URL: `https://katalog-firm.ch`
 
 - **Backend**: FastAPI (Python), JSON file-based storage, port 8000
 - **Frontend**: Next.js 14 App Router (TypeScript + Tailwind), port 3000
@@ -82,7 +82,7 @@ Companies are edited via unique `edit_token` (not user login). PUT `/companies/{
 All `/admin/*` endpoints require `Authorization: Bearer {ADMIN_PASSWORD}` header where ADMIN_PASSWORD comes from `backend/.env`.
 
 ### basePath
-Next.js uses conditional basePath: `/uslugi` in production, empty in dev. Configured in `next.config.mjs`. This affects all asset paths, links, and favicon URLs. Use absolute paths like `/uslugi/favicon.ico` in metadata when needed.
+Next.js basePath is empty (app at root `/`). Configured in `next.config.mjs` via `NEXT_PUBLIC_BASE_PATH` env var.
 
 ### Image Handling
 Images uploaded as base64, converted to WebP by `backend/image_utils.py` (max 10MB, 1200px, quality 85%). Stored inline in companies.json as data URIs.
