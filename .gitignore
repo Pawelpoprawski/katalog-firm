@@ -41,7 +41,9 @@ coverage/
 tmp_*.json
 nul
 
-# Image uploads (served by backend)
+# Backend data (lives on server, not in git)
+backend/data/*.json
+backend/data/*.txt
 backend/static/images/
 
 # Backup files

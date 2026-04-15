@@ -1,5 +1,0 @@
-# IP Blacklist Management
-# This file stores blacklisted IP addresses.
-# Add one IP address per line.
-# Lines starting with # are comments.
-
