@@ -247,7 +247,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
           <div
             className="h-64 md:h-80 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 cursor-pointer hover:opacity-90 transition-opacity flex items-center justify-center"
             onClick={() => {
-              const images = [company.img, ...(company.photos || [])].filter(Boolean) as string[];
+              const images = [company.img, ...(company.photos || [])].filter(Boolean).map(s => resolveImageUrl(s, apiUrl));
               if (images.length > 0) {
                 setLightboxImage(images[0]);
                 setLightboxIndex(0);
@@ -417,7 +417,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
           {/* Photo Gallery */}
           {company.photos && company.photos.length > 0 && (() => {
             const galleryPhotos = company.photos.filter(p => p !== company.img);
-            const allImages = [company.img, ...galleryPhotos].filter(Boolean) as string[];
+            const allImages = [company.img, ...galleryPhotos].filter(Boolean).map(s => resolveImageUrl(s, apiUrl));
 
             if (galleryPhotos.length === 0) return null;
 
@@ -438,7 +438,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={src}
+                          src={resolveImageUrl(src, apiUrl)}
                           alt={`${company.name} zdjęcie ${idx + 1}`}
                           className="max-h-full max-w-full object-contain"
                           loading="lazy"
@@ -761,7 +761,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
           </button>
 
           {(() => {
-            const allImages = [company.img, ...(company.photos || [])].filter(Boolean) as string[];
+            const allImages = [company.img, ...(company.photos || [])].filter(Boolean).map(s => resolveImageUrl(s, apiUrl));
             const currentIndex = allImages.indexOf(lightboxImage);
 
             return (
@@ -784,7 +784,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
 
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={lightboxImage}
+                  src={resolveImageUrl(lightboxImage, apiUrl)}
                   alt={`${company.name} - zdjęcie ${currentIndex + 1}`}
                   className="max-h-full max-w-full object-contain"
                   onClick={(e) => e.stopPropagation()}
