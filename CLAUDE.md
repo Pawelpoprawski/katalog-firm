@@ -8,7 +8,7 @@ Polish business directory for Switzerland ("Katalog Firm Polonijnych w Szwajcari
 
 - **Backend**: FastAPI (Python), JSON file-based storage, port 8000
 - **Frontend**: Next.js 14 App Router (TypeScript + Tailwind), port 3000
-- **Production**: Ubuntu VPS (51.75.141.194), nginx reverse proxy, PM2 process manager
+- **Production**: Ubuntu VPS (54.38.54.237, OVH Warszawa), nginx reverse proxy, PM2 process manager. SSH: `ubuntu@54.38.54.237` (password auth, not key). Repo at `/home/ubuntu/strony/katalog_firm/`.
 
 ## Build & Run Commands
 
@@ -28,12 +28,12 @@ npm run lint     # ESLint
 ```
 
 ### Production Deploy
-Deploy via paramiko SSH to 54.38.54.237:
-1. `git stash && git pull` on server (stash protects local data files)
-2. `npm run build` in frontend
-3. `pm2 restart all`
+Deploy via paramiko SSH to `ubuntu@54.38.54.237` (password auth). Repo on server: `/home/ubuntu/strony/katalog_firm/`.
+1. `cd /home/ubuntu/strony/katalog_firm && git pull origin main` (data files are gitignored — no stash needed)
+2. `cd frontend && npm run build`
+3. `pm2 restart katalog-backend katalog-frontend`
 
-**IMPORTANT**: `backend/data/*.json` is in `.gitignore` — data lives ONLY on the server. Never commit data files. If `git pull` deletes them, `git stash pop` restores them.
+**Note**: If `git pull` reports `DU` conflicts on `backend/data/*.json` (historical leftover), run `git rm --cached backend/data/*.json` first — files stay on disk, only index is cleaned.
 
 ## Architecture
 

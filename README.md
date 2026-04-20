@@ -1,98 +1,108 @@
-# Katalog Firm - Polskie Uslugi w Szwajcarii
+# Katalog Firm — Polskie Usługi w Szwajcarii
 
-Katalog polskich firm i uslug w Szwajcarii dzialajacy jako subdirectory na **polacyszwajcaria.com/uslugi**.
+Katalog polskich firm i usług w Szwajcarii dostępny pod adresem **https://katalog-firm.ch**.
 
-Aplikacja oparta na **Next.js 14** (frontend) z backendem **FastAPI** (Python), zintegrowana z glowna strona WordPress.
+Aplikacja oparta na **Next.js 14** (frontend) z backendem **FastAPI** (Python), hostowana na VPS OVH w Warszawie.
 
 **GitHub**: https://github.com/Pawelpoprawski/katalog-firm
 
+> Szczegóły deployu, SSH i workflow operacyjnego → **[DEPLOY.md](DEPLOY.md)**
+> Instrukcje dla Claude Code (AI development) → **[CLAUDE.md](CLAUDE.md)**
+
 ---
 
-## Spis tresci
+## Spis treści
 
 1. [Architektura](#architektura)
 2. [Stack technologiczny](#stack-technologiczny)
 3. [Struktura projektu](#struktura-projektu)
-4. [Zmienne srodowiskowe](#zmienne-srodowiskowe)
+4. [Zmienne środowiskowe](#zmienne-srodowiskowe)
 5. [Development lokalny](#development-lokalny)
-6. [Deploy na produkcje](#deploy-na-produkcje)
+6. [Deploy na produkcję](#deploy-na-produkcje)
 7. [Konfiguracja nginx](#konfiguracja-nginx)
-8. [PM2 - zarzadzanie procesami](#pm2---zarzadzanie-procesami)
+8. [PM2 — zarządzanie procesami](#pm2--zarzadzanie-procesami)
 9. [Google Maps API](#google-maps-api)
 10. [Panel admina](#panel-admina)
-11. [API Endpoints](#api-endpoints)
-12. [Bezpieczenstwo](#bezpieczenstwo)
-13. [SEO](#seo)
-14. [Troubleshooting](#troubleshooting)
+11. [Cykliczne potwierdzenia aktywności firm](#cykliczne-potwierdzenia-aktywnosci-firm)
+12. [API Endpoints](#api-endpoints)
+13. [Bezpieczeństwo](#bezpieczenstwo)
+14. [SEO](#seo)
+15. [Troubleshooting](#troubleshooting)
 
 ---
 
 ## Architektura
 
-```
-polacyszwajcaria.com/                  -> WordPress (glowna strona)
-polacyszwajcaria.com/uslugi/           -> Next.js Katalog (ta aplikacja)
-polacyszwajcaria.com/uslugi/firma/...  -> Strony firm
-polacyszwajcaria.com/uslugi/dodaj      -> Formularz dodawania
-polacyszwajcaria.com/uslugi/admin      -> Panel admina
-polacyszwajcaria.com/api/...           -> FastAPI Backend
-```
+Aplikacja działa jako standalone na domenie **katalog-firm.ch** (root `/`).
 
 ```
-                     nginx (reverse proxy)
-                    /          |          \
-                   /           |           \
-          WordPress        Next.js 14     FastAPI
-         (port 80)        (port 3000)    (port 8000)
-           root /          /uslugi         /api
-                               |            |
-                               +--fetch---->+
-                                  (SSR + client)
+                        nginx (reverse proxy, SSL)
+                       /                          \
+                      /                            \
+              Next.js 14                        FastAPI
+             (port 3000)                      (port 8000)
+               /  *                             /api/*
+                 \                                /
+                  \-------- fetch (SSR + client) /
 ```
 
-### Komponenty
+### Komponenty na serwerze
 
-| Komponent | Technologia | Port | Sciezka |
-|-----------|-------------|------|---------|
-| Glowna strona | WordPress | 80 | `/` |
-| Frontend katalogu | Next.js 14 | 3000 | `/uslugi` |
-| Backend API | FastAPI | 8000 | `/api` |
+| Komponent | Technologia | Port | Ścieżka URL |
+|-----------|-------------|------|-------------|
+| Frontend | Next.js 14 | 3000 | `/` (wszystko oprócz `/api/*`) |
+| Backend API | FastAPI | 8000 | `/api/*` (nginx stripuje prefix) |
+
+### Architektura danych
+
+- Pliki JSON w `backend/data/` (thread-safe, atomiczne zapisy)
+- Obrazy ekstraktowane z base64 do systemu plików (`backend/data/images/`)
+- Brak bazy SQL — wszystko w JSON + filesystem
+- Cache in-memory (TTL 60s) dla list firm i kategorii
 
 ---
 
 ## Stack technologiczny
 
 ### Frontend
-- **Next.js 14.2.4** - framework React z SSR
-- **React 18.3.1** - biblioteka UI
-- **TypeScript 5.5.3** - typy statyczne
-- **TailwindCSS 3.4.4** - framework CSS (dark mode)
-- **Google Maps** - interaktywna mapa + autocomplete adresow
-- **@googlemaps/markerclusterer** - grupowanie markerow na mapie
-- **react-hot-toast** - powiadomienia UI
+- **Next.js 14.2.4** — framework React z SSR i App Router
+- **React 18.3.1** — biblioteka UI
+- **TypeScript 5.5.3** — typy statyczne
+- **TailwindCSS 3.4.4** — framework CSS (dark mode)
+- **Google Maps** — interaktywna mapa + autocomplete adresów
+- **@googlemaps/markerclusterer** — grupowanie markerów na mapie
 
 ### Backend
-- **FastAPI 0.115.12** - framework API (Python)
-- **Pydantic 2.10** - walidacja danych + schematy
-- **uvicorn** - serwer ASGI
-- **googlemaps 4.10** - geocoding adresow (lat/lng)
-- **Pillow** - konwersja obrazow do WebP
-- **bleach** - sanityzacja HTML (ochrona XSS)
-- **slowapi** - rate limiting
-- **bcrypt** - hashowanie hasel
-- **PyJWT** - tokeny JWT
+- **FastAPI 0.115.12** — framework API (Python)
+- **Pydantic 2.10** — walidacja danych + schematy
+- **uvicorn** — serwer ASGI
+- **googlemaps 4.10** — geocoding adresów (lat/lng)
+- **Pillow** — konwersja obrazów do WebP
+- **bleach** — sanityzacja HTML (ochrona XSS)
+- **slowapi** — rate limiting (per IP)
+- **bcrypt** — hashowanie haseł (bezpośrednio, bez passlib)
 
-### Baza danych
-- **JSON file-based** - dane przechowywane w plikach `.json`
-- Pliki w `backend/data/`: companies.json, categories.json, reviews.json, users.json, stats.json, settings.json, reports.json
-- Thread-safe z `threading.RLock()`
-- Atomiczne zapisy (temp file + replace)
+### Przechowywanie danych
+- **JSON file-based** — thread-safe via `threading.RLock()`, atomiczne zapisy (temp file + `os.replace`)
+- Pliki w `backend/data/`:
+  - `companies.json`, `categories.json`, `reviews.json`, `users.json`
+  - `stats.json` (views/clicks per dzień), `analytics.json` (impressions, nowe firmy, potwierdzenia)
+  - `settings.json` (social media, sort order, newsletter count)
+  - `reports.json`, `ip_blacklist.txt`
+- Obrazy w `backend/data/images/` (serwowane przez nginx location `/images/`)
+- **`.gitignore` wyklucza całe `backend/data/*.json`** — dane żyją tylko na serwerze
+
+### Maile (cykliczne potwierdzenia)
+- **Resend API** — wysyłka HTML maili z Let's Encrypt domeny `katalog-firm.ch`
+- Szablon: `email_migration_template.html`
+- Skrypt: `send_migration_emails.py` (tryby `--confirmation`, `--bulk`, `--test`)
+- Cron: `0 10 */5 * * send_confirmations_cron.sh` (co 5 dni o 10:00)
 
 ### Serwer produkcyjny
-- **Ubuntu** (VPS)
-- **nginx** - reverse proxy
-- **PM2** - manager procesow
-- **Let's Encrypt** - certyfikat SSL
+- **OVH VPS (Warszawa)** — `54.38.54.237`, Ubuntu 25.04
+- **nginx** — reverse proxy + cache (5 min) + SSL termination
+- **PM2** — manager procesów (`katalog-backend`, `katalog-frontend`)
+- **Let's Encrypt** — certyfikat SSL (auto-renew przez certbot timer)
 
 ---
 
@@ -100,135 +110,150 @@ polacyszwajcaria.com/api/...           -> FastAPI Backend
 
 ```
 katalog-firm/
-|-- backend/
-|   |-- data/                    # Pliki bazy danych (JSON)
-|   |   |-- companies.json       # Firmy (~21MB, zawiera base64 obrazy)
-|   |   |-- categories.json      # Kategorie
-|   |   |-- reviews.json         # Recenzje
-|   |   |-- users.json           # Uzytkownicy
-|   |   |-- stats.json           # Statystyki (views/clicks per dzien)
-|   |   |-- settings.json        # Ustawienia (social media, sort order)
-|   |   |-- reports.json         # Zgloszenia
-|   |   |-- ip_blacklist.txt     # Zablokowane IP
-|   |-- routers/
-|   |   |-- admin.py             # Endpointy admina
-|   |   |-- auth.py              # Rejestracja/logowanie
-|   |   |-- categories.py        # Kategorie CRUD
-|   |   |-- companies.py         # Firmy CRUD (glowny zasob)
-|   |   |-- reviews.py           # Recenzje
-|   |   |-- reports.py           # Zgloszenia
-|   |-- main.py                  # Punkt wejscia FastAPI
-|   |-- settings.py              # Konfiguracja (env vars)
-|   |-- schemas.py               # Modele Pydantic
-|   |-- security.py              # Hashowanie hasel (bcrypt)
-|   |-- security_middleware.py   # Rate limiting, sanityzacja
-|   |-- ip_blacklist.py          # Middleware blokowania IP
-|   |-- geocoding.py             # Google Maps geocoding
-|   |-- image_utils.py           # Konwersja obrazow (WebP)
-|   |-- storage.py               # Warstwa bazy danych (JSON)
-|   |-- requirements.txt         # Zaleznosci Python
-|   |-- .env                     # Zmienne srodowiskowe (NIE COMMITOWAC!)
-|   |-- .env.example             # Szablon zmiennych
-|
-|-- frontend/
-|   |-- src/
-|   |   |-- app/
-|   |   |   |-- page.tsx             # Strona glowna (mapa + lista firm)
-|   |   |   |-- layout.tsx           # Root layout (SEO, JSON-LD)
-|   |   |   |-- AppShell.tsx         # Header, footer, cookie banner
-|   |   |   |-- sitemap.ts           # Dynamiczny sitemap
-|   |   |   |-- dodaj/page.tsx       # Formularz dodawania firmy (4 kroki)
-|   |   |   |-- admin/page.tsx       # Panel admina
-|   |   |   |-- firma/[slug]/        # Strona firmy (SSR + metadata)
-|   |   |   |-- edycja/[token]/      # Edycja firmy przez token
-|   |   |   |-- login/page.tsx       # Logowanie uzytkownika
-|   |   |   |-- konto/               # Panel uzytkownika
-|   |   |   |-- ulubione/page.tsx    # Ulubione firmy
-|   |   |   |-- kategoria/[slug]/    # Filtr po kategorii (SSR metadata)
-|   |   |   |-- polityka-prywatnosci/ # Polityka prywatnosci
-|   |   |-- hooks/
-|   |   |   |-- useFavorites.ts      # Hook ulubionych (localStorage)
-|   |   |-- components/
-|   |       |-- ErrorBoundary.tsx     # Obsluga bledow
-|   |-- public/
-|   |   |-- favicon.ico              # Ikona przegladarki
-|   |   |-- favicon.svg              # Ikona SVG
-|   |   |-- icon.png                 # Ikona 512x512 (apple-touch-icon)
-|   |   |-- logo.png                 # Logo (Open Graph, sharing)
-|   |   |-- default-company.png      # Domyslne zdjecie firmy
-|   |   |-- manifest.json            # PWA manifest (mobile)
-|   |   |-- robots.txt               # Reguly dla crawlerow
-|   |-- next.config.mjs              # Konfiguracja Next.js
-|   |-- tailwind.config.cjs          # Konfiguracja Tailwind
-|   |-- tsconfig.json                # Konfiguracja TypeScript
-|   |-- package.json                 # Zaleznosci Node.js
-|   |-- .env.local                   # Zmienne srodowiskowe (NIE COMMITOWAC!)
-|   |-- .env.example                 # Szablon zmiennych
-|
-|-- run/
-|   |-- run_backend.bat              # Skrypt startowy backendu (Windows)
-|   |-- run_frontend.bat             # Skrypt startowy frontendu (Windows)
-|
-|-- .gitignore                       # Ignorowane pliki
-|-- README.md                        # Ten plik
+├── backend/
+│   ├── data/                        # Pliki bazy (gitignored, tylko .gitkeep trackowany)
+│   │   ├── companies.json           # Firmy (~230KB, z edit_token)
+│   │   ├── categories.json          # Kategorie
+│   │   ├── reviews.json             # Recenzje
+│   │   ├── users.json               # Użytkownicy
+│   │   ├── stats.json               # Views/clicks per firma per dzień
+│   │   ├── analytics.json           # Impressions, nowe firmy, potwierdzenia
+│   │   ├── settings.json            # Social media, sort order
+│   │   ├── reports.json             # Zgłoszenia recenzji
+│   │   ├── ip_blacklist.txt         # Zablokowane IP
+│   │   └── images/                  # Ekstraktowane obrazy (WebP)
+│   ├── routers/
+│   │   ├── admin.py                 # Endpointy admina (bearer auth)
+│   │   ├── auth.py                  # Rejestracja/logowanie JWT
+│   │   ├── categories.py            # Kategorie CRUD
+│   │   ├── companies.py             # Firmy CRUD (główny zasób)
+│   │   ├── reviews.py               # Recenzje
+│   │   └── reports.py               # Zgłoszenia
+│   ├── main.py                      # Punkt wejścia FastAPI
+│   ├── settings.py                  # Konfiguracja (env vars)
+│   ├── schemas.py                   # Modele Pydantic (CompanyBase, ReviewCreate, itd.)
+│   ├── security.py                  # Hashowanie haseł (bcrypt)
+│   ├── security_middleware.py       # Rate limiting, sanityzacja HTML, walidacja URL
+│   ├── ip_blacklist.py              # Middleware blokowania IP
+│   ├── geocoding.py                 # Google Maps geocoding
+│   ├── image_utils.py               # Konwersja obrazów (base64 → WebP → filesystem)
+│   ├── email_service.py             # Wysyłka maila "witamy w katalogu" (Resend)
+│   ├── storage.py                   # Warstwa bazy danych (JSON + cache + locks)
+│   ├── clear_cache.py               # Clearing nginx cache po CRUD
+│   ├── migrate_images.py            # One-shot: extract base64 → filesystem
+│   ├── requirements.txt             # Zależności Python
+│   ├── start.sh                     # PM2 entry point (odpala uvicorn)
+│   └── .env                         # ADMIN_PASSWORD, SECRET_KEY, GOOGLE_MAPS_API_KEY (NIE COMMITOWAĆ!)
+│
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── page.tsx                 # Strona główna (mapa + lista firm)
+│   │   │   ├── layout.tsx               # Root layout (SEO, JSON-LD, CSP meta)
+│   │   │   ├── AppShell.tsx             # Header, footer, cookie banner
+│   │   │   ├── sitemap.ts               # Dynamiczny sitemap (rewalidacja 1h)
+│   │   │   ├── not-found.tsx            # Custom 404
+│   │   │   ├── dodaj/page.tsx           # Formularz dodawania firmy (4 kroki)
+│   │   │   ├── admin/
+│   │   │   │   ├── page.tsx             # Panel admina (login)
+│   │   │   │   ├── layout.tsx           # noindex/nofollow
+│   │   │   │   └── components/          # AdminStats (wykresy), AdminCompanies, AdminReviews, AdminCategories, AdminSettings
+│   │   │   ├── firma/[slug]/            # Strona firmy (SSR metadata + client interactivity)
+│   │   │   │   ├── page.tsx             # Server component (metadata)
+│   │   │   │   └── CompanyPageClient.tsx # Client component
+│   │   │   ├── edycja/[token]/          # Edycja firmy przez unikalny token
+│   │   │   ├── potwierdz/page.tsx       # Potwierdzenie aktywności firmy (wpisz email)
+│   │   │   ├── kategoria/[slug]/        # Filtr po kategorii (SSR metadata)
+│   │   │   ├── konto/                   # Panel użytkownika + ulubione
+│   │   │   ├── login/ · rejestracja/    # Auth użytkowników
+│   │   │   ├── jak-to-dziala/           # Strona "Jak to działa"
+│   │   │   └── polityka-prywatnosci/    # Polityka prywatności
+│   │   ├── hooks/
+│   │   │   └── useFavorites.ts          # Hook ulubionych (localStorage)
+│   │   ├── components/
+│   │   │   ├── CompanyCard.tsx
+│   │   │   ├── Filters.tsx
+│   │   │   ├── GoogleMap.tsx
+│   │   │   ├── Pagination.tsx
+│   │   │   └── ErrorBoundary.tsx
+│   │   ├── lib/utils.ts
+│   │   └── types.ts                     # Wspólne TypeScript types
+│   ├── public/
+│   │   ├── favicon.ico, icon.png, apple-icon.png, logo.png
+│   │   ├── default-company.png
+│   │   ├── manifest.json                # PWA manifest
+│   │   └── robots.txt                   # User-agent rules
+│   ├── next.config.mjs                  # Config Next.js (basePath: puste = root)
+│   ├── tailwind.config.cjs              # Config Tailwind (colors, dark mode)
+│   ├── tsconfig.json                    # Config TypeScript (strict)
+│   ├── package.json
+│   └── .env.local                       # NEXT_PUBLIC_API_URL, GOOGLE_MAPS_KEY (NIE COMMITOWAĆ!)
+│
+├── email_migration_template.html        # HTML template maila potwierdzenia (placeholdery: {{COMPANY_NAME}}, {{COMPANY_EMAIL}}, {{EDIT_TOKEN}})
+├── email_migration_preview.html         # Podgląd z dummy data (do wizualnego sprawdzenia)
+├── send_migration_emails.py             # Skrypt wysyłki maili (tryby: --confirmation, --bulk, --test, --dry-run)
+│
+├── CLAUDE.md                            # Instrukcje dla Claude Code (dev workflow)
+├── DEPLOY.md                            # Instrukcje deploy (SSH, commendy, troubleshooting)
+├── README.md                            # Ten plik
+└── .gitignore                           # Ignoruje .env, backend/data/*, logs, buildy, migration artifacts
 ```
 
 ---
 
-## Zmienne srodowiskowe
+## Zmienne środowiskowe
 
 ### Backend (`backend/.env`)
 
-| Zmienna | Wymagana | Opis | Przyklad |
+| Zmienna | Wymagana | Opis | Przykład |
 |---------|----------|------|----------|
-| `ADMIN_PASSWORD` | **TAK** | Haslo do panelu admina | `MojeSilneHaslo123!` |
-| `SECRET_KEY` | **TAK** | Klucz do podpisywania tokenow JWT (min. 32 znaki) | `wygeneruj-losowy-string` |
-| `GOOGLE_MAPS_API_KEY` | **TAK** | Klucz API Google Maps (geocoding adresow) | `AIzaSy...` |
-| `CORS_ORIGINS` | TAK (prod) | Dozwolone domeny (w produkcji NIE `*`) | `https://polacyszwajcaria.com` |
-| `DEBUG` | NIE | Tryb debug (domyslnie `False`) | `False` |
-| `MAPBOX_TOKEN` | NIE | Token Mapbox (nieuzywany, opcja zastepcza) | - |
+| `ADMIN_PASSWORD` | **TAK** | Hasło do panelu admina | `MojeSilneHaslo123!` |
+| `SECRET_KEY` | **TAK** | Klucz do podpisywania tokenów JWT (min 32 znaki) | wygenerowany losowo |
+| `GOOGLE_MAPS_API_KEY` | **TAK** | Klucz API Google Maps (geocoding adresów) | `AIzaSy...` |
+| `CORS_ORIGINS` | **TAK (prod)** | Dozwolone domeny (NIE `*` na produkcji) | `https://katalog-firm.ch,https://www.katalog-firm.ch` |
+| `DEBUG` | NIE | Tryb debug (domyślnie `False`) | `False` |
 
 **Szablon `backend/.env`:**
 ```bash
-# === WYMAGANE NA SERWERZE ===
 ADMIN_PASSWORD=twoje_silne_haslo_admina
 SECRET_KEY=wygeneruj_losowy_string_min_32_znakow
 GOOGLE_MAPS_API_KEY=AIzaSy_twoj_klucz_google_maps
-
-# === PRODUKCJA ===
 DEBUG=False
-CORS_ORIGINS=https://polacyszwajcaria.com
-
-# === OPCJONALNE ===
-MAPBOX_TOKEN=
+CORS_ORIGINS=https://katalog-firm.ch,https://www.katalog-firm.ch
 ```
 
-**Generowanie SECRET_KEY:**
+**Generowanie `SECRET_KEY`:**
 ```bash
 python3 -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
 ### Frontend (`frontend/.env.local`)
 
-| Zmienna | Wymagana | Opis | Przyklad |
+| Zmienna | Wymagana | Opis | Przykład |
 |---------|----------|------|----------|
-| `NEXT_PUBLIC_API_URL` | **TAK** | URL backendu API | `https://polacyszwajcaria.com/api` |
-| `NEXT_PUBLIC_GOOGLE_MAPS_KEY` | **TAK** | Klucz API Google Maps (mapa + autocomplete) | `AIzaSy...` |
+| `NEXT_PUBLIC_API_URL` | **TAK** | URL backendu API | `https://katalog-firm.ch/api` |
+| `NEXT_PUBLIC_GOOGLE_MAPS_KEY` | **TAK** | Klucz API Google Maps (frontend mapa + autocomplete) | `AIzaSy...` |
+| `NEXT_PUBLIC_BASE_PATH` | NIE | Prefix ścieżki (puste = root `/`) | `` |
 
 **Szablon `frontend/.env.local`:**
 ```bash
-# === PRODUKCJA ===
-NEXT_PUBLIC_API_URL=https://polacyszwajcaria.com/api
+# Produkcja
+NEXT_PUBLIC_API_URL=https://katalog-firm.ch/api
 NEXT_PUBLIC_GOOGLE_MAPS_KEY=AIzaSy_twoj_klucz_google_maps
+NEXT_PUBLIC_BASE_PATH=
 
-# === DEVELOPMENT ===
+# Development lokalny
 # NEXT_PUBLIC_API_URL=http://localhost:8000
-# NEXT_PUBLIC_GOOGLE_MAPS_KEY=AIzaSy_twoj_klucz_google_maps
 ```
 
-### Uwaga o OpenAI
+### Cron wysyłki maili (`send_confirmations_cron.sh` — tylko na serwerze)
 
-**OpenAI NIE jest uzywane w tym projekcie.** Nie ma zadnej integracji z GPT/OpenAI. Jesli w przyszlosci bedzie potrzebna, nalezy dodac `openai` do `requirements.txt` i zmienna `OPENAI_API_KEY` do `.env`.
+Wrapper bash z env vars (NIE commitowany do git, perms 700):
+```bash
+export RESEND_API_KEY="re_..."
+export ADMIN_PASSWORD="..."
+export API_BASE_URL="http://127.0.0.1:8000"
+```
 
 ---
 
@@ -239,298 +264,176 @@ NEXT_PUBLIC_GOOGLE_MAPS_KEY=AIzaSy_twoj_klucz_google_maps
 - **Node.js 18+**
 - **npm**
 
-### 1. Klonowanie repozytorium
-
+### 1. Klonowanie
 ```bash
 git clone https://github.com/Pawelpoprawski/katalog-firm.git
 cd katalog-firm
 ```
 
 ### 2. Backend
-
 ```bash
-# Utworz virtual environment
 cd backend
 python3 -m venv venv
-
-# Aktywuj (Linux/Mac)
-source venv/bin/activate
-# Aktywuj (Windows)
-venv\Scripts\activate
-
-# Zainstaluj zaleznosci
+source venv/bin/activate          # Linux/Mac
+# venv\Scripts\activate           # Windows
 pip install -r requirements.txt
 
-# Skopiuj i uzupelnij .env
+# Utwórz .env (patrz sekcja "Zmienne środowiskowe")
 cp .env.example .env
-# Edytuj .env - ustaw ADMIN_PASSWORD, SECRET_KEY, GOOGLE_MAPS_API_KEY
+# Edytuj .env — ustaw ADMIN_PASSWORD, SECRET_KEY, GOOGLE_MAPS_API_KEY
 
-# Uruchom
+# Uruchom z root projektu
 cd ..
 python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-Backend dostepny na: http://localhost:8000
-Dokumentacja API (Swagger): http://localhost:8000/docs
+Backend → http://localhost:8000
+Dokumentacja API (Swagger) → http://localhost:8000/docs
 
 ### 3. Frontend
-
 ```bash
 cd frontend
-
-# Zainstaluj zaleznosci
 npm install
 
-# Skopiuj i uzupelnij .env.local
-cp .env.example .env.local
-# Edytuj .env.local:
-#   NEXT_PUBLIC_API_URL=http://localhost:8000
-#   NEXT_PUBLIC_GOOGLE_MAPS_KEY=twoj_klucz
+# Utwórz .env.local
+cat > .env.local << 'EOF'
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_GOOGLE_MAPS_KEY=twoj_klucz_google
+NEXT_PUBLIC_BASE_PATH=
+EOF
 
-# Uruchom w trybie dev
 npm run dev
 ```
 
-Frontend dostepny na: http://localhost:3000
+Frontend → http://localhost:3000
 
-### Windows - szybki start
-
-Uzyj skryptow w folderze `run/`:
+### Komendy pomocnicze
 ```bash
-# Terminal 1 - Backend
-run\run_backend.bat
+# Build produkcyjny (waliduje TypeScript)
+npm run build
 
-# Terminal 2 - Frontend
-run\run_frontend.bat
+# Lint
+npm run lint
 ```
 
 ---
 
-## Deploy na produkcje
+## Deploy na produkcję
 
-### Serwer
+> **Pełne instrukcje deployu → [DEPLOY.md](DEPLOY.md)** (zawiera SSH creds, komendy, troubleshooting).
 
-- **IP**: `51.75.141.194`
-- **OS**: Ubuntu
-- **User**: `ubuntu`
-- **Domena**: `polacyszwajcaria.com`
-
-### Wymagania na serwerze
-
+### TL;DR
 ```bash
-# Zainstaluj Node.js 18+ (jesli nie ma)
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt-get install -y nodejs
+# 1. Lokalnie
+git add . && git commit -m "opis" && git push origin main
 
-# Zainstaluj Python 3.10+
-sudo apt-get install python3 python3-venv python3-pip
-
-# Zainstaluj PM2
-sudo npm install -g pm2
-
-# Zainstaluj nginx (jesli nie ma)
-sudo apt-get install nginx
-```
-
-### Krok po kroku - pierwszy deploy
-
-```bash
-# 1. Zaloguj sie na serwer
-ssh ubuntu@51.75.141.194
-
-# 2. Sklonuj repozytorium
-cd /var/www
-git clone https://github.com/Pawelpoprawski/katalog-firm.git
-cd katalog-firm
-
-# 3. Skonfiguruj backend
-cd backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-
-# 4. Utworz plik .env z wymaganymi zmiennymi
-cat > .env << 'EOF'
-ADMIN_PASSWORD=TwojeSilneHasloAdmina123!
-SECRET_KEY=wygeneruj_python3_-c_import_secrets_print_secrets.token_urlsafe_32
-GOOGLE_MAPS_API_KEY=AIzaSy_twoj_klucz
-DEBUG=False
-CORS_ORIGINS=https://polacyszwajcaria.com
-EOF
-
-cd ..
-
-# 5. Skonfiguruj frontend
-cd frontend
-npm install
-
-# Utworz .env.local
-cat > .env.local << 'EOF'
-NEXT_PUBLIC_API_URL=https://polacyszwajcaria.com/api
-NEXT_PUBLIC_GOOGLE_MAPS_KEY=AIzaSy_twoj_klucz
-EOF
-
-# Build produkcyjny
-npm run build
-cd ..
-
-# 6. Uruchom z PM2
-pm2 start "cd /var/www/katalog-firm && /var/www/katalog-firm/backend/venv/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000" --name katalog-backend
-
-cd frontend
-pm2 start npm --name katalog-frontend -- start
-cd ..
-
-# 7. Zapisz konfiguracje PM2 (auto-restart po reboot)
-pm2 save
-pm2 startup
-```
-
-### Kolejne deploye (aktualizacja kodu)
-
-```bash
-ssh ubuntu@51.75.141.194
-cd /var/www/katalog-firm
-
-# Pobierz zmiany
+# 2. Na serwerze
+ssh ubuntu@54.38.54.237        # hasło w DEPLOY.md
+cd /home/ubuntu/strony/katalog_firm
 git pull origin main
-
-# Jesli zmienily sie zaleznosci backendu:
-cd backend
-source venv/bin/activate
-pip install -r requirements.txt
-cd ..
-
-# Jesli zmienily sie zaleznosci frontendu:
-cd frontend
-npm install
-
-# Zawsze przebuduj frontend
-npm run build
-cd ..
-
-# Restart procesow
-pm2 restart katalog-backend
-pm2 restart katalog-frontend
+cd frontend && npm run build
+pm2 restart katalog-backend katalog-frontend
 ```
 
-### Szybki deploy (tylko frontend, bez zmian zaleznosci)
-
-```bash
-ssh ubuntu@51.75.141.194
-cd /var/www/katalog-firm
-git pull
-cd frontend && npm run build && pm2 restart katalog-frontend
-```
+Wszystkie dane (`backend/data/*.json`) są **gitignored** — żyją tylko na serwerze, `git pull` ich nie rusza.
 
 ---
 
 ## Konfiguracja nginx
 
-Dodaj do konfiguracji nginx dla domeny `polacyszwajcaria.com`:
+Plik: `/etc/nginx/sites-available/katalog-firm`
 
 ```nginx
 server {
-    listen 443 ssl;
-    server_name polacyszwajcaria.com www.polacyszwajcaria.com;
+    listen 443 ssl http2;
+    server_name katalog-firm.ch www.katalog-firm.ch;
 
-    # SSL (Let's Encrypt)
-    ssl_certificate /etc/letsencrypt/live/polacyszwajcaria.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/polacyszwajcaria.com/privkey.pem;
+    # SSL (Let's Encrypt, auto-renew przez certbot)
+    ssl_certificate /etc/letsencrypt/live/katalog-firm.ch/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/katalog-firm.ch/privkey.pem;
 
-    # WordPress - glowna domena
-    location / {
-        try_files $uri $uri/ /index.php?$args;
-    }
-
-    # Backend API dla katalogu
+    # Backend API
     location /api {
         proxy_pass http://127.0.0.1:8000;
         proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
 
-        # Wiekszy limit dla uploadu obrazow (10MB)
+        # Cache API (5 minut)
+        proxy_cache katalog_cache;
+        proxy_cache_valid 200 5m;
+
         client_max_body_size 10M;
     }
 
-    # Next.js Katalog - /uslugi
-    location /uslugi {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+    # Obrazy firm (ekstraktowane do filesystem)
+    location /images/ {
+        alias /home/ubuntu/strony/katalog_firm/backend/data/images/;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
     }
 
     # Next.js static assets
     location /_next {
         proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-
-        # Cache static files
         expires 365d;
         add_header Cache-Control "public, immutable";
     }
+
+    # Frontend (Next.js)
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
 }
 
-# Redirect HTTP -> HTTPS
+# Redirect HTTP → HTTPS
 server {
     listen 80;
-    server_name polacyszwajcaria.com www.polacyszwajcaria.com;
+    server_name katalog-firm.ch www.katalog-firm.ch;
     return 301 https://$server_name$request_uri;
 }
 ```
 
-**Testowanie i restart nginx:**
+**Testowanie i restart:**
 ```bash
 sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-**SSL (Let's Encrypt):**
+**Odnowienie SSL (ręczne, normalnie auto):**
 ```bash
-sudo certbot --nginx -d polacyszwajcaria.com -d www.polacyszwajcaria.com
+sudo certbot renew
 ```
 
 ---
 
-## PM2 - zarzadzanie procesami
+## PM2 — zarządzanie procesami
 
 ```bash
-# Status wszystkich procesow
-pm2 status
+# Status
+pm2 list
 
-# Logi (na zywo)
-pm2 logs katalog-frontend
+# Logi na żywo
 pm2 logs katalog-backend
+pm2 logs katalog-frontend
 
 # Restart
-pm2 restart katalog-frontend
 pm2 restart katalog-backend
+pm2 restart katalog-frontend
 pm2 restart all
 
-# Stop / Delete
-pm2 stop katalog-frontend
-pm2 delete katalog-backend
-
-# Auto-restart po reboot serwera
-pm2 startup
+# Auto-start po reboot serwera
 pm2 save
+pm2 startup
 
-# Monitoring zasobow (CPU, RAM)
+# Monitoring zasobów (CPU, RAM)
 pm2 monit
 ```
 
@@ -538,309 +441,352 @@ pm2 monit
 
 ## Google Maps API
 
-### Jak uzyskac klucz API
+### Uzyskanie klucza
+1. **Google Cloud Console** → https://console.cloud.google.com
+2. Włącz wymagane API:
+   - **Maps JavaScript API** — mapa na stronie głównej
+   - **Places API** — autocomplete adresów w formularzach
+   - **Geocoding API** — zamiana adresów na współrzędne (backend)
+3. **Credentials** → **Create Credentials** → **API key**
 
-1. Wejdz na **Google Cloud Console**: https://console.cloud.google.com
-2. Utworz nowy projekt lub wybierz istniejacy
-3. Wlacz wymagane APIs:
-   - **Maps JavaScript API** - mapa na stronie glownej
-   - **Places API** - autocomplete adresow w formularzach
-   - **Geocoding API** - zamiana adresow na wspolrzedne (backend)
-4. Przejdz do **APIs & Services** -> **Credentials**
-5. Kliknij **Create Credentials** -> **API key**
-6. Skopiuj wygenerowany klucz
+### Zabezpieczenie klucza
+- **Application restrictions** → **HTTP referrers**:
+  ```
+  https://katalog-firm.ch/*
+  https://www.katalog-firm.ch/*
+  http://localhost:3000/*
+  ```
+- **API restrictions** → tylko 3 powyższe APIs
 
-### Zabezpieczenie klucza (WAZNE!)
+### Umiejscowienie
+- Frontend: `frontend/.env.local` → `NEXT_PUBLIC_GOOGLE_MAPS_KEY`
+- Backend: `backend/.env` → `GOOGLE_MAPS_API_KEY`
 
-1. Kliknij na klucz w liscie credentials
-2. **Application restrictions** -> **HTTP referrers (web sites)**
-3. Dodaj dozwolone domeny:
-   ```
-   https://polacyszwajcaria.com/*
-   http://localhost:3000/*
-   ```
-4. **API restrictions** -> **Restrict key**
-5. Zaznacz tylko:
-   - Maps JavaScript API
-   - Places API
-   - Geocoding API
-6. Zapisz
-
-### Gdzie umiescic klucz
-
-- **Frontend**: `frontend/.env.local` -> `NEXT_PUBLIC_GOOGLE_MAPS_KEY=AIzaSy...`
-- **Backend**: `backend/.env` -> `GOOGLE_MAPS_API_KEY=AIzaSy...`
-
-Mozna uzyc tego samego klucza w obu miejscach, ale dla lepszego bezpieczenstwa warto miec osobne klucze (frontend ograniczony do HTTP referrer, backend ograniczony do IP serwera).
+Można użyć tego samego klucza, ale lepiej mieć **osobne**: frontend z HTTP referrer, backend z IP serwera.
 
 ---
 
 ## Panel admina
 
-**URL**: https://polacyszwajcaria.com/uslugi/admin
+**URL**: https://katalog-firm.ch/admin
 
-**Logowanie**: Haslo ustawione w `ADMIN_PASSWORD` (plik `backend/.env`)
+**Logowanie**: `ADMIN_PASSWORD` z `backend/.env` (header `Authorization: Bearer <hasło>`).
 
-### Funkcje panelu admina
+### Funkcje
 
 | Funkcja | Opis |
 |---------|------|
-| **Lista firm** | Przegladanie, filtrowanie, sortowanie |
+| **Lista firm** | Przeglądanie, filtrowanie, sortowanie, paginacja |
 | **Zmiana statusu** | draft / published |
-| **Promowanie** | Wyroznienie firmy (is_promoted) |
+| **Promowanie** | Wyróżnienie firmy (`is_promoted`) |
 | **Zmiana kategorii** | Przeniesienie do innej kategorii |
 | **Edycja emaila** | Aktualizacja adresu email firmy |
-| **Usuwanie firmy** | Trwale usuniecie |
-| **Link edycji** | Kopiowanie tokena edycji firmy |
-| **Lista recenzji** | Przegladanie, usuwanie recenzji |
-| **Blokowanie IP** | Dodawanie IP spamerow do blacklisty |
-| **Kategorie** | Dodawanie/usuwanie kategorii (emoji + nazwa) |
-| **Ustawienia** | Ilosc firm w newsletterze, sortowanie |
-| **Statystyki** | Wykres aktywnosci (30 dni), totale |
-| **Export CSV** | Lista emaili firm (do emailingu) |
+| **Link edycji** | Kopiowanie tokena edycji (do wysłania właścicielowi) |
+| **Usuwanie firmy** | Trwałe usunięcie |
+| **Lista recenzji** | Przeglądanie, usuwanie spam/nieprawdziwych |
+| **Blokowanie IP** | Dodawanie spamerów do blacklisty |
+| **Kategorie** | CRUD kategorii (emoji + nazwa) |
+| **Ustawienia** | Ilość firm w newsletterze, sort order |
+| **Statystyki** | Wykres 30 dni: wyświetlenia, unikalni, nowe firmy, nowe opinie, **wysłane prośby o potwierdzenie, otrzymane potwierdzenia** |
 
 ### Token edycji firm
 
-- Kazda firma dostaje unikalny `edit_token` przy dodaniu
-- Link edycji: `/uslugi/edycja/[TOKEN]`
-- Token widoczny w panelu admina (mozna kopiowac i wyslac wlascicielowi)
-- **NIE udostepniaj tokenow publicznie!**
+- Każda firma dostaje unikalny `edit_token` (256-bit entropy, `secrets.token_urlsafe(32)`) przy utworzeniu
+- Link edycji: `https://katalog-firm.ch/edycja/{TOKEN}`
+- Widoczny tylko w panelu admina i w mailu do właściciela (publiczne API go NIE zwraca)
+- **NIE udostępniaj tokenów publicznie**
+
+---
+
+## Cykliczne potwierdzenia aktywności firm
+
+System automatycznie wysyła maile do firm w katalogu z prośbą o potwierdzenie, że nadal są aktywne w Szwajcarii. Utrzymuje bazę aktualną bez ręcznej weryfikacji.
+
+### Flow
+
+1. **Cron na serwerze** (`0 10 */5 * * /home/ubuntu/strony/katalog_firm/send_confirmations_cron.sh`) — co 5 dni o 10:00 (dni 5, 10, 15, 20, 25, 30 miesiąca)
+2. **Filtr kandydatów** — firmy spełniające:
+   - `status == "published"`
+   - Mają email + edit_token
+   - `last_confirmed_at` NULL lub **starsze niż 6 miesięcy** (180 dni)
+   - **ORAZ** `last_confirmation_request_at` NULL lub **starsze niż 30 dni** (dedupe)
+3. **Wysyłka przez Resend API** — rate limit 1.6 req/s, max 2 req/s (Resend free tier)
+4. **Zapisanie `last_confirmation_request_at`** — żeby za 5 dni (następny cron) nie wysłać do tych samych firm
+5. **Update wykresu `/admin`** — dzienny licznik `confirmation_emails_sent`
+6. **User klika link w mailu** → `/potwierdz` → wpisuje email → `POST /api/companies/confirm` → ustawia `last_confirmed_at` + `confirmations_received++`
+
+### Pliki
+
+| Plik | Rola |
+|---|---|
+| `email_migration_template.html` | HTML template z placeholderami `{{COMPANY_NAME}}`, `{{COMPANY_EMAIL}}`, `{{EDIT_TOKEN}}` |
+| `email_migration_preview.html` | Podgląd z dummy data (otwórz w przeglądarce) |
+| `send_migration_emails.py` | Skrypt wysyłki — tryby `--confirmation` (cykliczny), `--bulk` (legacy migracja), `--test` (1 mail) |
+| `send_confirmations_cron.sh` | Wrapper bash dla crona (tylko na serwerze, z env vars RESEND_API_KEY + ADMIN_PASSWORD) |
+| `migration_send_log.jsonl` | Append-only audit log (status + resend_id + ts per firma) — gitignored |
+
+### Uruchomienie ręczne
+
+```bash
+export ADMIN_PASSWORD="..."
+export RESEND_API_KEY="re_..."
+
+# Dry-run (pokaż ile firm, nic nie wysyła)
+python send_migration_emails.py --confirmation --dry-run
+
+# Wysyłka z pytaniem y/N
+python send_migration_emails.py --confirmation
+
+# Wysyłka bez pytania (dla crona)
+python send_migration_emails.py --confirmation --auto-confirm
+
+# Ograniczenie do N firm (testy)
+python send_migration_emails.py --confirmation --limit 5
+
+# Wewnątrz serwera (lokalny API, szybciej)
+python send_migration_emails.py --confirmation --api-url http://127.0.0.1:8000 --auto-confirm
+```
+
+### Wykres w `/admin`
+
+Dzienne dane na wykresie w panelu admina:
+- **Wysłane prośby o potwierdzenie** (fioletowa linia) — ile maili poszło tego dnia
+- **Otrzymane potwierdzenia** (cyjan) — ile firm kliknęło i potwierdziło
 
 ---
 
 ## API Endpoints
 
-Pelna dokumentacja interaktywna: http://localhost:8000/docs (Swagger UI)
+Pełna dokumentacja interaktywna: https://katalog-firm.ch/api/docs (Swagger UI) lub http://localhost:8000/docs lokalnie.
 
 ### Publiczne
 
 | Metoda | Endpoint | Opis |
 |--------|----------|------|
-| GET | `/health` | Health check |
-| GET | `/settings` | Publiczne ustawienia (sort order, newsletter) |
-| GET | `/categories` | Lista kategorii |
-| GET | `/companies` | Lista firm (limit, category_id, status) |
-| GET | `/companies/{id}` | Firma po ID |
-| GET | `/companies/by-slug/{slug}` | Firma po slug (SEO) |
-| GET | `/companies/by-token/{token}` | Firma po tokenie edycji |
-| GET | `/companies/{id}/photo/{index}` | Zdjecie firmy |
-| POST | `/companies` | Dodanie nowej firmy |
-| PUT | `/companies/{id}` | Edycja firmy (wymaga edit_token) |
-| DELETE | `/companies/{id}` | Usuniecie firmy (wymaga edit_token) |
-| POST | `/companies/{id}/view` | Zliczenie wyswietlenia |
-| POST | `/companies/{id}/click` | Zliczenie klikniecia |
-| POST | `/companies/confirm` | Potwierdzenie aktywnosci firmy |
-| GET | `/reviews` | Lista recenzji (company_id) |
-| POST | `/reviews` | Dodanie recenzji (rating 1-5) |
-| POST | `/reports` | Zgloszenie recenzji |
-| POST | `/auth/register` | Rejestracja uzytkownika |
-| POST | `/auth/login` | Logowanie |
+| GET | `/api/health` | Health check |
+| GET | `/api/settings` | Publiczne ustawienia (sort order, newsletter count) |
+| GET | `/api/categories` | Lista kategorii |
+| GET | `/api/companies` | Lista firm (limit, category_id, status) |
+| GET | `/api/companies/{id}` | Firma po ID |
+| GET | `/api/companies/by-slug/{slug}` | Firma po slug (SEO) |
+| GET | `/api/companies/by-token/{token}` | Firma po tokenie edycji |
+| POST | `/api/companies/` | Dodanie nowej firmy (rate limit 3/h) |
+| PUT | `/api/companies/{id}` | Edycja firmy (wymaga `edit_token` w body) |
+| DELETE | `/api/companies/{id}` | Usunięcie firmy (wymaga `edit_token`) |
+| POST | `/api/companies/{id}/view` | Zliczenie wyświetlenia |
+| POST | `/api/companies/{id}/click` | Zliczenie kliknięcia |
+| POST | `/api/companies/batch-view` | Batch zliczanie (do 50 ID, z Intersection Observer) |
+| POST | `/api/companies/confirm` | Potwierdzenie aktywności przez email (rate limit 5/min) |
+| GET | `/api/reviews` | Lista recenzji (`company_id`) |
+| POST | `/api/reviews` | Dodanie recenzji (rating 1-5) |
+| POST | `/api/reports` | Zgłoszenie recenzji |
+| POST | `/api/auth/register` | Rejestracja użytkownika |
+| POST | `/api/auth/login` | Logowanie (zwraca JWT) |
 
-### Admin (wymaga `Authorization: Bearer {ADMIN_PASSWORD}`)
+### Admin (`Authorization: Bearer {ADMIN_PASSWORD}`)
 
 | Metoda | Endpoint | Opis |
 |--------|----------|------|
-| GET | `/admin/stats` | Statystyki (30 dni + totale) |
-| GET | `/admin/companies` | Wszystkie firmy (z tokenami) |
-| GET | `/admin/reviews` | Wszystkie recenzje |
-| DELETE | `/admin/reviews/{id}` | Usuniecie recenzji |
-| PATCH | `/admin/companies/{id}/status` | Zmiana statusu (draft/published) |
-| PATCH | `/admin/companies/{id}/promote` | Toggle promowania |
-| PATCH | `/admin/companies/{id}/category` | Zmiana kategorii |
-| PATCH | `/admin/companies/{id}` | Edycja pol firmy |
-| DELETE | `/admin/companies/{id}` | Usuniecie firmy |
-| GET | `/admin/ip-blacklist` | Lista zablokowanych IP |
-| POST | `/admin/ip-blacklist/add` | Zablokowanie IP |
-| DELETE | `/admin/ip-blacklist/remove` | Odblokowanie IP |
-| GET | `/admin/settings` | Ustawienia admina |
-| PUT | `/admin/settings/social-media` | Aktualizacja social media |
-| PUT | `/admin/settings/newsletter-count` | Ilosc firm w newsletterze |
-| PUT | `/admin/settings/sort-order` | Sortowanie (newest/random/alphabetical) |
-| GET | `/admin/categories` | Lista kategorii |
-| POST | `/admin/categories` | Dodanie kategorii |
-| PUT | `/admin/categories/{id}` | Edycja kategorii |
-| DELETE | `/admin/categories/{id}` | Usuniecie kategorii |
+| GET | `/api/admin/stats` | Statystyki (30 dni + totale views/clicks) |
+| GET | `/api/admin/analytics?days=30` | Dzienna analityka (views, unikalni, nowe firmy, recenzje, potwierdzenia) |
+| GET | `/api/admin/companies` | Wszystkie firmy (z `edit_token`, wszystkie statusy) |
+| PATCH | `/api/admin/companies/{id}/status` | Zmiana statusu (draft/published) |
+| PATCH | `/api/admin/companies/{id}/promote` | Toggle promowania |
+| PATCH | `/api/admin/companies/{id}/category` | Zmiana kategorii |
+| PATCH | `/api/admin/companies/{id}` | Edycja pól firmy |
+| DELETE | `/api/admin/companies/{id}` | Usunięcie firmy |
+| **POST** | **`/api/admin/track-confirmation-sent`** | **Bulk-update `last_confirmation_request_at` + licznik wysłanych maili (używane przez skrypt cron)** |
+| GET | `/api/admin/reviews` | Wszystkie recenzje |
+| DELETE | `/api/admin/reviews/{id}` | Usunięcie recenzji |
+| GET | `/api/admin/ip-blacklist` | Lista zablokowanych IP |
+| POST | `/api/admin/ip-blacklist/add` | Zablokowanie IP |
+| DELETE | `/api/admin/ip-blacklist/remove` | Odblokowanie IP |
+| GET | `/api/admin/settings` | Ustawienia admina |
+| PUT | `/api/admin/settings/social-media` | Aktualizacja linków social |
+| PUT | `/api/admin/settings/newsletter-count` | Ilość firm w newsletterze |
+| PUT | `/api/admin/settings/sort-order` | Sort order (newest/random/alphabetical) |
+| GET | `/api/admin/categories` | Lista kategorii (z ID) |
+| POST | `/api/admin/categories` | Dodanie kategorii |
+| PUT | `/api/admin/categories/{id}` | Edycja kategorii |
+| DELETE | `/api/admin/categories/{id}` | Usunięcie kategorii |
 
 ---
 
-## Bezpieczenstwo
+## Bezpieczeństwo
 
 ### Zaimplementowane zabezpieczenia
 
 | Zabezpieczenie | Opis |
 |----------------|------|
-| **Rate limiting** | slowapi - max 100 req/min per IP (domyslnie) |
-| **IP Blacklist** | Middleware blokujace spamerow (admin zarzadza) |
-| **CORS** | Ograniczenie do dozwolonych domen (ustaw w .env!) |
-| **XSS Protection** | bleach sanityzacja HTML na wejsciu |
-| **Security Headers** | X-Frame-Options, X-Content-Type-Options, HSTS, CSP |
-| **Password Hashing** | bcrypt (bezposrednio, nie passlib) |
-| **Edit Tokens** | secrets.token_urlsafe(32) - unikalne tokeny edycji |
-| **Input Validation** | Pydantic: EmailStr, rating 1-5, min_length, etc. |
-| **Image Validation** | Max 10MB, tylko JPG/PNG, auto-konwersja do WebP |
-| **GZIP Compression** | Odpowiedzi > 1KB kompresowane (21MB -> ~3-5MB) |
+| **Rate limiting** (slowapi) | `/companies/confirm` 5/min, `POST /companies/` 3/h, reszta domyślnie |
+| **IP Blacklist middleware** | Blokowanie IP spamerów (admin zarządza) |
+| **CORS** | Tylko dozwolone domeny w `CORS_ORIGINS` (NIE `*` na prod) |
+| **XSS Protection** | `bleach` sanityzacja HTML na wejściu (allowed tags) |
+| **Security Headers** | HSTS, X-Frame-Options, X-Content-Type-Options, X-XSS-Protection, Referrer-Policy, Permissions-Policy, CSP |
+| **Password Hashing** | bcrypt bezpośrednio (passlib niekompatybilne z 3.14) |
+| **Edit Tokens** | `secrets.token_urlsafe(32)` — 256-bit entropy, unikalne per firma |
+| **Anti-enumeracja emaili** | `/companies/confirm` zwraca zawsze ten sam string (niezależnie od istnienia emaila) |
+| **Input Validation** | Pydantic: EmailStr, rating 1-5, min_length, url validation |
+| **SSRF Protection** | `validate_url` w `security_middleware.py` — blokuje prywatne/wewnętrzne IP w polu `website` |
+| **Image Validation** | Max 10MB, JPG/PNG, auto-konwersja do WebP (Pillow) |
+| **GZIP Compression** | Odpowiedzi > 1KB kompresowane |
 
-### Wazne zasady bezpieczenstwa
+### Ważne zasady bezpieczeństwa
 
-1. **NIGDY nie ustawiaj `CORS_ORIGINS=*` na produkcji** - zawsze podaj dokladna domene
-2. **NIGDY nie ustawiaj `DEBUG=True` na produkcji**
-3. **Ustaw silne `ADMIN_PASSWORD`** - min. 12 znakow, litery + cyfry + znaki specjalne
-4. **Wygeneruj losowy `SECRET_KEY`** - uzyj `python3 -c "import secrets; print(secrets.token_urlsafe(32))"`
-5. **Ogranicz klucz Google Maps** - HTTP referrer + API restrictions
-6. **Nie commituj plikow `.env`** - sa w `.gitignore`
+1. **NIGDY nie ustawiaj `CORS_ORIGINS=*`** na produkcji — zawsze dokładna domena
+2. **NIGDY nie ustawiaj `DEBUG=True`** na produkcji
+3. **Silne `ADMIN_PASSWORD`** — min 12 znaków, litery + cyfry + symbole
+4. **Losowy `SECRET_KEY`** — `python3 -c "import secrets; print(secrets.token_urlsafe(32))"`
+5. **Ogranicz klucz Google Maps** — HTTP referrer + API restrictions
+6. **NIE commituj `.env`** — jest w `.gitignore`
+7. **NIE commituj `migration_send_log.jsonl`, `_all_companies.json`, `_dummy_company.json`** — zawierają emaile i edit_tokens (gitignored)
+8. **Cron wrapper `send_confirmations_cron.sh`** — perms 700, tylko na serwerze, NIE w git
+
+### Zewnętrzny audyt (2026-04-20)
+
+Pełny security audit wykonany zewnętrznie przez Claude — znaleziska tylko **LOW severity**:
+- OpenAPI docs (`/api/docs`, `/api/openapi.json`) są publicznie dostępne (info disclosure)
+- Brak lockoutu na admin login (rate limit tylko per endpoint)
+- CSP z `unsafe-inline` (typowe dla Next.js)
+
+Żadnych krytycznych podatności — auth, IDOR, path traversal, XSS reflection, CORS, SSRF: wszystko zabezpieczone.
 
 ---
 
 ## SEO
 
 ### Sitemap
+- **Automatyczny** — generowany przez Next.js (`sitemap.ts`)
+- **URL**: https://katalog-firm.ch/sitemap.xml
+- **Zawiera**: strona główna, strony firm (`/firma/{slug}`), kategorie (`/kategoria/{slug}`), `/dodaj`, `/jak-to-dziala`, `/polityka-prywatnosci`
+- **Rewalidacja**: co 1 godzinę
 
-- **Automatyczny**: Generowany dynamicznie przez Next.js
-- **URL**: https://polacyszwajcaria.com/uslugi/sitemap.xml
-- **Zawiera**: Strona glowna, strony firm, kategorie, formularz dodawania, polityka prywatnosci
-- **Rewalidacja**: co 1 godzine
-
-### Robots.txt
-
-Plik `frontend/public/robots.txt` (serwowany automatycznie przez Next.js):
+### robots.txt
+`frontend/public/robots.txt`:
 ```
 User-agent: *
 Allow: /
+
 Disallow: /admin/
 Disallow: /api/
 Disallow: /_next/
-Sitemap: https://polacyszwajcaria.com/uslugi/sitemap.xml
-```
 
-Dodatkowo na glownym serwerze WordPress (`/var/www/polacyszwajcaria.com/robots.txt`):
-```
-User-agent: *
-Allow: /
-
-Disallow: /wp-admin/
-Disallow: /wp-includes/
-Disallow: /uslugi/admin/
-Disallow: /uslugi/api/
-Disallow: /uslugi/_next/
-
-Sitemap: https://polacyszwajcaria.com/sitemap.xml
-Sitemap: https://polacyszwajcaria.com/uslugi/sitemap.xml
+Sitemap: https://katalog-firm.ch/sitemap.xml
 ```
 
 ### Metadata i Open Graph
 
-Zaimplementowane na kazdej stronie:
-
 | Strona | Metadata | Open Graph | Twitter Card |
 |--------|----------|------------|--------------|
-| Strona glowna (layout) | title, description, keywords, robots | og:title, og:image, og:url, og:locale | summary_large_image |
-| Strona firmy (/firma/[slug]) | Dynamiczne per firma | Dynamiczne + zdjecie firmy | Dynamiczne |
-| Kategoria (/kategoria/[slug]) | Dynamiczne per kategoria | Dynamiczne | Dynamiczne |
-| Inne strony | Dziedziczone z layout | Dziedziczone z layout | Dziedziczone z layout |
-
-- **og:image**: Absolutne URL (`https://polacyszwajcaria.com/uslugi/logo.png`)
-- **theme-color**: `#E30613` (czerwony - kolor marki)
-- **manifest.json**: PWA manifest dla mobilnych przegladarek
+| Strona główna (layout) | title, description, keywords, robots, canonical | og:title, og:image, og:url, og:locale | summary_large_image |
+| Strona firmy (`/firma/[slug]`) | Dynamiczne per firma | Dynamiczne + zdjęcie firmy | Dynamiczne |
+| Kategoria (`/kategoria/[slug]`) | Dynamiczne per kategoria | Dynamiczne | Dynamiczne |
+| `/admin` | `robots: noindex, nofollow` | — | — |
 
 ### Structured Data (JSON-LD)
 
-Zaimplementowane automatycznie w `layout.tsx`:
-- Schema.org Organization (nazwa, logo, social media)
-- Schema.org WebSite (url, jezyk, wydawca)
-- Schema.org LocalBusiness na stronach firm
+Automatycznie w `layout.tsx`:
+- `Organization` (nazwa, logo, sameAs Facebook/portal)
+- `WebSite` (url, język, wydawca)
+- `LocalBusiness` na stronach firm (nazwa, adres, telefon, rating, reviews)
 
 ### Google Search Console
 
-1. Dodaj wlasciwosc: `polacyszwajcaria.com`
-2. Przeslij oba sitemapy:
-   - `https://polacyszwajcaria.com/sitemap.xml` (WordPress)
-   - `https://polacyszwajcaria.com/uslugi/sitemap.xml` (Katalog)
-3. Opcjonalnie dodaj kod weryfikacyjny do `frontend/.env.local`:
-   ```
-   NEXT_PUBLIC_GOOGLE_VERIFICATION=twoj_kod_weryfikacyjny
-   ```
+1. Dodaj właściwość `katalog-firm.ch`
+2. Prześlij sitemap `https://katalog-firm.ch/sitemap.xml`
+3. Weryfikacja przez DNS TXT lub meta tag w `layout.tsx`
 
 ---
 
 ## Troubleshooting
 
-### Next.js nie dziala na /uslugi
-
+### Backend nie startuje
 ```bash
-# Sprawdz czy basePath jest poprawny
-grep basePath frontend/next.config.mjs
-# Powinno byc: basePath: process.env.NODE_ENV === 'production' ? '/uslugi' : ''
+pm2 logs katalog-backend --lines 30
+ls -la /home/ubuntu/strony/katalog_firm/backend/.env
+pm2 restart katalog-backend
+```
 
-# Sprawdz nginx
-sudo nginx -t
-sudo tail -f /var/log/nginx/error.log
-
-# Restart
+### Frontend 502 Bad Gateway
+```bash
+pm2 logs katalog-frontend --lines 30
+# Jeśli "Could not find production build":
+cd /home/ubuntu/strony/katalog_firm/frontend
+npm run build
 pm2 restart katalog-frontend
 ```
 
-### 404 na API endpoints
-
+### `git pull` błąd `DU conflict` na `backend/data/*.json`
+Legacy artifact po przeniesieniu danych poza git (commit `feb61b2`):
 ```bash
-# Sprawdz czy backend dziala
-curl http://localhost:8000/health
+cd /home/ubuntu/strony/katalog_firm
+git rm --cached backend/data/*.json backend/data/*.txt
+git pull origin main
+# Pliki zostają na dysku (gitignored), index jest czysty
+```
 
-# Sprawdz nginx proxy
-sudo nginx -t
-
-# Sprawdz CORS
-grep CORS_ORIGINS backend/.env
+### 404 na API endpoints
+```bash
+curl http://localhost:8000/health          # backend żyje?
+sudo nginx -t                              # nginx config OK?
+grep CORS_ORIGINS /home/ubuntu/strony/katalog_firm/backend/.env  # domena w CORS?
 ```
 
 ### 422 przy edycji firmy (Field required: payload)
-
-Frontend musi wysylac body w formacie:
+Frontend musi wysyłać body w zagnieżdżonej strukturze:
 ```json
 {
-  "payload": {
-    "name": "...",
-    "email": "...",
-    "...": "..."
-  },
+  "payload": { "name": "...", "email": "...", "...": "..." },
   "edit_token": "token_firmy"
 }
 ```
-**NIE** jako plaski obiekt. FastAPI z `Body(..., embed=True)` wymaga zagniezdzonej struktury.
+FastAPI z `Body(..., embed=True)` wymaga zagnieżdżenia.
 
-### Obrazy sie nie laduja
-
+### Obrazy się nie ładują
 ```bash
-# Sprawdz nginx dla /_next/static
+ls -la /home/ubuntu/strony/katalog_firm/backend/data/images/ | head -5
 sudo tail -f /var/log/nginx/error.log
 
-# Przebuduj frontend
+# Przebuduj frontend jeśli `/_next/` błędy:
 cd frontend && npm run build && pm2 restart katalog-frontend
 ```
 
 ### Brak mapy Google
+1. Klucz w `frontend/.env.local` (`NEXT_PUBLIC_GOOGLE_MAPS_KEY`)
+2. Czy APIs włączone w Google Cloud Console (Maps JavaScript API, Places API, Geocoding API)?
+3. HTTP referrer zawiera `katalog-firm.ch`?
+4. Konsola przeglądarki (F12 → Console) pokazuje błędy?
 
-1. Sprawdz klucz w `frontend/.env.local` (`NEXT_PUBLIC_GOOGLE_MAPS_KEY`)
-2. Sprawdz czy APIs sa wlaczone w Google Cloud Console
-3. Sprawdz ograniczenia klucza (HTTP referrer musi zawierac twoja domene)
-4. Sprawdz konsole przegladarki (F12 -> Console) na bledy Google Maps
-
-### Backend nie startuje
-
+### Cron wysyłki maili nie działa
 ```bash
-# Sprawdz logi
-pm2 logs katalog-backend
+# Sprawdź crontab
+crontab -l
+# Powinno być: 0 10 */5 * * /home/ubuntu/strony/katalog_firm/send_confirmations_cron.sh
 
-# Sprawdz czy .env istnieje
-ls -la backend/.env
+# Sprawdź logi cron
+tail -50 /home/ubuntu/strony/katalog_firm/logs/cron_confirmations.log
 
-# Sprawdz czy venv jest aktywne
-source backend/venv/bin/activate
-pip install -r backend/requirements.txt
+# Odpal ręcznie
+/home/ubuntu/strony/katalog_firm/send_confirmations_cron.sh
+
+# Sprawdź czy Resend API key działa (env vars wewnątrz wrappera)
+cat /home/ubuntu/strony/katalog_firm/send_confirmations_cron.sh
 ```
 
-### Duzy rozmiar companies.json (~21MB)
+### Nginx cache zwraca stare dane
+```bash
+sudo rm -rf /var/cache/nginx/katalog/*
+sudo systemctl reload nginx
+```
 
-To normalne - plik zawiera obrazy zakodowane w base64. Kompresja GZIP redukuje transfer do ~3-5MB. W przyszlosci mozna przeniesc obrazy do S3/CDN.
+### SSL cert wygasa
+Certbot auto-renew powinien działać przez timer systemd. Sprawdzenie:
+```bash
+sudo systemctl status certbot.timer
+sudo certbot certificates
+# Ręczne odnowienie jeśli trzeba:
+sudo certbot renew
+```
 
 ---
 
@@ -848,16 +794,19 @@ To normalne - plik zawiera obrazy zakodowane w base64. Kompresja GZIP redukuje t
 
 | URL | Opis |
 |-----|------|
-| https://polacyszwajcaria.com | Glowna strona (WordPress) |
-| https://polacyszwajcaria.com/uslugi | Katalog firm |
-| https://polacyszwajcaria.com/uslugi/dodaj | Dodaj firme |
-| https://polacyszwajcaria.com/uslugi/admin | Panel admina |
-| https://polacyszwajcaria.com/uslugi/sitemap.xml | Sitemap katalogu |
-| https://polacyszwajcaria.com/api/companies/ | API lista firm |
-| https://polacyszwajcaria.com/api/docs | Swagger UI (jesli DEBUG=True) |
+| https://katalog-firm.ch | Strona główna (mapa + lista firm) |
+| https://katalog-firm.ch/dodaj | Formularz dodawania firmy |
+| https://katalog-firm.ch/admin | Panel admina (login) |
+| https://katalog-firm.ch/potwierdz | Potwierdzenie aktywności firmy |
+| https://katalog-firm.ch/firma/{slug} | Strona konkretnej firmy |
+| https://katalog-firm.ch/kategoria/{slug} | Firmy w kategorii |
+| https://katalog-firm.ch/edycja/{token} | Edycja firmy (wymaga tokena) |
+| https://katalog-firm.ch/sitemap.xml | Sitemap dla Google |
+| https://katalog-firm.ch/api/docs | Swagger UI (OpenAPI) |
+| https://katalog-firm.ch/api/companies/ | API lista firm |
 
 ---
 
 ## License
 
-Proprietary - Natalia & Pawel Poprawscy 2024-2026
+Proprietary — Natalia & Paweł Poprawscy 2024-2026
