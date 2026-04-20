@@ -29,6 +29,31 @@ const chartLines = [
   { key: "confirmations_received" as const, label: "Otrzymane potwierdzenia", color: "#06b6d4" },
 ];
 
+// Cron wysyłki maili: 0 10 */5 * * = dni 5, 10, 15, 20, 25, 30 miesiąca o 10:00
+// Zwraca najbliższą datę w przyszłości kiedy cron się odpali.
+function getNextEmailRun(from: Date = new Date()): Date {
+  const targetDays = [5, 10, 15, 20, 25, 30];
+  const probe = new Date(from.getFullYear(), from.getMonth(), from.getDate(), 10, 0, 0);
+  for (let i = 0; i < 40; i++) {
+    if (targetDays.includes(probe.getDate()) && probe.getTime() > from.getTime()) {
+      return probe;
+    }
+    probe.setDate(probe.getDate() + 1);
+    probe.setHours(10, 0, 0, 0);
+  }
+  return probe;
+}
+
+function formatTimeUntil(target: Date, now: Date = new Date()): string {
+  const diffMs = target.getTime() - now.getTime();
+  if (diffMs <= 0) return "już wkrótce";
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  if (days === 0) return `za ${hours} h`;
+  if (days === 1) return "jutro";
+  return `za ${days} dni`;
+}
+
 function StatCard({ title, value, icon, color }: { title: string; value: number; icon: string; color: string }) {
   const colors = {
     blue: "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400",
@@ -66,6 +91,14 @@ export default function AdminStats({ stats, analytics }: AdminStatsProps) {
   });
   const [hoveredDay, setHoveredDay] = useState<number | null>(null);
 
+  const nextEmailRun = getNextEmailRun();
+  const nextEmailRunFormatted = nextEmailRun.toLocaleDateString("pl-PL", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  const nextEmailRunRelative = formatTimeUntil(nextEmailRun);
+
   return (
     <>
       {/* Stats Cards */}
@@ -74,6 +107,29 @@ export default function AdminStats({ stats, analytics }: AdminStatsProps) {
         <StatCard title="Wyświetlenia" value={stats?.total_views || 0} icon="eye" color="green" />
         <StatCard title="Unikalni (dziś)" value={analytics.length > 0 ? analytics[analytics.length - 1]?.unique_ips || 0 : 0} icon="user" color="purple" />
         <StatCard title="Opinie" value={stats?.total_reviews || 0} icon="chat" color="orange" />
+      </div>
+
+      {/* Następna cykliczna wysyłka maili potwierdzenia aktywności firm */}
+      <div className="bg-gradient-to-r from-purple-50 to-cyan-50 dark:from-purple-900/20 dark:to-cyan-900/20 rounded-2xl p-5 border border-purple-100 dark:border-purple-900/30 flex items-center gap-4">
+        <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-1">
+            Następna wysyłka maili potwierdzenia
+          </p>
+          <p className="text-sm text-slate-700 dark:text-slate-200">
+            <span className="font-black text-slate-900 dark:text-white">{nextEmailRunRelative}</span>
+            <span className="mx-2 text-slate-400">·</span>
+            <span className="font-semibold">{nextEmailRunFormatted}</span>
+            <span className="text-slate-500 dark:text-slate-400"> o 10:00</span>
+          </p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Cron odpala się co 5 dni (dni 5, 10, 15, 20, 25, 30) — wysyła tylko do firm z cooldown &gt; 30 dni
+          </p>
+        </div>
       </div>
 
       {/* Analytics Line Chart */}

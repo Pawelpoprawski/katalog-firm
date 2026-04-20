@@ -22,6 +22,7 @@ type AdminCompany = {
   is_promoted?: boolean;
   category_id?: number;
   last_confirmed_at?: string;
+  last_confirmation_request_at?: string;
 };
 
 type AdminReview = {

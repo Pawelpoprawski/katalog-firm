@@ -18,6 +18,7 @@ type AdminCompany = {
   is_promoted?: boolean;
   category_id?: number;
   last_confirmed_at?: string;
+  last_confirmation_request_at?: string;
 };
 
 interface AdminCompaniesProps {
@@ -204,7 +205,8 @@ export default function AdminCompanies({
               <th className="px-6 py-4">Status</th>
               <th className="px-6 py-4 text-center">Promocja</th>
               <th className="px-6 py-4 text-center">Widoki</th>
-              <th className="px-6 py-4">Utworzono/Potwierdzono</th>
+              <th className="px-6 py-4">Potwierdzono</th>
+              <th className="px-6 py-4">Ostatni mail</th>
               <th className="px-6 py-4 text-right">Akcje</th>
             </tr>
           </thead>
@@ -324,7 +326,12 @@ export default function AdminCompanies({
                   <td className="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm">
                     {c.last_confirmed_at
                       ? new Date(c.last_confirmed_at).toLocaleDateString("pl-PL", { day: "2-digit", month: "2-digit", year: "numeric" })
-                      : "Nigdy"}
+                      : <span className="text-slate-400 dark:text-slate-500">Nigdy</span>}
+                  </td>
+                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm">
+                    {c.last_confirmation_request_at
+                      ? new Date(c.last_confirmation_request_at).toLocaleDateString("pl-PL", { day: "2-digit", month: "2-digit", year: "numeric" })
+                      : <span className="text-slate-400 dark:text-slate-500">—</span>}
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
