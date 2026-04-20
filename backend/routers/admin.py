@@ -6,7 +6,8 @@ from ..storage import (
     get_daily_stats,
     get_analytics,
     update_company as storage_update_company,
-    delete_review as storage_delete_review
+    delete_review as storage_delete_review,
+    track_confirmation_email_sent,
 )
 from ..settings import get_settings
 from ..security_middleware import sanitize_html
@@ -70,6 +71,38 @@ def get_stats():
 def get_analytics_endpoint(days: int = 30):
     """Get daily analytics for last N days: views, unique IPs, new companies, new reviews."""
     return get_analytics(days=min(days, 365))
+
+
+@router.post("/track-confirmation-sent")
+def track_confirmation_sent(body: dict = Body(...)):
+    """
+    Mark confirmation emails as sent to given company_ids:
+    - Updates last_confirmation_request_at on each company
+    - Increments confirmation_emails_sent counter in analytics (for admin chart)
+    Body: {"company_ids": [123, 456]}
+    """
+    from datetime import datetime
+
+    company_ids = body.get("company_ids") or []
+    if not isinstance(company_ids, list):
+        raise HTTPException(status_code=400, detail="company_ids must be a list")
+
+    now_iso = datetime.now().isoformat()
+    updated = 0
+    all_companies = {c["id"]: c for c in storage_list_companies()}
+
+    for cid in company_ids:
+        company = all_companies.get(cid)
+        if not company:
+            continue
+        company["last_confirmation_request_at"] = now_iso
+        storage_update_company(cid, company)
+        updated += 1
+
+    if updated:
+        track_confirmation_email_sent(count=updated)
+
+    return {"updated": updated, "requested": len(company_ids)}
 
 
 @router.get("/companies")

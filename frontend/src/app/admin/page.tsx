@@ -49,6 +49,8 @@ type AnalyticsDay = {
   unique_ips: number;
   new_companies: number;
   new_reviews: number;
+  confirmation_emails_sent: number;
+  confirmations_received: number;
 };
 
 export default function AdminPage() {

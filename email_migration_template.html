@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalog Firm Polonijnych w Szwajcarii</title>
+</head>
+<body style="margin:0;padding:0;background:#ececec;font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,Arial,sans-serif;color:#1a1a1a;">
+
+<!--
+  TEMPLATE DO MAIL MERGE — zastąp placeholdery dla każdego odbiorcy:
+    {{COMPANY_NAME}}  — nazwa firmy
+    {{COMPANY_EMAIL}} — email firmy (z bazy)
+    {{EDIT_TOKEN}}    — edit_token danej firmy
+-->
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#ececec;padding:32px 12px;">
+  <tr>
+    <td align="center">
+
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background:#ffffff;">
+
+        <tr>
+          <td style="padding:32px 40px 24px;border-bottom:3px solid #E30613;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td>
+                  <div style="font-size:13px;color:#E30613;font-weight:700;letter-spacing:2px;text-transform:uppercase;">
+                    Katalog Firm Polonijnych
+                  </div>
+                  <div style="font-size:12px;color:#737373;margin-top:2px;">
+                    w Szwajcarii
+                  </div>
+                </td>
+                <td align="right" style="font-size:12px;color:#a3a3a3;">
+                  katalog-firm.ch
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:40px 40px 8px;">
+
+            <h1 style="margin:0 0 28px;font-size:24px;font-weight:700;color:#1a1a1a;line-height:1.3;letter-spacing:-0.3px;">
+              Prosimy o&nbsp;potwierdzenie &mdash; czy&nbsp;Wasza usługa jest nadal aktywna?
+            </h1>
+
+            <p style="margin:0 0 18px;font-size:15px;line-height:1.7;color:#404040;">
+              Cześć, {{COMPANY_NAME}}!
+            </p>
+
+            <p style="margin:0 0 18px;font-size:15px;line-height:1.7;color:#404040;">
+              W naszej bazie usług
+              <a href="https://katalog-firm.ch" style="color:#E30613;font-weight:600;text-decoration:none;">katalog-firm.ch</a>
+              znajduje się Wasza usługa. Żeby utrzymać katalog aktualny, co jakiś czas prosimy
+              każdą firmę o krótkie potwierdzenie, że ogłoszenie jest wciąż w użyciu.
+            </p>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:0 40px 8px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:3px solid #E30613;">
+              <tr>
+                <td style="padding:4px 0 4px 20px;">
+                  <div style="font-size:11px;color:#E30613;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+                    Prośba o potwierdzenie
+                  </div>
+                  <p style="margin:0 0 14px;font-size:14px;line-height:1.7;color:#404040;">
+                    Bardzo prosimy o potwierdzenie, że Wasza usługa jest nadal aktywna.
+                    Wystarczy kliknąć poniższy przycisk:
+                  </p>
+
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td style="background:#E30613;">
+                        <a href="https://katalog-firm.ch/potwierdz/"
+                           style="display:inline-block;padding:12px 24px;color:#ffffff;font-weight:600;font-size:14px;text-decoration:none;letter-spacing:0.2px;">
+                          Potwierdź aktywność usługi &rarr;
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <p style="margin:16px 0 0;font-size:13px;line-height:1.6;color:#737373;">
+                    Wasza usługa jest w naszej bazie z adresem email:
+                    <span style="color:#1a1a1a;font-weight:600;">{{COMPANY_EMAIL}}</span>
+                  </p>
+
+                  <div style="margin-top:18px;padding:14px 16px;background:#fff5f5;border-left:3px solid #E30613;">
+                    <p style="margin:0;font-size:13px;line-height:1.6;color:#7a0a0f;">
+                      <strong>Uwaga:</strong> jeżeli nie potwierdzicie aktywności,
+                      Wasza usługa zostanie usunięta z katalogu. Chcemy, żeby baza
+                      była zawsze aktualna i zawierała tylko działające firmy.
+                    </p>
+                  </div>
+
+                  <p style="margin:14px 0 0;font-size:12px;line-height:1.6;color:#a3a3a3;">
+                    Tego typu maila będziecie otrzymywać <strong>co 6&nbsp;miesięcy</strong> &mdash;
+                    to jedyny sposób, żeby katalog nie zapełniał się nieaktualnymi ogłoszeniami.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 40px;">
+            <div style="border-top:1px solid #ececec;"></div>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:0 40px 8px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:3px solid #1a1a1a;">
+              <tr>
+                <td style="padding:4px 0 4px 20px;">
+                  <div style="font-size:11px;color:#737373;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+                    Edycja Waszego ogłoszenia
+                  </div>
+                  <p style="margin:0 0 18px;font-size:14px;line-height:1.7;color:#404040;">
+                    Poniżej znajdziecie również link do edycji Waszego ogłoszenia.
+                    Możecie tutaj <strong>dodać nowe zdjęcia</strong>,
+                    <strong>zmienić opis</strong>, <strong>zaktualizować dane kontaktowe</strong>
+                    (adres, telefon, email) i wszystko inne &mdash; w każdej chwili, bez pisania do nas.
+                  </p>
+
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td style="background:#1a1a1a;">
+                        <a href="https://katalog-firm.ch/edycja/{{EDIT_TOKEN}}"
+                           style="display:inline-block;padding:12px 24px;color:#ffffff;font-weight:600;font-size:14px;text-decoration:none;letter-spacing:0.2px;">
+                          Edytuj moją usługę &rarr;
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <p style="margin:16px 0 0;font-size:13px;line-height:1.6;color:#737373;">
+                    Link powyżej jest unikalny tylko dla Was &mdash; zachowajcie go
+                    i nikomu nie przesyłajcie. Daje pełen dostęp do edycji ogłoszenia.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:40px 40px 32px;">
+            <p style="margin:0 0 14px;font-size:15px;line-height:1.7;color:#404040;">
+              Jeżeli coś nie działa, coś jest niejasne albo po prostu chcecie
+              o coś zapytać &mdash; odpiszcie na tego maila, odpowiemy.
+            </p>
+            <p style="margin:0;font-size:15px;line-height:1.7;color:#404040;">
+              Dzięki, że jesteście z nami.<br/>
+              Pozdrawiamy <span style="color:#1a1a1a;font-weight:600;">PolacySzwajcaria &mdash; Natalia &amp; Paweł</span>
+            </p>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 40px 32px;background:#fafafa;border-top:1px solid #ececec;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td>
+                  <p style="margin:0 0 6px;font-size:12px;color:#737373;line-height:1.6;">
+                    <a href="https://katalog-firm.ch" style="color:#737373;text-decoration:none;">katalog-firm.ch</a>
+                    &nbsp;&middot;&nbsp;
+                    <a href="mailto:kontakt@polacyszwajcaria.com" style="color:#737373;text-decoration:none;">kontakt@polacyszwajcaria.com</a>
+                  </p>
+                  <p style="margin:0;font-size:11px;color:#a3a3a3;line-height:1.6;">
+                    Otrzymujecie tę wiadomość, ponieważ Wasza usługa znajduje się
+                    w bazie katalog-firm.ch. Tego typu maila wysyłamy co 6 miesięcy
+                    w ramach aktualizacji katalogu.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

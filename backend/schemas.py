@@ -59,6 +59,7 @@ class CompanyBase(BaseModel):
     status: str = "draft"  # Changed from "published" to "draft"
     is_promoted: bool = False
     last_confirmed_at: Optional[datetime] = None  # Data utworzenia/ostatniego potwierdzenia
+    last_confirmation_request_at: Optional[datetime] = None  # Data ostatniej wysłanej prośby o potwierdzenie
 
 
 class CompanyCreate(CompanyBase):

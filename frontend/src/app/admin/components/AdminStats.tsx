@@ -8,6 +8,8 @@ type AnalyticsDay = {
   unique_ips: number;
   new_companies: number;
   new_reviews: number;
+  confirmation_emails_sent: number;
+  confirmations_received: number;
 };
 
 type Stats = {
@@ -23,6 +25,8 @@ const chartLines = [
   { key: "unique_ips" as const, label: "Unikalni użytkownicy (IP)", color: "#10b981" },
   { key: "new_companies" as const, label: "Nowe firmy", color: "#f59e0b" },
   { key: "new_reviews" as const, label: "Nowe opinie", color: "#ef4444" },
+  { key: "confirmation_emails_sent" as const, label: "Wysłane prośby o potwierdzenie", color: "#8b5cf6" },
+  { key: "confirmations_received" as const, label: "Otrzymane potwierdzenia", color: "#06b6d4" },
 ];
 
 function StatCard({ title, value, icon, color }: { title: string; value: number; icon: string; color: string }) {
@@ -57,6 +61,8 @@ export default function AdminStats({ stats, analytics }: AdminStatsProps) {
     unique_ips: true,
     new_companies: true,
     new_reviews: true,
+    confirmation_emails_sent: true,
+    confirmations_received: true,
   });
   const [hoveredDay, setHoveredDay] = useState<number | null>(null);
 
@@ -74,7 +80,7 @@ export default function AdminStats({ stats, analytics }: AdminStatsProps) {
       <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 border border-slate-200 dark:border-slate-700 shadow-sm">
         <div className="flex flex-col gap-4 mb-6">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white">Statystyki (ostatnie 30 dni)</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {chartLines.map((line) => {
               const total = analytics.reduce((s, d) => s + (d[line.key as keyof AnalyticsDay] as number), 0);
               const firstHalf = analytics.slice(0, 15).reduce((s, d) => s + (d[line.key as keyof AnalyticsDay] as number), 0);
@@ -215,7 +221,7 @@ export default function AdminStats({ stats, analytics }: AdminStatsProps) {
                         const tx = PX + hoveredDay * stepX;
                         const tooltipX = tx > W / 2 ? tx - 160 : tx + 10;
                         return (
-                          <foreignObject x={tooltipX} y={10} width={150} height={120}>
+                          <foreignObject x={tooltipX} y={10} width={180} height={180}>
                             <div className="bg-white dark:bg-slate-700 rounded-xl shadow-lg border border-slate-200 dark:border-slate-600 p-3 text-xs">
                               <div className="font-bold text-slate-900 dark:text-white mb-2">{d.date}</div>
                               {chartLines

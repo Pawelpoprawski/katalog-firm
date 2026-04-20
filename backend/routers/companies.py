@@ -477,6 +477,12 @@ def confirm_company_activity(request: Request, body: dict[str, str]) -> dict[str
         # Update last_confirmed_at
         company["last_confirmed_at"] = datetime.now().isoformat()
         storage_update_company(company["id"], company)
+        # Track confirmation in analytics (for admin chart)
+        try:
+            from ..storage import track_confirmation_received
+            track_confirmation_received()
+        except Exception:
+            pass
 
     # Always return success to prevent email enumeration
     return {"status": "confirmed", "message": "Jeśli podany email istnieje w bazie, ogłoszenie zostało potwierdzone."}

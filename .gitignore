@@ -52,3 +52,9 @@ waldmann_catering.json
 
 # Logo
 Logo.jpg
+
+# Migration / confirmation-email artifacts (contain emails & edit_tokens)
+_all_companies.json
+_dummy_company.json
+migration_send_log.jsonl
+email_preview_*.html

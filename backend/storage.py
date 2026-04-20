@@ -996,6 +996,28 @@ def track_new_review() -> None:
         _write_analytics(analytics)
 
 
+def track_confirmation_email_sent(count: int = 1) -> None:
+    """Track confirmation-request emails sent today (batch)."""
+    today = _get_today_str()
+    with _lock:
+        analytics = _read_analytics()
+        if today not in analytics:
+            analytics[today] = {"views": 0, "ips": [], "new_companies": 0, "new_reviews": 0}
+        analytics[today]["confirmation_emails_sent"] = analytics[today].get("confirmation_emails_sent", 0) + count
+        _write_analytics(analytics)
+
+
+def track_confirmation_received() -> None:
+    """Track a received activity confirmation today."""
+    today = _get_today_str()
+    with _lock:
+        analytics = _read_analytics()
+        if today not in analytics:
+            analytics[today] = {"views": 0, "ips": [], "new_companies": 0, "new_reviews": 0}
+        analytics[today]["confirmations_received"] = analytics[today].get("confirmations_received", 0) + 1
+        _write_analytics(analytics)
+
+
 def get_analytics(days: int = 30) -> list[dict]:
     """Get analytics for the last N days."""
     from datetime import timedelta
@@ -1013,6 +1035,8 @@ def get_analytics(days: int = 30) -> list[dict]:
             "unique_ips": len(day_data.get("ips", [])),
             "new_companies": day_data.get("new_companies", 0),
             "new_reviews": day_data.get("new_reviews", 0),
+            "confirmation_emails_sent": day_data.get("confirmation_emails_sent", 0),
+            "confirmations_received": day_data.get("confirmations_received", 0),
         })
     return result
 
