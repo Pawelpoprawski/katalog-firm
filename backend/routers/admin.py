@@ -89,14 +89,12 @@ def track_confirmation_sent(body: dict = Body(...)):
 
     now_iso = datetime.now().isoformat()
     updated = 0
-    all_companies = {c["id"]: c for c in storage_list_companies()}
+    existing_ids = {c["id"] for c in storage_list_companies()}
 
     for cid in company_ids:
-        company = all_companies.get(cid)
-        if not company:
+        if cid not in existing_ids:
             continue
-        company["last_confirmation_request_at"] = now_iso
-        storage_update_company(cid, company)
+        storage_update_company(cid, {"last_confirmation_request_at": now_iso})
         updated += 1
 
     if updated:

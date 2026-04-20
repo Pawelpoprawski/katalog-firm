@@ -777,7 +777,7 @@ def update_company(company_id: int, updates: dict) -> dict:
         for idx, c in enumerate(companies):
             if int(c.get("id") or 0) != company_id:
                 continue
-            merged = {**c, **updates, "id": company_id, "updated_at": _now_ts(), "last_confirmed_at": datetime.now().isoformat()}
+            merged = {**c, **updates, "id": company_id, "updated_at": _now_ts()}
             companies[idx] = merged
             _write_list(COMPANIES_FILE, companies)
             _cache.invalidate("companies")
