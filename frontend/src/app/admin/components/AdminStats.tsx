@@ -21,12 +21,12 @@ type Stats = {
 };
 
 const chartLines = [
-  { key: "views" as const, label: "Wyświetlenia stron", color: "#3b82f6" },
-  { key: "unique_ips" as const, label: "Unikalni odwiedzający (wg IP)", color: "#10b981" },
-  { key: "new_companies" as const, label: "Nowo dodane firmy", color: "#f59e0b" },
-  { key: "new_reviews" as const, label: "Nowe opinie klientów", color: "#ef4444" },
-  { key: "confirmation_emails_sent" as const, label: "Maile z prośbą o potwierdzenie aktywności (wysłane)", color: "#8b5cf6" },
-  { key: "confirmations_received" as const, label: "Potwierdzenia aktywności od firm (kliknięcia w mail)", color: "#06b6d4" },
+  { key: "views" as const, label: "Wyświetlenia stron", short: "Wyświetlenia", color: "#3b82f6" },
+  { key: "unique_ips" as const, label: "Unikalni odwiedzający (wg IP)", short: "Odwiedzający", color: "#10b981" },
+  { key: "new_companies" as const, label: "Nowo dodane firmy", short: "Nowe firmy", color: "#f59e0b" },
+  { key: "new_reviews" as const, label: "Nowe opinie klientów", short: "Nowe opinie", color: "#ef4444" },
+  { key: "confirmation_emails_sent" as const, label: "Maile z prośbą o potwierdzenie aktywności (wysłane)", short: "Maile wysłane", color: "#8b5cf6" },
+  { key: "confirmations_received" as const, label: "Potwierdzenia aktywności od firm (kliknięcia w mail)", short: "Potwierdzenia", color: "#06b6d4" },
 ];
 
 // Cron wysyłki maili: 0 10 */5 * * = dni 5, 10, 15, 20, 25, 30 miesiąca o 10:00
@@ -286,7 +286,7 @@ export default function AdminStats({ stats, analytics }: AdminStatsProps) {
                                   <div key={line.key} className="flex items-center justify-between gap-2 py-0.5">
                                     <div className="flex items-center gap-1.5">
                                       <span className="w-2 h-2 rounded-full" style={{ backgroundColor: line.color }} />
-                                      <span className="text-slate-500 dark:text-slate-300">{line.label.split(" ")[0]}</span>
+                                      <span className="text-slate-500 dark:text-slate-300">{line.short}</span>
                                     </div>
                                     <span className="font-bold text-slate-900 dark:text-white">{d[line.key as keyof AnalyticsDay]}</span>
                                   </div>
