@@ -15,7 +15,7 @@ from ..storage import increment_click as storage_increment_click
 from ..storage import verify_edit_token as storage_verify_edit_token
 from ..storage import get_newsletter_count
 from ..storage import track_impressions
-from ..security_middleware import limiter, sanitize_html, validate_url
+from ..security_middleware import limiter, sanitize_html, sanitize_plain_text, validate_url
 
 
 router = APIRouter()
@@ -245,11 +245,11 @@ def create_company(
     data = payload.dict()
     # Sanitize text fields to prevent XSS
     if data.get("name"):
-        data["name"] = sanitize_html(data["name"])
+        data["name"] = sanitize_plain_text(data["name"])
     if data.get("description"):
         data["description"] = sanitize_html(data["description"], allowed_tags=["p", "br", "b", "strong", "i", "em", "ul", "ol", "li"])
     if data.get("short_description"):
-        data["short_description"] = sanitize_html(data["short_description"])
+        data["short_description"] = sanitize_plain_text(data["short_description"])
     if data.get("offer"):
         data["offer"] = sanitize_html(data["offer"], allowed_tags=["p", "br", "b", "strong", "i", "em", "ul", "ol", "li"])
     # Block SSRF: reject private/internal IPs in website field
@@ -343,9 +343,9 @@ def update_company(
         if update_data.get("offer"):
             update_data["offer"] = sanitize_html(update_data["offer"], allowed_tags=["p", "br", "b", "strong", "i", "em", "ul", "ol", "li"])
         if update_data.get("name"):
-            update_data["name"] = sanitize_html(update_data["name"])
+            update_data["name"] = sanitize_plain_text(update_data["name"])
         if update_data.get("short_description"):
-            update_data["short_description"] = sanitize_html(update_data["short_description"])
+            update_data["short_description"] = sanitize_plain_text(update_data["short_description"])
         updated = storage_update_company(company_id, update_data)
         return _enrich_company(updated.copy())
     except KeyError:

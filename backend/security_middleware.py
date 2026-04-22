@@ -2,6 +2,7 @@
 Security middleware and utilities for the application.
 Includes rate limiting, input sanitization, and security headers.
 """
+import html
 import re
 from typing import Callable
 import bleach
@@ -56,6 +57,19 @@ def sanitize_html(text: str, allowed_tags: list[str] | None = None) -> str:
         tags=allowed_tags,
         strip=True
     )
+
+
+def sanitize_plain_text(text: str) -> str:
+    """
+    Sanitize a plain-text field (e.g. company name): strip any HTML tags,
+    then decode entities so `&` stays as `&` rather than `&amp;`.
+
+    Use for fields that are rendered as text, not HTML (name, short_description).
+    """
+    if not text:
+        return text
+    stripped = bleach.clean(text, tags=[], strip=True)
+    return html.unescape(stripped)
 
 
 def validate_slug(slug: str) -> bool:
