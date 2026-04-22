@@ -21,12 +21,12 @@ type Stats = {
 };
 
 const chartLines = [
-  { key: "views" as const, label: "Wyświetlenia", color: "#3b82f6" },
-  { key: "unique_ips" as const, label: "Unikalni użytkownicy (IP)", color: "#10b981" },
-  { key: "new_companies" as const, label: "Nowe firmy", color: "#f59e0b" },
-  { key: "new_reviews" as const, label: "Nowe opinie", color: "#ef4444" },
-  { key: "confirmation_emails_sent" as const, label: "Wysłane prośby o potwierdzenie", color: "#8b5cf6" },
-  { key: "confirmations_received" as const, label: "Otrzymane potwierdzenia", color: "#06b6d4" },
+  { key: "views" as const, label: "Wyświetlenia stron", color: "#3b82f6" },
+  { key: "unique_ips" as const, label: "Unikalni odwiedzający (wg IP)", color: "#10b981" },
+  { key: "new_companies" as const, label: "Nowo dodane firmy", color: "#f59e0b" },
+  { key: "new_reviews" as const, label: "Nowe opinie klientów", color: "#ef4444" },
+  { key: "confirmation_emails_sent" as const, label: "Maile z prośbą o potwierdzenie aktywności (wysłane)", color: "#8b5cf6" },
+  { key: "confirmations_received" as const, label: "Potwierdzenia aktywności od firm (kliknięcia w mail)", color: "#06b6d4" },
 ];
 
 // Cron wysyłki maili: 0 10 */5 * * = dni 5, 10, 15, 20, 25, 30 miesiąca o 10:00
