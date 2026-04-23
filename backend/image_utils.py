@@ -85,6 +85,9 @@ def convert_base64_to_webp(
         webp_base64 = base64.b64encode(webp_data).decode()
         return f"data:image/webp;base64,{webp_base64}"
         
+    except ValueError:
+        # Size violation — propagate so API can return 400
+        raise
     except Exception as e:
         # If conversion fails, return original
         print(f"Warning: Failed to convert image to WebP: {e}")
@@ -96,6 +99,7 @@ def save_image_to_disk(base64_str: str, company_id: int, image_type: str = "main
     Convert base64 image to WebP and save to disk. Returns URL path.
     image_type: "main" or "photo"
     Returns: "/images/company_{id}_{type}_{index}.webp" or original string if not base64
+    Raises ValueError on oversized input so caller can return 400.
     """
     if not base64_str or not base64_str.startswith("data:image"):
         return base64_str  # External URL or already processed
@@ -106,21 +110,18 @@ def save_image_to_disk(base64_str: str, company_id: int, image_type: str = "main
 
     IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
-    try:
-        # Convert to WebP first
-        webp_data_uri = convert_base64_to_webp(base64_str)
+    # Convert to WebP first — ValueError (too large) propagates to caller.
+    webp_data_uri = convert_base64_to_webp(base64_str)
 
-        # Extract binary data
+    try:
         if ";base64," not in webp_data_uri:
             return base64_str
 
         encoded = webp_data_uri.split(";base64,")[1]
         image_bytes = base64.b64decode(encoded)
 
-        # Generate filename
         filename = f"company_{company_id}_{image_type}_{index}.webp"
         filepath = IMAGES_DIR / filename
-
         filepath.write_bytes(image_bytes)
 
         return f"/images/{filename}"

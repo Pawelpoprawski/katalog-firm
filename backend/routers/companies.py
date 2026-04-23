@@ -237,7 +237,7 @@ def get_newsletter_companies(count: int = Query(default=6, ge=1, le=20)):
 
 
 @router.post("/", response_model=CompanyReadWithToken, status_code=status.HTTP_201_CREATED)
-@limiter.limit("3/hour")
+@limiter.limit("10/hour")
 def create_company(
     request: Request,
     payload: CompanyCreate,
@@ -252,10 +252,17 @@ def create_company(
         data["short_description"] = sanitize_plain_text(data["short_description"])
     if data.get("offer"):
         data["offer"] = sanitize_html(data["offer"], allowed_tags=["p", "br", "b", "strong", "i", "em", "ul", "ol", "li"])
+    # Limit liczby zdjęć przychodzących (frontend limituje do 8, ale direct API też musi mieć twardy limit)
+    if data.get("photos") and isinstance(data["photos"], list) and len(data["photos"]) > 8:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Maksymalnie 8 zdjęć.")
     # Block SSRF: reject private/internal IPs in website field
     if data.get("website") and not validate_url(data["website"]):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid website URL")
-    company = storage_create_company(data)
+    try:
+        company = storage_create_company(data)
+    except ValueError as e:
+        # Oversized image from image_utils.convert_base64_to_webp
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     from ..storage import track_new_company
     track_new_company()
     # Clear nginx cache so new company appears immediately
@@ -346,8 +353,12 @@ def update_company(
             update_data["name"] = sanitize_plain_text(update_data["name"])
         if update_data.get("short_description"):
             update_data["short_description"] = sanitize_plain_text(update_data["short_description"])
+        if update_data.get("photos") and isinstance(update_data["photos"], list) and len(update_data["photos"]) > 8:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Maksymalnie 8 zdjęć.")
         updated = storage_update_company(company_id, update_data)
         return _enrich_company(updated.copy())
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except KeyError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
 

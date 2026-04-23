@@ -8,6 +8,9 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 const steps = ["Dane firmy", "Kontakt", "Zdjęcia", "Podsumowanie"];
 const DESC_LIMIT = 10000; // Merged: description + offer
+const NAME_LIMIT = 150;
+const MAX_PHOTOS = 8;
+const MAX_PHOTO_SIZE_MB = 5;
 const ADDRESS_SUGGESTIONS = [
   { label: "Bahnhofstrasse 1, Zürich", canton: "ZH" },
   { label: "Bundesplatz 1, Bern", canton: "BE" },
@@ -226,16 +229,24 @@ export default function AddCompanyPage() {
 
   const handleFiles = (files: FileList | null) => {
     if (!files || files.length === 0) return;
-    const MAX_FILES = 8;
-    const MAX_SIZE = 5 * 1024 * 1024;
-    const accepted = Array.from(files).filter((f) => f.type.startsWith("image/") && f.size <= MAX_SIZE);
-    if (accepted.length !== files.length) {
-      setUploadError("Dozwolone tylko obrazy (jpg/png/webp) do 5MB. Limit 8 szt.");
-    } else {
-      setUploadError("");
-    }
-    const urls = accepted.map((f) => URL.createObjectURL(f));
-    setPreviews((prev) => [...prev, ...urls].slice(0, MAX_FILES));
+    const MAX_SIZE = MAX_PHOTO_SIZE_MB * 1024 * 1024;
+    const all = Array.from(files);
+    const rejectedType = all.filter((f) => !f.type.startsWith("image/"));
+    const rejectedSize = all.filter((f) => f.type.startsWith("image/") && f.size > MAX_SIZE);
+    const accepted = all.filter((f) => f.type.startsWith("image/") && f.size <= MAX_SIZE);
+
+    const reasons: string[] = [];
+    if (rejectedType.length) reasons.push(`${rejectedType.length} plik(ów) z niedozwolonym formatem (wymagane JPG/PNG/WebP)`);
+    if (rejectedSize.length) reasons.push(`${rejectedSize.length} zdjęcie(a) przekracza ${MAX_PHOTO_SIZE_MB}MB`);
+
+    const willFit = Math.max(0, MAX_PHOTOS - previews.length);
+    const droppedOverLimit = Math.max(0, accepted.length - willFit);
+    if (droppedOverLimit > 0) reasons.push(`pominięto ${droppedOverLimit} – limit ${MAX_PHOTOS} zdjęć`);
+
+    setUploadError(reasons.length ? reasons.join(". ") + "." : "");
+
+    const urls = accepted.slice(0, willFit).map((f) => URL.createObjectURL(f));
+    setPreviews((prev) => [...prev, ...urls]);
     if (!mainPhoto && urls.length > 0) setMainPhoto(urls[0]);
   };
 
@@ -523,8 +534,12 @@ export default function AddCompanyPage() {
                         placeholder="np. Pol-Bud CH"
                         value={form.name}
                         onChange={handleChange("name")}
+                        maxLength={NAME_LIMIT}
                         required
                       />
+                      <div className="flex justify-end text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                        <span className={form.name.length >= NAME_LIMIT ? "text-primary" : ""}>{form.name.length} / {NAME_LIMIT}</span>
+                      </div>
                       {errors.name && <p className="text-xs font-bold text-red-500 animate-shake">{errors.name}</p>}
                     </div>
 

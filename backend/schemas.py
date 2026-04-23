@@ -33,11 +33,11 @@ class CategoryRead(CategoryCreate):
 
 
 class CompanyBase(BaseModel):
-    name: str = Field(min_length=1)
-    slug: Optional[str] = None  # Auto-generated if not provided
-    short_description: Optional[str] = None  # Krótki opis dla kart
-    description: Optional[str] = None  # Merged: Firma & Usługi (20-10,000 chars when required)
-    offer: Optional[str] = None  # Legacy separate offer/services field
+    name: str = Field(min_length=1, max_length=150)
+    slug: Optional[str] = Field(default=None, max_length=250)  # Auto-generated if not provided
+    short_description: Optional[str] = Field(default=None, max_length=500)  # Krótki opis dla kart
+    description: Optional[str] = Field(default=None, max_length=10000)  # Merged: Firma & Usługi (20-10,000 chars when required)
+    offer: Optional[str] = Field(default=None, max_length=10000)  # Legacy separate offer/services field
     phone: Optional[str] = None
     whatsapp: Optional[str] = None  # WhatsApp number
     email: Optional[str] = None
