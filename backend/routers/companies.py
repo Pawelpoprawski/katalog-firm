@@ -253,8 +253,8 @@ def create_company(
     if data.get("offer"):
         data["offer"] = sanitize_html(data["offer"], allowed_tags=["p", "br", "b", "strong", "i", "em", "ul", "ol", "li"])
     # Limit liczby zdjęć przychodzących (frontend limituje do 8, ale direct API też musi mieć twardy limit)
-    if data.get("photos") and isinstance(data["photos"], list) and len(data["photos"]) > 8:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Maksymalnie 8 zdjęć.")
+    if data.get("photos") and isinstance(data["photos"], list) and len(data["photos"]) > 20:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Maksymalnie 20 zdjęć.")
     # Block SSRF: reject private/internal IPs in website field
     if data.get("website") and not validate_url(data["website"]):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid website URL")
@@ -353,8 +353,8 @@ def update_company(
             update_data["name"] = sanitize_plain_text(update_data["name"])
         if update_data.get("short_description"):
             update_data["short_description"] = sanitize_plain_text(update_data["short_description"])
-        if update_data.get("photos") and isinstance(update_data["photos"], list) and len(update_data["photos"]) > 8:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Maksymalnie 8 zdjęć.")
+        if update_data.get("photos") and isinstance(update_data["photos"], list) and len(update_data["photos"]) > 20:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Maksymalnie 20 zdjęć.")
         updated = storage_update_company(company_id, update_data)
         return _enrich_company(updated.copy())
     except ValueError as e:

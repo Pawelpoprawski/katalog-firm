@@ -8,7 +8,7 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const steps = ["Dane firmy", "Kontakt", "Zdjęcia", "Podsumowanie"];
 const DESC_LIMIT = 10000; // Merged: description + offer
 const NAME_LIMIT = 150;
-const MAX_PHOTOS = 8;
+const MAX_PHOTOS = 20;
 const MAX_PHOTO_SIZE_MB = 5;
 
 import { Category } from "@/types";
