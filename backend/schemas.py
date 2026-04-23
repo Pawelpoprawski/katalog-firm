@@ -83,6 +83,7 @@ class CompanyRead(CompanyBase):
     created_at: Optional[float] = None
     updated_at: Optional[float] = None
     views: int = 0
+    profile_views: int = 0
     clicks: int = 0
     model_config = ConfigDict(from_attributes=True)
 

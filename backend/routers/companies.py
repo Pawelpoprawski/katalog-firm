@@ -11,6 +11,7 @@ from ..storage import list_companies as storage_list_companies
 from ..storage import list_reviews as storage_list_reviews
 from ..storage import update_company as storage_update_company
 from ..storage import increment_view as storage_increment_view
+from ..storage import increment_profile_view as storage_increment_profile_view
 from ..storage import increment_click as storage_increment_click
 from ..storage import verify_edit_token as storage_verify_edit_token
 from ..storage import get_newsletter_count
@@ -315,7 +316,7 @@ def batch_increment_views(company_ids: list[int] = Body(...)):
 
 @router.post("/{company_id}/view", status_code=status.HTTP_204_NO_CONTENT)
 def increment_view(company_id: int):
-    storage_increment_view(company_id)
+    storage_increment_profile_view(company_id)
     return None
 
 

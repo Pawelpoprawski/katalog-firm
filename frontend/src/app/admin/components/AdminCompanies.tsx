@@ -11,6 +11,7 @@ type AdminCompany = {
   email?: string;
   slug: string;
   views: number;
+  profile_views?: number;
   clicks: number;
   edit_token?: string;
   status: string;
@@ -43,7 +44,7 @@ export default function AdminCompanies({
   const [updatingEmail, setUpdatingEmail] = useState<number | null>(null);
   const [editingEmailId, setEditingEmailId] = useState<number | null>(null);
   const [tempEmail, setTempEmail] = useState("");
-  const [adminSortBy, setAdminSortBy] = useState<"name" | "confirmed" | "created">("created");
+  const [adminSortBy, setAdminSortBy] = useState<"name" | "confirmed" | "created" | "views" | "profile_views" | "clicks">("created");
 
   const copyLink = (token: string) => {
     const link = `${window.location.origin}/edycja/${token}`;
@@ -185,12 +186,15 @@ export default function AdminCompanies({
           <label className="text-sm font-medium text-slate-600 dark:text-slate-400">Sortuj po:</label>
           <select
             value={adminSortBy}
-            onChange={(e) => setAdminSortBy(e.target.value as "name" | "confirmed" | "created")}
+            onChange={(e) => setAdminSortBy(e.target.value as typeof adminSortBy)}
             className="text-sm px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-medium hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
           >
             <option value="created">Data utworzenia</option>
             <option value="confirmed">Data potwierdzenia</option>
             <option value="name">Nazwa alfabetycznie</option>
+            <option value="views">Scrolle (najwięcej)</option>
+            <option value="profile_views">Wejścia (najwięcej)</option>
+            <option value="clicks">Kliknięcia (najwięcej)</option>
           </select>
         </div>
       </div>
@@ -204,7 +208,9 @@ export default function AdminCompanies({
               <th className="px-6 py-4">Kategoria</th>
               <th className="px-6 py-4">Status</th>
               <th className="px-6 py-4 text-center">Promocja</th>
-              <th className="px-6 py-4 text-center">Widoki</th>
+              <th className="px-6 py-4 text-center" title="Scroll impressions — firma była widoczna w liście podczas scrollowania">Scrolle</th>
+              <th className="px-6 py-4 text-center" title="Wejścia na stronę firmy (z listy lub z zewnątrz)">Wejścia</th>
+              <th className="px-6 py-4 text-center" title="Kliknięcia w link do strony www firmy">Kliknięcia</th>
               <th className="px-6 py-4">Potwierdzono</th>
               <th className="px-6 py-4">Ostatni mail</th>
               <th className="px-6 py-4 text-right">Akcje</th>
@@ -220,6 +226,12 @@ export default function AdminCompanies({
                   const dateA = a.last_confirmed_at ? new Date(a.last_confirmed_at).getTime() : 0;
                   const dateB = b.last_confirmed_at ? new Date(b.last_confirmed_at).getTime() : 0;
                   return dateA - dateB;
+                } else if (adminSortBy === "views") {
+                  return (b.views || 0) - (a.views || 0);
+                } else if (adminSortBy === "profile_views") {
+                  return (b.profile_views || 0) - (a.profile_views || 0);
+                } else if (adminSortBy === "clicks") {
+                  return (b.clicks || 0) - (a.clicks || 0);
                 } else {
                   return (a.created_at || 0) - (b.created_at || 0);
                 }
@@ -322,7 +334,9 @@ export default function AdminCompanies({
                       )}
                     </button>
                   </td>
-                  <td className="px-6 py-4 text-center font-mono text-slate-600 dark:text-slate-400">{c.views}</td>
+                  <td className="px-6 py-4 text-center font-mono text-slate-600 dark:text-slate-400">{c.views || 0}</td>
+                  <td className="px-6 py-4 text-center font-mono text-slate-600 dark:text-slate-400">{c.profile_views || 0}</td>
+                  <td className="px-6 py-4 text-center font-mono text-slate-600 dark:text-slate-400">{c.clicks || 0}</td>
                   <td className="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm">
                     {c.last_confirmed_at
                       ? new Date(c.last_confirmed_at).toLocaleDateString("pl-PL", { day: "2-digit", month: "2-digit", year: "numeric" })

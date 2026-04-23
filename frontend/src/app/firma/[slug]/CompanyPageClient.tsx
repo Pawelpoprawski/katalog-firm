@@ -25,6 +25,20 @@ const DEFAULT_COORDS = { lat: 46.8, lng: 8.2 };
 const googleMapsKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
 const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
+function formatDescriptionHtml(text: string): string {
+  if (/<(p|ul|ol|div|h[1-6]|br)\b/i.test(text)) {
+    return text;
+  }
+  const paragraphs = text
+    .replace(/\r\n/g, "\n")
+    .split(/\n{2,}/)
+    .map((para) => para.trim())
+    .filter(Boolean)
+    .map((para) => `<p>${para.replace(/\n/g, "<br>")}</p>`)
+    .join("");
+  return paragraphs || text;
+}
+
 
 import { useFavorites } from "../../../hooks/useFavorites";
 
@@ -400,7 +414,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
           {/* Description */}
           <div
             className="company-description max-w-none text-base text-slate-700"
-            dangerouslySetInnerHTML={{ __html: company.description || "Brak opisu" }}
+            dangerouslySetInnerHTML={{ __html: company.description ? formatDescriptionHtml(company.description) : "Brak opisu" }}
           />
 
           {/* Offer */}
@@ -409,7 +423,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
               <h3 className="text-sm font-semibold text-slate-900 mb-2">Oferta</h3>
               <div
                 className="company-description max-w-none text-sm text-slate-700"
-                dangerouslySetInnerHTML={{ __html: company.offer || "" }}
+                dangerouslySetInnerHTML={{ __html: company.offer ? formatDescriptionHtml(company.offer) : "" }}
               />
             </div>
           )}

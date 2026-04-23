@@ -361,6 +361,7 @@ def create_company(payload: dict) -> dict:
             "status": payload.get("status", "draft"),  # ✨ NEW: Default to draft status
             "edit_token": secrets.token_urlsafe(32),
             "views": 0,
+            "profile_views": 0,
             "clicks": 0,
             "created_at": _now_ts(),
             "last_confirmed_at": datetime.now().isoformat(),  # Data utworzenia
@@ -417,6 +418,18 @@ def increment_view(company_id: int) -> None:
 
                 # Update granular stats
                 _update_stats(company_id, "views")
+                return
+
+
+def increment_profile_view(company_id: int) -> None:
+    with _lock:
+        companies = _read_list(COMPANIES_FILE)
+        for idx, c in enumerate(companies):
+            if int(c.get("id") or 0) == company_id:
+                c["profile_views"] = (c.get("profile_views") or 0) + 1
+                companies[idx] = c
+                _write_list(COMPANIES_FILE, companies)
+                _cache.invalidate("companies")
                 return
 
 
