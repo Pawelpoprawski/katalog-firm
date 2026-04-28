@@ -156,6 +156,13 @@ def update_company_status(
     except KeyError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
 
+@router.post("/run-auto-publish")
+def run_auto_publish():
+    """Manualnie uruchom auto_publish_drafts (do testów). Admin only."""
+    from ..scheduler import auto_publish_drafts
+    return auto_publish_drafts()
+
+
 @router.patch("/companies/{company_id}/promote")
 def toggle_promotion(
     company_id: int,

@@ -22,6 +22,7 @@ from backend.security_middleware import (  # type: ignore  # noqa: E402
 )
 from backend.ip_blacklist import ip_blacklist_middleware  # type: ignore  # noqa: E402
 from backend.storage import track_page_view  # type: ignore  # noqa: E402
+from backend.scheduler import start_scheduler  # type: ignore  # noqa: E402
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -81,9 +82,10 @@ app.add_middleware(
 
 
 @app.on_event("startup")
-def on_startup() -> None:
+async def on_startup() -> None:
     logger.info("Initializing storage...")
     init_storage()
+    start_scheduler()
     logger.info("Storage initialized. Backend ready on http://0.0.0.0:8000")
 
 
