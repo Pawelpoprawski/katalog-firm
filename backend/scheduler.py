@@ -17,7 +17,7 @@ _task: Optional[asyncio.Task] = None
 
 
 def _get_delay_hours() -> float:
-    return float(os.getenv("AUTO_PUBLISH_DELAY_HOURS", "3"))
+    return float(os.getenv("AUTO_PUBLISH_DELAY_HOURS", "6"))
 
 
 def _get_check_interval_minutes() -> float:
