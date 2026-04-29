@@ -53,7 +53,7 @@ def _enrich_company(company: dict) -> dict:
 
 @router.get("/", response_model=list[CompanyRead])
 def list_companies(
-    limit: int = Query(default=100, ge=1, le=100),
+    limit: int = Query(default=1000, ge=1, le=1000),
     category_id: int | None = None,
     status: str | None = None,
 ) -> list[dict]:
