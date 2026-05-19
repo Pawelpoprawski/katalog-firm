@@ -58,3 +58,7 @@ _all_companies.json
 _dummy_company.json
 migration_send_log.jsonl
 email_preview_*.html
+send_confirmations_cron.sh
+
+# Marketing leads (research output)
+leady_pitch_deck.md

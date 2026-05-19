@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Katalog firm polonijnych w Szwajcarii — mockup (styl Hays)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<style>
+  :root {
+    --hays-red: #E1002A;
+    --hays-red-dark: #B8001F;
+    --hays-red-light: #FFF0F3;
+    --hays-navy: #0D2240;
+    --hays-navy-light: #1A3A5C;
+    --border: #E0E3E8;
+    --bg-soft: #F5F6F8;
+    --text-muted: #555;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+    background:#fff; color:#1A1A1A; line-height:1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3,h4 {
+    font-family:'Roboto Slab', Georgia, serif;
+    letter-spacing:-0.01em; font-weight:700;
+    text-rendering:optimizeLegibility;
+  }
+  .font-display { font-family:'Roboto Slab', Georgia, serif; }
+
+  /* Hays patterns / accents */
+  .hays-pattern{
+    background-image:
+      linear-gradient(30deg, transparent 48%, rgba(255,255,255,0.03) 48%, rgba(255,255,255,0.03) 52%, transparent 52%),
+      linear-gradient(150deg, transparent 48%, rgba(255,255,255,0.03) 48%, rgba(255,255,255,0.03) 52%, transparent 52%),
+      linear-gradient(60deg, transparent 48%, rgba(255,255,255,0.02) 48%, rgba(255,255,255,0.02) 52%, transparent 52%);
+    background-size:80px 80px;
+  }
+  .hays-red-glow{
+    background:radial-gradient(circle, rgba(225,0,42,0.15), transparent 70%);
+  }
+  .hays-red-line{
+    display:block; width:48px; height:3px; background:var(--hays-red); margin-bottom:16px;
+  }
+  .py-15{ padding-top:60px; padding-bottom:60px; }
+  .gap-15{ gap:60px; }
+
+  /* Cards */
+  .hays-cat-card{ position:relative; cursor:pointer; transition:all .2s; }
+  .hays-cat-card::before{
+    content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+    background:var(--hays-red); transform:scaleY(0); transition:transform .2s;
+  }
+  .hays-cat-card:hover::before{ transform:scaleY(1); }
+  .hays-cat-card:hover{ box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+
+  .hays-job-card{ cursor:pointer; transition:all .2s; }
+  .hays-job-card:hover{
+    border-color:var(--hays-red);
+    box-shadow:0 4px 16px rgba(225,0,42,0.08);
+  }
+
+  /* Nav link */
+  .hays-nav-link{
+    font-weight:500; font-size:.9rem; color:#555;
+    padding:8px 0; position:relative; transition:color .2s; text-decoration:none;
+  }
+  .hays-nav-link:hover{ color:var(--hays-navy); }
+  .hays-nav-link::after{
+    content:''; position:absolute; bottom:0; left:0; width:0; height:2px;
+    background:var(--hays-red); transition:width .2s;
+  }
+  .hays-nav-link:hover::after{ width:100%; }
+
+  /* FAQ summary marker */
+  details > summary { list-style:none; }
+  details > summary::-webkit-details-marker { display:none; }
+  details[open] .faq-chevron { transform:rotate(180deg); }
+  .faq-chevron { transition: transform .2s; }
+
+  /* Star rating */
+  .star{ color:#F5B400; }
+
+  /* Mockup ribbon */
+  .ribbon{
+    position:fixed; top:14px; right:-44px; transform:rotate(35deg);
+    background:var(--hays-red); color:#fff; font-size:.72rem; font-weight:700;
+    letter-spacing:.12em; padding:6px 56px; z-index:9999;
+    box-shadow:0 2px 8px rgba(0,0,0,.18); text-transform:uppercase;
+  }
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<div class="ribbon">Mockup designu</div>
+
+<!-- ============ HEADER ============ -->
+<header class="sticky top-0 z-50 bg-white border-b" style="border-color:var(--border)">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="flex justify-between items-center h-[72px]">
+      <!-- Logo -->
+      <div class="flex items-center gap-3 min-w-0">
+        <a href="#" aria-label="Strona główna"
+           class="relative w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0 rounded-lg"
+           style="background:var(--hays-navy)">
+          <i data-lucide="building-2" class="text-white" style="width:24px;height:24px;"></i>
+          <span class="absolute -top-1 -right-1 w-3 h-3 rounded-full" style="background:var(--hays-red)"></span>
+        </a>
+        <div class="leading-tight min-w-0">
+          <a href="#" class="block font-display font-extrabold text-[1.05rem] sm:text-[1.4rem] whitespace-nowrap no-underline"
+             style="color:var(--hays-navy)">
+            Katalog <span style="color:var(--hays-red)">firm</span>
+          </a>
+          <a href="https://polacyszwajcaria.com" target="_blank" rel="noopener noreferrer"
+             class="block text-[.6rem] sm:text-[.65rem] text-[#888] tracking-[.05em] -mt-0.5 no-underline hover:text-[#E1002A] transition-colors">
+            część portalu <span class="font-semibold">PolacySzwajcaria.com</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Desktop nav -->
+      <nav class="hidden md:flex items-center gap-4 lg:gap-7">
+        <a href="#kategorie" class="hays-nav-link">Kategorie</a>
+        <a href="#firmy" class="hays-nav-link">Firmy</a>
+        <a href="#dodaj" class="hays-nav-link">Dodaj firmę</a>
+        <a href="#faq" class="hays-nav-link">Pomoc</a>
+      </nav>
+
+      <!-- CTA -->
+      <div class="hidden md:flex items-center gap-3">
+        <a href="#dodaj"
+           class="inline-flex items-center gap-2 px-5 py-2.5 rounded font-medium text-[.88rem] transition-colors text-white"
+           style="background:var(--hays-red)"
+           onmouseover="this.style.background='var(--hays-red-dark)'"
+           onmouseout="this.style.background='var(--hays-red)'">
+          <i data-lucide="plus" style="width:16px;height:16px;"></i>
+          Dodaj firmę
+        </a>
+      </div>
+
+      <!-- Mobile hamburger -->
+      <button class="md:hidden p-2 hover:bg-[#F5F6F8] rounded transition-colors" aria-label="Menu">
+        <i data-lucide="menu" style="width:24px;height:24px;color:var(--hays-navy)"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="flex-1">
+
+<!-- ============ HERO ============ -->
+<section class="relative overflow-hidden text-white" style="background:var(--hays-navy)">
+  <div class="absolute inset-0 hays-pattern"></div>
+  <div class="absolute -right-[100px] -top-[100px] w-[500px] h-[500px] hays-red-glow"></div>
+
+  <div class="relative z-10 max-w-[1200px] mx-auto px-6 py-20 grid lg:grid-cols-[1.2fr_0.8fr] gap-15 items-center">
+    <!-- Left -->
+    <div>
+      <h1 class="font-display text-[2rem] sm:text-[2.5rem] lg:text-[2.8rem] font-extrabold leading-[1.15] mb-5">
+        Polskie firmy<br>
+        w <span style="color:var(--hays-red)">Szwajcarii</span><br>
+        w jednym miejscu
+      </h1>
+      <p class="text-[1.1rem] text-white/85 max-w-[480px] mb-8 leading-[1.7] font-light">
+        Sprawdzony katalog usług polonijnych — od remontów i sprzątania, przez gastronomię, po zdrowie. Wszystko po polsku, ze szczerymi recenzjami.
+      </p>
+
+      <!-- Search -->
+      <form class="max-w-[600px] bg-white/10 border border-white/20 rounded backdrop-blur-md flex flex-col sm:flex-row overflow-hidden"
+            onsubmit="event.preventDefault()">
+        <div class="flex-1 relative flex items-center">
+          <i data-lucide="search" class="text-white/50 ml-5 flex-shrink-0" style="width:20px;height:20px;"></i>
+          <input type="text" placeholder="Czego szukasz? np. fryzjer, remont, dentysta..."
+                 class="flex-1 bg-transparent border-0 outline-none px-4 py-4 text-[.95rem] text-white placeholder:text-white/50" />
+        </div>
+        <div class="relative flex items-center border-t sm:border-t-0 sm:border-l border-white/20">
+          <i data-lucide="map-pin" class="text-white/50 ml-5 flex-shrink-0" style="width:18px;height:18px;"></i>
+          <select class="bg-transparent border-0 outline-none px-3 py-4 text-[.95rem] text-white appearance-none pr-10">
+            <option value="" class="text-black">Cała Szwajcaria</option>
+            <option class="text-black">Zürich</option>
+            <option class="text-black">Bern</option>
+            <option class="text-black">Basel</option>
+            <option class="text-black">Geneva</option>
+            <option class="text-black">Luzern</option>
+          </select>
+        </div>
+        <button type="submit"
+                class="px-7 py-4 font-medium text-[.95rem] transition-colors text-white"
+                style="background:var(--hays-red)"
+                onmouseover="this.style.background='var(--hays-red-dark)'"
+                onmouseout="this.style.background='var(--hays-red)'">
+          Szukaj firm
+        </button>
+      </form>
+
+      <!-- Popular tags -->
+      <div class="mt-6 flex flex-wrap gap-2 text-[.82rem]">
+        <span class="text-white/50 mr-1">Popularne:</span>
+        <a href="#" class="text-white/80 hover:text-white border-b border-white/20 hover:border-white/60 transition-colors">fryzjer</a>
+        <a href="#" class="text-white/80 hover:text-white border-b border-white/20 hover:border-white/60 transition-colors">remont mieszkania</a>
+        <a href="#" class="text-white/80 hover:text-white border-b border-white/20 hover:border-white/60 transition-colors">dentysta</a>
+        <a href="#" class="text-white/80 hover:text-white border-b border-white/20 hover:border-white/60 transition-colors">przeprowadzki</a>
+        <a href="#" class="text-white/80 hover:text-white border-b border-white/20 hover:border-white/60 transition-colors">tłumaczenia</a>
+      </div>
+    </div>
+
+    <!-- Right: stat cards -->
+    <div class="hidden lg:flex flex-col gap-4">
+      <div class="bg-white/[.08] border border-white/10 rounded-lg p-5 flex items-center gap-4 backdrop-blur-md">
+        <div class="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--hays-red)">
+          <i data-lucide="building-2" class="text-white" style="width:22px;height:22px;"></i>
+        </div>
+        <div>
+          <div class="font-display text-[1.6rem] font-bold leading-none">412</div>
+          <div class="text-[.85rem] text-white/60 mt-1">Zweryfikowanych firm</div>
+        </div>
+      </div>
+      <div class="bg-white/[.08] border border-white/10 rounded-lg p-5 flex items-center gap-4 backdrop-blur-md">
+        <div class="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--hays-red)">
+          <i data-lucide="map-pin" class="text-white" style="width:22px;height:22px;"></i>
+        </div>
+        <div>
+          <div class="font-display text-[1.6rem] font-bold leading-none">26</div>
+          <div class="text-[.85rem] text-white/60 mt-1">Kantonów Szwajcarii</div>
+        </div>
+      </div>
+      <div class="bg-white/[.08] border border-white/10 rounded-lg p-5 flex items-center gap-4 backdrop-blur-md">
+        <div class="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--hays-red)">
+          <i data-lucide="message-square" class="text-white" style="width:22px;height:22px;"></i>
+        </div>
+        <div>
+          <div class="font-display text-[1.6rem] font-bold leading-none">1 280</div>
+          <div class="text-[.85rem] text-white/60 mt-1">Recenzji od klientów</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DUAL CARDS (klienci / firmy) ============ -->
+<section class="max-w-[1200px] mx-auto px-6 py-15">
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- For customers -->
+    <div class="bg-white border rounded-lg p-10 transition-shadow hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] flex flex-col h-full" style="border-color:var(--border)">
+      <span class="inline-block self-start text-[.72rem] font-semibold uppercase tracking-[.1em] px-3 py-1 rounded mb-4"
+            style="background:var(--hays-red-light); color:var(--hays-red)">Dla klientów</span>
+      <h3 class="font-display text-[1.3rem] font-bold mb-3" style="color:var(--hays-navy)">Szukasz polskiej firmy w Szwajcarii?</h3>
+      <p class="text-[#555] leading-[1.7] mb-6">Przeglądaj zweryfikowane firmy polonijne, czytaj prawdziwe opinie i kontaktuj się bezpośrednio — bez prowizji, bez pośredników.</p>
+      <ul class="space-y-3 mb-7">
+        <li class="flex items-start gap-3 text-[.9rem] text-[#555]">
+          <i data-lucide="check" style="width:18px;height:18px;color:var(--hays-red);flex-shrink:0;margin-top:2px;"></i>
+          Setki firm pogrupowanych w 10 kategoriach
+        </li>
+        <li class="flex items-start gap-3 text-[.9rem] text-[#555]">
+          <i data-lucide="check" style="width:18px;height:18px;color:var(--hays-red);flex-shrink:0;margin-top:2px;"></i>
+          Realne recenzje od polskich klientów w CH
+        </li>
+        <li class="flex items-start gap-3 text-[.9rem] text-[#555]">
+          <i data-lucide="check" style="width:18px;height:18px;color:var(--hays-red);flex-shrink:0;margin-top:2px;"></i>
+          Mapa Google z lokalizacją każdej firmy
+        </li>
+      </ul>
+      <a href="#firmy"
+         class="mt-auto inline-flex items-center gap-2 self-start px-8 py-3.5 rounded font-medium transition-colors no-underline text-white"
+         style="background:var(--hays-red)"
+         onmouseover="this.style.background='var(--hays-red-dark)'"
+         onmouseout="this.style.background='var(--hays-red)'">
+        Przeglądaj firmy
+        <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+      </a>
+    </div>
+
+    <!-- For businesses -->
+    <div class="bg-white border rounded-lg p-10 transition-shadow hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] flex flex-col h-full" style="border-color:var(--border)">
+      <span class="inline-block self-start text-[.72rem] font-semibold uppercase tracking-[.1em] px-3 py-1 rounded mb-4"
+            style="background:#E8EDF4; color:var(--hays-navy)">Dla firm</span>
+      <h3 class="font-display text-[1.3rem] font-bold mb-3" style="color:var(--hays-navy)">Prowadzisz polską firmę w Szwajcarii?</h3>
+      <p class="text-[#555] leading-[1.7] mb-6">Dodaj swoją wizytówkę za darmo i dotrzyj do Polonii w Szwajcarii. Bez abonamentów, bez ukrytych opłat.</p>
+      <ul class="space-y-3 mb-7">
+        <li class="flex items-start gap-3 text-[.9rem] text-[#555]">
+          <i data-lucide="check" style="width:18px;height:18px;color:var(--hays-red);flex-shrink:0;margin-top:2px;"></i>
+          Dodanie wizytówki w 5 minut — 100% bezpłatnie
+        </li>
+        <li class="flex items-start gap-3 text-[.9rem] text-[#555]">
+          <i data-lucide="check" style="width:18px;height:18px;color:var(--hays-red);flex-shrink:0;margin-top:2px;"></i>
+          Galeria, kontakt, godziny otwarcia, social media
+        </li>
+        <li class="flex items-start gap-3 text-[.9rem] text-[#555]">
+          <i data-lucide="check" style="width:18px;height:18px;color:var(--hays-red);flex-shrink:0;margin-top:2px;"></i>
+          Statystyki wyświetleń i kliknięć w panelu
+        </li>
+      </ul>
+      <a href="#dodaj"
+         class="mt-auto inline-flex items-center gap-2 self-start px-8 py-3.5 rounded font-medium transition-colors no-underline text-white"
+         style="background:var(--hays-navy)"
+         onmouseover="this.style.background='var(--hays-navy-light)'"
+         onmouseout="this.style.background='var(--hays-navy)'">
+        Dodaj firmę
+        <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CATEGORIES ============ -->
+<section id="kategorie" class="py-15" style="background:var(--bg-soft)">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="mb-8">
+      <span class="hays-red-line"></span>
+      <h2 class="font-display text-[1.6rem] font-bold mb-1" style="color:var(--hays-navy)">Kategorie</h2>
+      <p style="color:var(--text-muted)">Znajdź firmę w swojej branży — od beauty po transport</p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+      <!-- 10 real categories -->
+      <a href="#" class="hays-cat-card bg-white border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 no-underline min-h-[88px]" style="border-color:var(--border)">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg-soft)">
+          <i data-lucide="scissors" style="width:20px;height:20px;color:var(--hays-navy)"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-display text-[.85rem] sm:text-[.95rem] font-semibold leading-tight" style="color:var(--hays-navy)">Beauty</div>
+          <div class="text-[.75rem] mt-0.5" style="color:var(--text-muted)">58 firm</div>
+        </div>
+      </a>
+      <a href="#" class="hays-cat-card bg-white border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 no-underline min-h-[88px]" style="border-color:var(--border)">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg-soft)">
+          <i data-lucide="file-text" style="width:20px;height:20px;color:var(--hays-navy)"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-display text-[.85rem] sm:text-[.95rem] font-semibold leading-tight" style="color:var(--hays-navy)">CV &amp; Tłumaczenia</div>
+          <div class="text-[.75rem] mt-0.5" style="color:var(--text-muted)">23 firmy</div>
+        </div>
+      </a>
+      <a href="#" class="hays-cat-card bg-white border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 no-underline min-h-[88px]" style="border-color:var(--border)">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg-soft)">
+          <i data-lucide="graduation-cap" style="width:20px;height:20px;color:var(--hays-navy)"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-display text-[.85rem] sm:text-[.95rem] font-semibold leading-tight" style="color:var(--hays-navy)">Edukacja</div>
+          <div class="text-[.75rem] mt-0.5" style="color:var(--text-muted)">31 firm</div>
+        </div>
+      </a>
+      <a href="#" class="hays-cat-card bg-white border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 no-underline min-h-[88px]" style="border-color:var(--border)">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg-soft)">
+          <i data-lucide="camera" style="width:20px;height:20px;color:var(--hays-navy)"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-display text-[.85rem] sm:text-[.95rem] font-semibold leading-tight" style="color:var(--hays-navy)">Fotografia</div>
+          <div class="text-[.75rem] mt-0.5" style="color:var(--text-muted)">19 firm</div>
+        </div>
+      </a>
+      <a href="#" class="hays-cat-card bg-white border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 no-underline min-h-[88px]" style="border-color:var(--border)">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg-soft)">
+          <i data-lucide="utensils" style="width:20px;height:20px;color:var(--hays-navy)"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-display text-[.85rem] sm:text-[.95rem] font-semibold leading-tight" style="color:var(--hays-navy)">Gastronomia</div>
+          <div class="text-[.75rem] mt-0.5" style="color:var(--text-muted)">42 firmy</div>
+        </div>
+      </a>
+      <a href="#" class="hays-cat-card bg-white border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 no-underline min-h-[88px]" style="border-color:var(--border)">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg-soft)">
+          <i data-lucide="hammer" style="width:20px;height:20px;color:var(--hays-navy)"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-display text-[.85rem] sm:text-[.95rem] font-semibold leading-tight" style="color:var(--hays-navy)">Remont</div>
+          <div class="text-[.75rem] mt-0.5" style="color:var(--text-muted)">87 firm</div>
+        </div>
+      </a>
+      <a href="#" class="hays-cat-card bg-white border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 no-underline min-h-[88px]" style="border-color:var(--border)">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg-soft)">
+          <i data-lucide="truck" style="width:20px;height:20px;color:var(--hays-navy)"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-display text-[.85rem] sm:text-[.95rem] font-semibold leading-tight" style="color:var(--hays-navy)">Transport</div>
+          <div class="text-[.75rem] mt-0.5" style="color:var(--text-muted)">8 firm</div>
+        </div>
+      </a>
+      <a href="#" class="hays-cat-card bg-white border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 no-underline min-h-[88px]" style="border-color:var(--border)">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg-soft)">
+          <i data-lucide="sparkles" style="width:20px;height:20px;color:var(--hays-navy)"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-display text-[.85rem] sm:text-[.95rem] font-semibold leading-tight" style="color:var(--hays-navy)">Sprzątanie</div>
+          <div class="text-[.75rem] mt-0.5" style="color:var(--text-muted)">11 firm</div>
+        </div>
+      </a>
+      <a href="#" class="hays-cat-card bg-white border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 no-underline min-h-[88px]" style="border-color:var(--border)">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg-soft)">
+          <i data-lucide="heart-pulse" style="width:20px;height:20px;color:var(--hays-navy)"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-display text-[.85rem] sm:text-[.95rem] font-semibold leading-tight" style="color:var(--hays-navy)">Zdrowie</div>
+          <div class="text-[.75rem] mt-0.5" style="color:var(--text-muted)">15 firm</div>
+        </div>
+      </a>
+      <a href="#" class="hays-cat-card bg-white border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 no-underline min-h-[88px]" style="border-color:var(--border)">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg-soft)">
+          <i data-lucide="shield" style="width:20px;height:20px;color:var(--hays-navy)"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-display text-[.85rem] sm:text-[.95rem] font-semibold leading-tight" style="color:var(--hays-navy)">Ubezpieczenia</div>
+          <div class="text-[.75rem] mt-0.5" style="color:var(--text-muted)">6 firm</div>
+        </div>
+      </a>
+      <a href="#" class="hays-cat-card bg-white border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 no-underline min-h-[88px]" style="border-color:var(--border)">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg-soft)">
+          <i data-lucide="banknote" style="width:20px;height:20px;color:var(--hays-navy)"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-display text-[.85rem] sm:text-[.95rem] font-semibold leading-tight" style="color:var(--hays-navy)">Finanse i Podatki</div>
+          <div class="text-[.75rem] mt-0.5" style="color:var(--text-muted)">9 firm</div>
+        </div>
+      </a>
+      <a href="#" class="hays-cat-card bg-white border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 no-underline min-h-[88px]" style="border-color:var(--border)">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--bg-soft)">
+          <i data-lucide="star" style="width:20px;height:20px;color:var(--hays-navy)"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-display text-[.85rem] sm:text-[.95rem] font-semibold leading-tight" style="color:var(--hays-navy)">Różne</div>
+          <div class="text-[.75rem] mt-0.5" style="color:var(--text-muted)">14 firm</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURED COMPANIES ============ -->
+<section id="firmy" class="max-w-[1200px] mx-auto px-6 py-15">
+  <div class="flex justify-between items-end mb-6">
+    <div>
+      <span class="hays-red-line"></span>
+      <h2 class="font-display text-[1.6rem] font-bold" style="color:var(--hays-navy)">Polecane firmy</h2>
+    </div>
+    <a href="#"
+       class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 border rounded text-[.88rem] font-medium transition-all no-underline"
+       style="color:var(--hays-navy); border-color:var(--hays-navy)"
+       onmouseover="this.style.background='var(--hays-navy)';this.style.color='#fff'"
+       onmouseout="this.style.background='';this.style.color='var(--hays-navy)'">
+      Wszystkie firmy
+      <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+    </a>
+  </div>
+
+  <div class="space-y-3">
+    <!-- ALParys Poradnia Terapeutyczna — Zdrowie -->
+    <a href="./katalog-firm-mockup-firma.html" class="hays-job-card bg-white border rounded-lg px-7 py-6 grid grid-cols-[auto_1fr_auto] gap-5 items-center no-underline" style="border-color:var(--border)">
+      <img src="https://katalog-firm.ch/images/company_4_main_0.webp" alt="ALParys" loading="lazy"
+           class="w-14 h-14 rounded-lg border object-cover flex-shrink-0" style="border-color:var(--border)" />
+      <div class="min-w-0">
+        <div class="flex items-center gap-2 mb-1 flex-wrap">
+          <h3 class="font-display text-[1.05rem] font-semibold truncate" style="color:var(--hays-navy)">ALParys Poradnia Terapeutyczna</h3>
+          <span class="inline-flex items-center gap-1 text-[.7rem] font-semibold px-2 py-0.5 rounded" style="background:var(--hays-red-light); color:var(--hays-red)">
+            <i data-lucide="badge-check" style="width:12px;height:12px;"></i> Polecana
+          </span>
+        </div>
+        <div class="text-[.9rem] mb-1.5 line-clamp-1" style="color:var(--text-muted)">Terapia psychologiczna dzieci, młodzieży i dorosłych. Diagnoza i terapia SI, logopedia.</div>
+        <div class="flex flex-wrap gap-4 text-[.85rem]" style="color:#888">
+          <span class="flex items-center gap-1"><i data-lucide="map-pin" style="width:14px;height:14px;"></i> Zürich, ZH</span>
+          <span class="flex items-center gap-1"><i data-lucide="tag" style="width:14px;height:14px;"></i> Zdrowie</span>
+          <span class="flex items-center gap-1"><i data-lucide="eye" style="width:14px;height:14px;"></i> 1 345 wyświetleń</span>
+        </div>
+      </div>
+      <div class="text-right hidden md:block">
+        <span class="inline-flex items-center gap-1.5 text-[.88rem] font-medium" style="color:var(--hays-red)">
+          Zobacz <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+        </span>
+      </div>
+    </a>
+
+    <!-- Chrust Translations — CV & Tłumaczenia -->
+    <a href="./katalog-firm-mockup-firma.html" class="hays-job-card bg-white border rounded-lg px-7 py-6 grid grid-cols-[auto_1fr_auto] gap-5 items-center no-underline" style="border-color:var(--border)">
+      <img src="https://katalog-firm.ch/images/company_24_main_0.webp" alt="Chrust Translations" loading="lazy"
+           class="w-14 h-14 rounded-lg border object-cover flex-shrink-0" style="border-color:var(--border)" />
+      <div class="min-w-0">
+        <div class="flex items-center gap-2 mb-1 flex-wrap">
+          <h3 class="font-display text-[1.05rem] font-semibold truncate" style="color:var(--hays-navy)">Chrust Translations</h3>
+          <span class="inline-flex items-center gap-1 text-[.7rem] font-semibold px-2 py-0.5 rounded" style="background:var(--hays-red-light); color:var(--hays-red)">
+            <i data-lucide="badge-check" style="width:12px;height:12px;"></i> Polecana
+          </span>
+        </div>
+        <div class="text-[.9rem] mb-1.5 line-clamp-1" style="color:var(--text-muted)">Profesjonalne tłumaczenia dla Polaków w niemieckojęzycznej Szwajcarii.</div>
+        <div class="flex flex-wrap gap-4 text-[.85rem]" style="color:#888">
+          <span class="flex items-center gap-1"><i data-lucide="map-pin" style="width:14px;height:14px;"></i> Grenchen, SO</span>
+          <span class="flex items-center gap-1"><i data-lucide="tag" style="width:14px;height:14px;"></i> CV &amp; Tłumaczenia</span>
+          <span class="flex items-center gap-1"><i data-lucide="eye" style="width:14px;height:14px;"></i> 1 212 wyświetleń</span>
+        </div>
+      </div>
+      <div class="text-right hidden md:block">
+        <span class="inline-flex items-center gap-1.5 text-[.88rem] font-medium" style="color:var(--hays-red)">
+          Zobacz <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+        </span>
+      </div>
+    </a>
+
+    <!-- NYKS Ubezpieczenia -->
+    <a href="./katalog-firm-mockup-firma.html" class="hays-job-card bg-white border rounded-lg px-7 py-6 grid grid-cols-[auto_1fr_auto] gap-5 items-center no-underline" style="border-color:var(--border)">
+      <img src="https://katalog-firm.ch/images/company_111_main_0.webp" alt="NYKS" loading="lazy"
+           class="w-14 h-14 rounded-lg border object-cover flex-shrink-0" style="border-color:var(--border)" />
+      <div class="min-w-0">
+        <div class="flex items-center gap-2 mb-1 flex-wrap">
+          <h3 class="font-display text-[1.05rem] font-semibold truncate" style="color:var(--hays-navy)">NYKS — Ubezpieczenia w Szwajcarii</h3>
+          <span class="inline-flex items-center gap-1 text-[.7rem] font-semibold px-2 py-0.5 rounded" style="background:var(--hays-red-light); color:var(--hays-red)">
+            <i data-lucide="badge-check" style="width:12px;height:12px;"></i> Polecana
+          </span>
+        </div>
+        <div class="text-[.9rem] mb-1.5 line-clamp-1" style="color:var(--text-muted)">Kompleksowe doradztwo ubezpieczeniowe po polsku — prywatne, biznesowe, zdrowotne i graniczne.</div>
+        <div class="flex flex-wrap gap-4 text-[.85rem]" style="color:#888">
+          <span class="flex items-center gap-1"><i data-lucide="map-pin" style="width:14px;height:14px;"></i> Pfäffikon, SZ</span>
+          <span class="flex items-center gap-1"><i data-lucide="tag" style="width:14px;height:14px;"></i> Ubezpieczenia</span>
+          <span class="flex items-center gap-1"><i data-lucide="eye" style="width:14px;height:14px;"></i> 824 wyświetlenia</span>
+        </div>
+      </div>
+      <div class="text-right hidden md:block">
+        <span class="inline-flex items-center gap-1.5 text-[.88rem] font-medium" style="color:var(--hays-red)">
+          Zobacz <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+        </span>
+      </div>
+    </a>
+
+    <!-- PKS Finanz GmbH -->
+    <a href="./katalog-firm-mockup-firma.html" class="hays-job-card bg-white border rounded-lg px-7 py-6 grid grid-cols-[auto_1fr_auto] gap-5 items-center no-underline" style="border-color:var(--border)">
+      <img src="https://katalog-firm.ch/images/company_112_photo_0.webp" alt="PKS Finanz" loading="lazy"
+           class="w-14 h-14 rounded-lg border object-cover flex-shrink-0" style="border-color:var(--border)" />
+      <div class="min-w-0">
+        <div class="flex items-center gap-2 mb-1 flex-wrap">
+          <h3 class="font-display text-[1.05rem] font-semibold truncate" style="color:var(--hays-navy)">PKS Finanz GmbH</h3>
+          <span class="inline-flex items-center gap-1 text-[.7rem] font-semibold px-2 py-0.5 rounded" style="background:var(--hays-red-light); color:var(--hays-red)">
+            <i data-lucide="badge-check" style="width:12px;height:12px;"></i> Polecana
+          </span>
+        </div>
+        <div class="text-[.9rem] mb-1.5 line-clamp-1" style="color:var(--text-muted)">Doradztwo po polsku w zakresie kredytów konsumpcyjnych i rozliczeń podatkowych w Szwajcarii.</div>
+        <div class="flex flex-wrap gap-4 text-[.85rem]" style="color:#888">
+          <span class="flex items-center gap-1"><i data-lucide="map-pin" style="width:14px;height:14px;"></i> Sursee, LU</span>
+          <span class="flex items-center gap-1"><i data-lucide="tag" style="width:14px;height:14px;"></i> Finanse i Podatki</span>
+          <span class="flex items-center gap-1"><i data-lucide="eye" style="width:14px;height:14px;"></i> 697 wyświetleń</span>
+        </div>
+      </div>
+      <div class="text-right hidden md:block">
+        <span class="inline-flex items-center gap-1.5 text-[.88rem] font-medium" style="color:var(--hays-red)">
+          Zobacz <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+        </span>
+      </div>
+    </a>
+
+    <!-- Creatique Agency -->
+    <a href="./katalog-firm-mockup-firma.html" class="hays-job-card bg-white border rounded-lg px-7 py-6 grid grid-cols-[auto_1fr_auto] gap-5 items-center no-underline" style="border-color:var(--border)">
+      <img src="https://katalog-firm.ch/images/company_110_main_0.webp" alt="Creatique Agency" loading="lazy"
+           class="w-14 h-14 rounded-lg border object-cover flex-shrink-0" style="border-color:var(--border)" />
+      <div class="min-w-0">
+        <h3 class="font-display text-[1.05rem] font-semibold truncate mb-1" style="color:var(--hays-navy)">Creatique Agency — Reklamy Online</h3>
+        <div class="text-[.9rem] mb-1.5 line-clamp-1" style="color:var(--text-muted)">Generowanie klientów i sprzedaży, reklamy Google/Meta/LinkedIn/TikTok, strategie AI.</div>
+        <div class="flex flex-wrap gap-4 text-[.85rem]" style="color:#888">
+          <span class="flex items-center gap-1"><i data-lucide="map-pin" style="width:14px;height:14px;"></i> Zürich, ZH</span>
+          <span class="flex items-center gap-1"><i data-lucide="tag" style="width:14px;height:14px;"></i> Różne</span>
+          <span class="flex items-center gap-1">
+            <i data-lucide="star" class="star" style="width:14px;height:14px;fill:currentColor;"></i>
+            <span class="font-medium" style="color:var(--hays-navy)">5.0</span>
+            <span>(1 opinia)</span>
+          </span>
+        </div>
+      </div>
+      <div class="text-right hidden md:block">
+        <span class="inline-flex items-center gap-1.5 text-[.88rem] font-medium" style="color:var(--hays-red)">
+          Zobacz <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+        </span>
+      </div>
+    </a>
+
+    <!-- AG Wimpern -->
+    <a href="./katalog-firm-mockup-firma.html" class="hays-job-card bg-white border rounded-lg px-7 py-6 grid grid-cols-[auto_1fr_auto] gap-5 items-center no-underline" style="border-color:var(--border)">
+      <img src="https://katalog-firm.ch/images/company_1_main_0.webp" alt="AG Wimpern" loading="lazy"
+           class="w-14 h-14 rounded-lg border object-cover flex-shrink-0" style="border-color:var(--border)" />
+      <div class="min-w-0">
+        <h3 class="font-display text-[1.05rem] font-semibold truncate mb-1" style="color:var(--hays-navy)">AG Wimpern</h3>
+        <div class="text-[.9rem] mb-1.5 line-clamp-1" style="color:var(--text-muted)">Lifting rzęs w kameralnym zaciszu — możliwy dojazd do klienta.</div>
+        <div class="flex flex-wrap gap-4 text-[.85rem]" style="color:#888">
+          <span class="flex items-center gap-1"><i data-lucide="map-pin" style="width:14px;height:14px;"></i> Goldach, SG</span>
+          <span class="flex items-center gap-1"><i data-lucide="tag" style="width:14px;height:14px;"></i> Beauty</span>
+          <span class="flex items-center gap-1"><i data-lucide="eye" style="width:14px;height:14px;"></i> 1 024 wyświetlenia</span>
+        </div>
+      </div>
+      <div class="text-right hidden md:block">
+        <span class="inline-flex items-center gap-1.5 text-[.88rem] font-medium" style="color:var(--hays-red)">
+          Zobacz <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+        </span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ============ WHY US ============ -->
+<section class="py-15 text-white" style="background:var(--hays-navy)">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="mb-8">
+      <span class="hays-red-line"></span>
+      <h2 class="font-display text-[1.6rem] font-bold text-white mb-1">Dlaczego my?</h2>
+      <p class="text-white/85">Największy polonijny katalog firm w Szwajcarii</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="bg-white/[.06] border border-white/10 rounded-lg p-7 hover:bg-white/10 transition-colors">
+        <div class="font-display text-[2rem] font-extrabold mb-1 leading-none" style="color:var(--hays-red)">412</div>
+        <div class="text-[.85rem] text-white/60 mb-5">Zweryfikowanych firm w bazie</div>
+        <h3 class="font-display text-[1.05rem] font-semibold text-white mb-2">Wyłącznie zweryfikowane</h3>
+        <p class="text-[.9rem] text-white/70 leading-relaxed">Każda firma w katalogu jest moderowana ręcznie zanim trafi do publikacji. Bez fejków, bez podejrzanych wpisów.</p>
+      </div>
+      <div class="bg-white/[.06] border border-white/10 rounded-lg p-7 hover:bg-white/10 transition-colors">
+        <div class="font-display text-[2rem] font-extrabold mb-1 leading-none" style="color:var(--hays-red)">1 280</div>
+        <div class="text-[.85rem] text-white/60 mb-5">Realnych recenzji od klientów</div>
+        <h3 class="font-display text-[1.05rem] font-semibold text-white mb-2">Prawdziwe opinie</h3>
+        <p class="text-[.9rem] text-white/70 leading-relaxed">Recenzje od realnych polskich klientów w Szwajcarii — nie reklamy, nie wpisy generowane, tylko szczere doświadczenia.</p>
+      </div>
+      <div class="bg-white/[.06] border border-white/10 rounded-lg p-7 hover:bg-white/10 transition-colors">
+        <div class="font-display text-[2rem] font-extrabold mb-1 leading-none" style="color:var(--hays-red)">od 2024</div>
+        <div class="text-[.85rem] text-white/60 mb-5">Część portalu PolacySzwajcaria</div>
+        <h3 class="font-display text-[1.05rem] font-semibold text-white mb-2">Część PolacySzwajcaria.com</h3>
+        <p class="text-[.9rem] text-white/70 leading-relaxed">Tworzymy największą polską społeczność dla Polaków w Szwajcarii. Nie jesteśmy anonimowi — stoją za nami konkretni ludzie.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ADD COMPANY CTA ============ -->
+<section id="dodaj" class="max-w-[1200px] mx-auto px-6 py-15">
+  <div class="border rounded-lg p-10 flex flex-col" style="background:var(--bg-soft); border-color:var(--border)">
+    <span class="hays-red-line"></span>
+    <h2 class="font-display text-[1.6rem] font-bold mb-3" style="color:var(--hays-navy)">Dodaj swoją firmę — bezpłatnie</h2>
+    <p class="mb-6 leading-[1.7]" style="color:var(--text-muted)">
+      Prowadzisz polską firmę w Szwajcarii? Wpis w katalogu jest w 100% bezpłatny. Dodanie zajmuje 5 minut, a Twoja wizytówka trafia do Polonii szukającej zaufanych usług.
+    </p>
+    <ul class="space-y-3 mb-7">
+      <li class="flex items-center gap-3 text-[.9rem]" style="color:var(--text-muted)">
+        <i data-lucide="check" style="width:16px;height:16px;color:var(--hays-red);flex-shrink:0;"></i>
+        Galeria zdjęć, opis, godziny otwarcia, kontakt
+      </li>
+      <li class="flex items-center gap-3 text-[.9rem]" style="color:var(--text-muted)">
+        <i data-lucide="check" style="width:16px;height:16px;color:var(--hays-red);flex-shrink:0;"></i>
+        Linki do social media i strony WWW
+      </li>
+      <li class="flex items-center gap-3 text-[.9rem]" style="color:var(--text-muted)">
+        <i data-lucide="check" style="width:16px;height:16px;color:var(--hays-red);flex-shrink:0;"></i>
+        Edycja wpisu w dowolnym momencie przez unikalny link
+      </li>
+    </ul>
+    <a href="#"
+       class="self-start inline-flex items-center gap-2 px-8 py-3.5 rounded font-medium transition-colors no-underline text-white"
+       style="background:var(--hays-red)"
+       onmouseover="this.style.background='var(--hays-red-dark)'"
+       onmouseout="this.style.background='var(--hays-red)'">
+      <i data-lucide="plus" style="width:16px;height:16px;"></i>
+      Dodaj firmę za darmo
+    </a>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" class="py-15" style="background:var(--bg-soft)">
+  <div class="max-w-[800px] mx-auto px-6">
+    <div class="text-center mb-10">
+      <span class="hays-red-line mx-auto" style="margin-left:auto;margin-right:auto;"></span>
+      <h2 class="font-display text-[1.8rem] font-bold mb-2" style="color:var(--hays-navy)">Najczęściej zadawane pytania</h2>
+      <p style="color:var(--text-muted)">Wszystko co musisz wiedzieć o katalogu</p>
+    </div>
+    <div class="space-y-3">
+      <details class="group bg-white border rounded-lg overflow-hidden transition-colors" style="border-color:var(--border)">
+        <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-display font-semibold" style="color:var(--hays-navy)">
+          Czy dodanie firmy jest płatne?
+          <i data-lucide="chevron-down" class="faq-chevron flex-shrink-0 ml-3" style="width:20px;height:20px;color:#888"></i>
+        </summary>
+        <p class="px-6 pb-5 leading-[1.7] text-[.95rem]" style="color:var(--text-muted)">
+          Nie. Dodanie wpisu, edycja oraz wyświetlanie wizytówki są w 100% bezpłatne. Nie pobieramy żadnych prowizji ani opłat abonamentowych.
+        </p>
+      </details>
+      <details class="group bg-white border rounded-lg overflow-hidden transition-colors" style="border-color:var(--border)">
+        <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-display font-semibold" style="color:var(--hays-navy)">
+          Jak edytować swoją wizytówkę po dodaniu?
+          <i data-lucide="chevron-down" class="faq-chevron flex-shrink-0 ml-3" style="width:20px;height:20px;color:#888"></i>
+        </summary>
+        <p class="px-6 pb-5 leading-[1.7] text-[.95rem]" style="color:var(--text-muted)">
+          Po dodaniu firmy otrzymujesz unikalny link edycyjny na e-mail. Przez ten link możesz w każdej chwili zmienić opis, zdjęcia, kontakt czy godziny otwarcia — bez logowania.
+        </p>
+      </details>
+      <details class="group bg-white border rounded-lg overflow-hidden transition-colors" style="border-color:var(--border)">
+        <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-display font-semibold" style="color:var(--hays-navy)">
+          Czy recenzje są weryfikowane?
+          <i data-lucide="chevron-down" class="faq-chevron flex-shrink-0 ml-3" style="width:20px;height:20px;color:#888"></i>
+        </summary>
+        <p class="px-6 pb-5 leading-[1.7] text-[.95rem]" style="color:var(--text-muted)">
+          Tak. Każda recenzja przechodzi moderację. Nie publikujemy opinii podejrzanych, automatycznie generowanych ani niespełniających regulaminu. Właściciele firm nie mogą usuwać negatywnych recenzji.
+        </p>
+      </details>
+      <details class="group bg-white border rounded-lg overflow-hidden transition-colors" style="border-color:var(--border)">
+        <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-display font-semibold" style="color:var(--hays-navy)">
+          Czy firma musi być oficjalnie zarejestrowana w Szwajcarii?
+          <i data-lucide="chevron-down" class="faq-chevron flex-shrink-0 ml-3" style="width:20px;height:20px;color:#888"></i>
+        </summary>
+        <p class="px-6 pb-5 leading-[1.7] text-[.95rem]" style="color:var(--text-muted)">
+          Tak — w katalogu publikujemy wyłącznie firmy działające legalnie w Szwajcarii (Einzelfirma, GmbH, AG lub odpowiednik). Wymagamy podania numeru UID lub adresu prowadzenia działalności.
+        </p>
+      </details>
+      <details class="group bg-white border rounded-lg overflow-hidden transition-colors" style="border-color:var(--border)">
+        <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-display font-semibold" style="color:var(--hays-navy)">
+          Jak długo trwa publikacja wpisu?
+          <i data-lucide="chevron-down" class="faq-chevron flex-shrink-0 ml-3" style="width:20px;height:20px;color:#888"></i>
+        </summary>
+        <p class="px-6 pb-5 leading-[1.7] text-[.95rem]" style="color:var(--text-muted)">
+          Wpisy publikowane są zazwyczaj w ciągu kilku godzin po moderacji. Jeśli wszystko jest w porządku, Twoja firma jest widoczna w katalogu jeszcze tego samego dnia.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="text-white/85 mt-auto" style="background:var(--hays-navy)">
+  <div class="max-w-[1200px] mx-auto px-6 pt-12 pb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1.2fr] gap-10 mb-8">
+      <!-- Brand -->
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15)">
+            <i data-lucide="building-2" class="text-white" style="width:24px;height:24px;"></i>
+          </div>
+          <span class="font-display font-extrabold text-[1.4rem] text-white leading-none">
+            Katalog <span style="color:var(--hays-red)">firm</span>
+          </span>
+        </div>
+        <p class="text-[.85rem] text-white/50 leading-[1.7] max-w-[320px]">
+          Część portalu <a href="https://polacyszwajcaria.com" class="font-semibold text-white/70 hover:text-white no-underline">PolacySzwajcaria.com</a> — od 2024 roku tworzymy największą polską społeczność dla Polaków w Szwajcarii.
+        </p>
+      </div>
+
+      <!-- Dla klientów -->
+      <div>
+        <h4 class="font-display text-[.8rem] font-semibold uppercase tracking-[.1em] text-white mb-4">Dla klientów</h4>
+        <ul class="flex flex-col gap-2.5 list-none">
+          <li><a href="#firmy" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Przeglądaj firmy</a></li>
+          <li><a href="#kategorie" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Kategorie</a></li>
+          <li><a href="#" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Dodaj recenzję</a></li>
+        </ul>
+      </div>
+
+      <!-- Dla firm -->
+      <div>
+        <h4 class="font-display text-[.8rem] font-semibold uppercase tracking-[.1em] text-white mb-4">Dla firm</h4>
+        <ul class="flex flex-col gap-2.5 list-none">
+          <li><a href="#dodaj" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Dodaj firmę</a></li>
+          <li><a href="#" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Edycja wpisu</a></li>
+          <li><a href="#" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Regulamin</a></li>
+        </ul>
+      </div>
+
+      <!-- Pozostałe portale -->
+      <div>
+        <h4 class="font-display text-[.8rem] font-semibold uppercase tracking-[.1em] text-white mb-4">Nasze pozostałe portale</h4>
+        <ul class="flex flex-col gap-2.5 list-none">
+          <li><a href="https://polacyszwajcaria.com" target="_blank" rel="noopener noreferrer" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">PolacySzwajcaria.com</a></li>
+          <li><a href="https://praca-w-szwajcarii.ch" target="_blank" rel="noopener noreferrer" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Praca-w-szwajcarii.ch</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pt-5 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-3 text-[.78rem] text-white/40">
+      <span>© 2026 Katalog firm polonijnych w Szwajcarii. Wszystkie prawa zastrzeżone.</span>
+      <div class="flex gap-5">
+        <a href="#" class="text-white/40 hover:text-white transition-colors no-underline">Regulamin</a>
+        <a href="#" class="text-white/40 hover:text-white transition-colors no-underline">Polityka prywatności</a>
+        <a href="#" class="text-white/40 hover:text-white transition-colors no-underline">RODO</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Initialize lucide icons
+  lucide.createIcons();
+</script>
+</body>
+</html>
