@@ -184,8 +184,8 @@ export default function EditCompanyPage() {
                     newErrors.email = "Nieprawidłowy format e-mail.";
                 } else if (key === "phone" && value.trim() && !validatePhone(value)) {
                     newErrors.phone = "Nieprawidłowy format telefonu. Użyj formatu: +41, +48 lub 0";
-                } else if (key === "website" && value.trim() && !value.startsWith("http") && !value.startsWith("www.")) {
-                    newErrors.website = "Podaj pełny link (https://... lub www....).";
+                } else if (key === "website" && value.trim() && !/^[^\s]+\.[^\s]+$/.test(value.trim())) {
+                    newErrors.website = "Podaj poprawny adres strony (np. moja-firma.ch).";
                 } else if (key === "facebook" && value.trim() && !value.startsWith("http")) {
                     newErrors.facebook = "Podaj pełny link (https://...).";
                 } else if (key === "instagram" && value.trim() && !value.startsWith("http")) {
@@ -357,7 +357,7 @@ export default function EditCompanyPage() {
                     description: form.desc,
                     phone: form.phone,
                     email: form.email,
-                    website: form.website ? (form.website.startsWith("www.") ? `https://${form.website}` : form.website) : null,
+                    website: form.website ? (/^https?:\/\//i.test(form.website.trim()) ? form.website.trim() : `https://${form.website.trim().replace(/^\/+/, "")}`) : null,
                     facebook: form.facebook || null,
                     instagram: form.instagram || null,
                     address: form.address,
@@ -636,9 +636,9 @@ export default function EditCompanyPage() {
                                         <div className="space-y-3">
                                             <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Strona internetowa</label>
                                             <input
-                                                type="url"
+                                                type="text"
                                                 className={inputClass("website")}
-                                                placeholder="https://www.twoja-firma.ch"
+                                                placeholder="np. moja-firma.ch"
                                                 value={form.website}
                                                 onChange={handleChange("website")}
                                             />
