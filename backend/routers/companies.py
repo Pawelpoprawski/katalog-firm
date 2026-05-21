@@ -498,3 +498,38 @@ def confirm_company_activity(request: Request, body: dict[str, str]) -> dict[str
 
     # Always return success to prevent email enumeration
     return {"status": "confirmed", "message": "Jeśli podany email istnieje w bazie, ogłoszenie zostało potwierdzone."}
+
+
+@router.post("/confirm-token")
+@limiter.limit("10/minute")
+def confirm_company_by_token(request: Request, body: dict[str, str]) -> dict[str, str]:
+    """
+    Confirm company activity by edit_token (from email link).
+    No form input needed - one-click confirmation.
+    """
+    from datetime import datetime
+
+    token = (body.get("token") or "").strip()
+    if not token:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Token wymagany")
+
+    all_companies = storage_list_companies()
+    company = next((c for c in all_companies if (c.get("edit_token") or "") == token), None)
+
+    if not company:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nieprawidłowy token")
+
+    company["last_confirmed_at"] = datetime.now().isoformat()
+    storage_update_company(company["id"], company)
+
+    try:
+        from ..storage import track_confirmation_received
+        track_confirmation_received()
+    except Exception:
+        pass
+
+    return {
+        "status": "confirmed",
+        "message": "Dziękujemy! Aktywność Waszej usługi została potwierdzona.",
+        "company_name": company.get("name", ""),
+    }
