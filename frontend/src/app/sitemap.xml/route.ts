@@ -1,7 +1,8 @@
 // Ręczny sitemap route — Next.js MetadataRoute Sitemap nie pozwala kontrolować Cache-Control.
-// Bez tego header byłby "public, max-age=0, must-revalidate" → Googlebot ograniczał crawl budget.
+// force-dynamic + Cache-Control z Response → Googlebot dostaje cacheable sitemap.
+// Backend ma własny cache (revalidate na fetch), więc cost generacji jest niski.
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://katalog-firm.ch";
