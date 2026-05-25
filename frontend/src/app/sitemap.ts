@@ -1,5 +1,8 @@
 import { MetadataRoute } from 'next';
 
+// Cache sitemap przez 1h (zamiast default no-cache, must-revalidate Next.js)
+export const revalidate = 3600;
+
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://katalog-firm.ch";
 

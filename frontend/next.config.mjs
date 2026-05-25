@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 
 const PUBLIC_CACHE = "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400";
-const SITEMAP_CACHE = "public, max-age=600, s-maxage=3600";
 const ROBOTS_CACHE = "public, max-age=3600";
 
 const cachePublicHeader = [{ key: "Cache-Control", value: PUBLIC_CACHE }];
@@ -32,8 +31,8 @@ const nextConfig = {
       { source: '/polityka-prywatnosci', headers: cachePublicHeader },
       { source: '/dodaj', headers: cachePublicHeader },
 
-      // Sitemap & robots — krótszy cache, ale publiczny
-      { source: '/sitemap.xml', headers: [{ key: 'Cache-Control', value: SITEMAP_CACHE }] },
+      // Robots — sitemap zarządza się sam przez `export const revalidate` w sitemap.ts
+      // (dodanie tutaj zduplikowało Cache-Control header → must-revalidate wygrywał).
       { source: '/robots.txt', headers: [{ key: 'Cache-Control', value: ROBOTS_CACHE }] },
     ];
   },
