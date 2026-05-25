@@ -4,6 +4,8 @@ import CompanyPageClient from "./CompanyPageClient";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
+export const revalidate = 300;
+
 type Props = { params: { slug: string } };
 
 async function getCompany(slug: string) {
@@ -83,6 +85,30 @@ export default async function CompanyPage({ params }: Props) {
   }
 
   const location = [company.city, company.canton].filter(Boolean).join(", ");
+  const categorySlug = (company.category_slug || "").toString();
+  const breadcrumbItems: Array<{ name: string; item: string }> = [
+    { name: "Strona główna", item: "https://katalog-firm.ch" },
+  ];
+  if (company.category && categorySlug) {
+    breadcrumbItems.push({
+      name: company.category,
+      item: `https://katalog-firm.ch/kategoria/${categorySlug}`,
+    });
+  }
+  breadcrumbItems.push({
+    name: company.name,
+    item: `https://katalog-firm.ch/firma/${params.slug}`,
+  });
+  const breadcrumbData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbItems.map((b, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: b.name,
+      item: b.item,
+    })),
+  };
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -121,6 +147,10 @@ export default async function CompanyPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
       />
       <CompanyPageClient company={company} slug={params.slug} />
     </>

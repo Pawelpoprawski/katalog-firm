@@ -1,55 +1,42 @@
 /** @type {import('next').NextConfig} */
+
+const PUBLIC_CACHE = "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400";
+const SITEMAP_CACHE = "public, max-age=600, s-maxage=3600";
+const ROBOTS_CACHE = "public, max-age=3600";
+
+const cachePublicHeader = [{ key: "Cache-Control", value: PUBLIC_CACHE }];
+
+// Security headers — X-Frame-Options, X-Content-Type-Options, X-XSS-Protection,
+// Referrer-Policy oraz CSP są ustawiane przez nginx (production) — nie duplikujemy
+// ich tutaj, żeby uniknąć podwójnych wartości w response headers.
+const securityHeaders = [
+  { key: "X-DNS-Prefetch-Control", value: "on" },
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+];
+
 const nextConfig = {
-  // basePath configurable via env var: empty for katalog-firm.ch standalone
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
   reactStrictMode: true,
   poweredByHeader: false,
-  // Removed basePath and assetPrefix - they were causing redirect loops
-  // The app should work directly on / for local development
 
-
-  // Security headers for production
   async headers() {
     return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on'
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload'
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN'
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block'
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin'
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()'
-          }
-        ],
-      },
+      { source: '/:path*', headers: securityHeaders },
+
+      // Public, cacheable pages — fix dla Googlebot crawl budget
+      { source: '/', headers: cachePublicHeader },
+      { source: '/firma/:slug*', headers: cachePublicHeader },
+      { source: '/kategoria/:slug*', headers: cachePublicHeader },
+      { source: '/jak-to-dziala', headers: cachePublicHeader },
+      { source: '/polityka-prywatnosci', headers: cachePublicHeader },
+      { source: '/dodaj', headers: cachePublicHeader },
+
+      // Sitemap & robots — krótszy cache, ale publiczny
+      { source: '/sitemap.xml', headers: [{ key: 'Cache-Control', value: SITEMAP_CACHE }] },
+      { source: '/robots.txt', headers: [{ key: 'Cache-Control', value: ROBOTS_CACHE }] },
     ];
   },
-
-  // Enable static export for better SEO (optional, can use SSR instead)
-  // output: "export",
 };
 
 export default nextConfig;
-

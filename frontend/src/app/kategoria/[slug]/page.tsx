@@ -5,6 +5,8 @@ import { Category } from "@/types";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
+export const revalidate = 300;
+
 type Props = { params: { slug: string } };
 
 async function getCategory(slug: string): Promise<Category | null> {

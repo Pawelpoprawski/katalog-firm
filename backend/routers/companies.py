@@ -41,13 +41,15 @@ def _enrich_company(company: dict) -> dict:
     
     # Lookup category name from category_id to prevent stale/grayed category names
     category_name = None
+    category_slug = None
     if company.get("category_id"):
         categories = list_categories()
         category = next((cat for cat in categories if cat["id"] == company["category_id"]), None)
         if category:
             category_name = category["name"]
-    
-    return {**company, "rating": rating, "category": category_name}
+            category_slug = category.get("slug")
+
+    return {**company, "rating": rating, "category": category_name, "category_slug": category_slug}
 
 
 
