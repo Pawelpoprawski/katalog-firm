@@ -8,6 +8,7 @@ from ..storage import (
     update_company as storage_update_company,
     delete_review as storage_delete_review,
     track_confirmation_email_sent,
+    list_ai_search_log,
 )
 from ..settings import get_settings
 from ..security_middleware import sanitize_html
@@ -69,8 +70,14 @@ def get_stats():
 
 @router.get("/analytics")
 def get_analytics_endpoint(days: int = 30):
-    """Get daily analytics for last N days: views, unique IPs, new companies, new reviews."""
+    """Get daily analytics for last N days: views, unique IPs, new companies, new reviews, AI searches."""
     return get_analytics(days=min(days, 365))
+
+
+@router.get("/ai-searches")
+def get_ai_searches_endpoint(limit: int = 100):
+    """Get the last N AI search queries (newest first)."""
+    return list_ai_search_log(limit=min(max(limit, 1), 500))
 
 
 @router.post("/track-confirmation-sent")

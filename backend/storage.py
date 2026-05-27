@@ -659,8 +659,77 @@ def get_analytics(days: int = 30) -> list[dict]:
             "new_reviews": day_data.get("new_reviews", 0),
             "confirmation_emails_sent": day_data.get("confirmation_emails_sent", 0),
             "confirmations_received": day_data.get("confirmations_received", 0),
+            "ai_searches": day_data.get("ai_searches", 0),
+            "ai_searches_blocked": day_data.get("ai_searches_blocked", 0),
         })
     return result
+
+
+# AI search analytics
+AI_SEARCH_LOG_FILE = DATA_DIR / "ai_search_log.json"
+AI_SEARCH_LOG_MAX = 500  # keep last N queries
+
+
+def _read_ai_search_log() -> list[dict]:
+    if not AI_SEARCH_LOG_FILE.exists():
+        return []
+    try:
+        with open(AI_SEARCH_LOG_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            return data if isinstance(data, list) else []
+    except (json.JSONDecodeError, OSError):
+        return []
+
+
+def _write_ai_search_log(entries: list[dict]) -> None:
+    tmp = AI_SEARCH_LOG_FILE.with_suffix(".json.tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(entries, f, ensure_ascii=False, indent=2)
+    tmp.replace(AI_SEARCH_LOG_FILE)
+
+
+def track_ai_search(query: str, ip: str, result_count: int, blocked: bool = False) -> None:
+    """Log an AI search query + bump daily counter."""
+    today = _get_today_str()
+    with _lock:
+        # 1) Bump daily analytics counter
+        analytics = _read_analytics()
+        if today not in analytics:
+            analytics[today] = {"views": 0, "ips": [], "new_companies": 0, "new_reviews": 0}
+        if blocked:
+            analytics[today]["ai_searches_blocked"] = analytics[today].get("ai_searches_blocked", 0) + 1
+        else:
+            analytics[today]["ai_searches"] = analytics[today].get("ai_searches", 0) + 1
+        _write_analytics(analytics)
+
+        # 2) Append to log (capped)
+        if not blocked:
+            log = _read_ai_search_log()
+            log.append({
+                "ts": int(time.time()),
+                "query": query[:200],
+                "ip": ip or "",
+                "result_count": result_count,
+            })
+            if len(log) > AI_SEARCH_LOG_MAX:
+                log = log[-AI_SEARCH_LOG_MAX:]
+            _write_ai_search_log(log)
+
+
+def list_ai_search_log(limit: int = 100) -> list[dict]:
+    """Return the most recent AI searches (newest first)."""
+    with _lock:
+        log = _read_ai_search_log()
+    # newest first
+    return list(reversed(log[-limit:]))
+
+
+def get_ai_search_global_count_today() -> int:
+    """How many AI searches happened today globally (for global cap check)."""
+    today = _get_today_str()
+    with _lock:
+        analytics = _read_analytics()
+        return int(analytics.get(today, {}).get("ai_searches", 0))
 
 
 # Settings management

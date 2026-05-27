@@ -8,7 +8,12 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
-from ..storage import list_companies, list_categories
+from ..storage import (
+    list_companies,
+    list_categories,
+    track_ai_search,
+    get_ai_search_global_count_today,
+)
 from ..security_middleware import limiter, get_client_ip
 from ..settings import get_settings
 
@@ -19,17 +24,37 @@ router = APIRouter()
 # In-memory daily counter per IP (resets co dzien o polnocy serwera).
 # Bezpieczne dla pojedynczego procesu (PM2 single-instance) — przy clusterze
 # trzeba by przeniesc do Redis / pliku.
-_DAILY_LIMIT = 100
+_DAILY_LIMIT = 100              # per IP
+_GLOBAL_DAILY_LIMIT = 1000      # total across all IPs
+_PER_MINUTE_LIMIT = 5           # per IP, sliding window 60s
+
 _daily_counts: dict[str, tuple[date, int]] = {}
-_daily_lock = threading.Lock()
+_minute_buckets: dict[str, list[float]] = {}  # ip -> list[unix_ts] in last 60s
+_lock = threading.Lock()
+
+
+def _check_minute_limit(ip: str) -> bool:
+    """True if allowed (< 5 calls in last 60s), False if rate-limited."""
+    if not ip:
+        return True
+    import time as _t
+    now = _t.time()
+    with _lock:
+        bucket = [t for t in _minute_buckets.get(ip, []) if now - t < 60]
+        if len(bucket) >= _PER_MINUTE_LIMIT:
+            _minute_buckets[ip] = bucket
+            return False
+        bucket.append(now)
+        _minute_buckets[ip] = bucket
+    return True
 
 
 def _check_daily_limit(ip: str) -> bool:
-    """Return True if request allowed, False if daily cap exceeded."""
+    """True if allowed, False if daily per-IP cap exceeded."""
     if not ip:
-        return True  # nie blokujemy gdy IP nieznane (lepiej niz odciac wszystkich)
+        return True
     today = date.today()
-    with _daily_lock:
+    with _lock:
         last_day, count = _daily_counts.get(ip, (today, 0))
         if last_day != today:
             count = 0
@@ -74,24 +99,39 @@ def _build_company_summary() -> list[dict[str, Any]]:
 
 
 @router.post("/ai-search", response_model=AiSearchResponse)
-@limiter.limit("5/minute")
 def ai_search(request: Request, body: AiSearchRequest) -> AiSearchResponse:
-    # Daily cap per IP — chroni przed kosztami OpenAI w razie wycieku/bota.
+    """
+    AI semantic search. Zawsze zwraca 200 — nawet gdy limit AI przekroczony,
+    zwracamy pusta liste ID. Frontend wtedy dorzuca substring matche, wiec user
+    nie wisi na bledzie, tylko widzi 'gorsze' wyniki bez AI.
+    """
     ip = get_client_ip(request)
-    if not _check_daily_limit(ip):
-        logger.warning("AI-search daily cap exceeded for IP %s", ip)
-        raise HTTPException(
-            status_code=429,
-            detail=f"Dzienny limit zapytań AI przekroczony ({_DAILY_LIMIT}/dzień). Spróbuj jutro.",
-        )
-
+    query = body.query.strip()
     settings = get_settings()
+    model = settings.openai_model or os.getenv("OPENAI_MODEL", "gpt-5.4-mini")
+
+    # Sprawdz wszystkie limity. Gdy przekroczony — pomin call AI i zwroc puste.
+    def _skip(reason: str) -> AiSearchResponse:
+        logger.info("AI-search skipped (%s) ip=%s query=%r", reason, ip, query[:50])
+        try:
+            track_ai_search(query, ip, 0, blocked=True)
+        except Exception:
+            pass
+        return AiSearchResponse(ids=[], model=model, query=query)
+
+    if not _check_minute_limit(ip):
+        return _skip(f"per-minute limit {_PER_MINUTE_LIMIT}/min")
+    if not _check_daily_limit(ip):
+        return _skip(f"per-IP daily cap {_DAILY_LIMIT}")
+    global_count = get_ai_search_global_count_today()
+    if global_count >= _GLOBAL_DAILY_LIMIT:
+        return _skip(f"global daily cap {_GLOBAL_DAILY_LIMIT}")
+
     api_key = settings.open_ai_katalog_firm or os.getenv("OPEN_AI_KATALOG_FIRM") or os.getenv("OPENAI_API_KEY")
     if not api_key:
-        raise HTTPException(status_code=503, detail="AI search nieskonfigurowany na serwerze.")
+        # Brak klucza — graceful: log + pusty wynik (frontend zrobi substring)
+        return _skip("missing api key")
 
-    model = settings.openai_model or os.getenv("OPENAI_MODEL", "gpt-5.4-mini")
-    query = body.query.strip()
     companies_summary = _build_company_summary()
 
     if not companies_summary:
@@ -114,7 +154,7 @@ def ai_search(request: Request, body: AiSearchRequest) -> AiSearchResponse:
         from openai import OpenAI
     except ImportError as e:
         logger.error("OpenAI SDK not installed: %s", e)
-        raise HTTPException(status_code=500, detail="OpenAI SDK not installed on server.")
+        return _skip("openai sdk missing")
 
     try:
         client = OpenAI(api_key=api_key)
@@ -129,7 +169,8 @@ def ai_search(request: Request, body: AiSearchRequest) -> AiSearchResponse:
         raw = resp.choices[0].message.content or "{}"
     except Exception as e:
         logger.error("OpenAI call failed: %s", e)
-        raise HTTPException(status_code=502, detail=f"AI niedostepne: {e}")
+        # Graceful — frontend dostaje pusta liste, robi tylko substring
+        return AiSearchResponse(ids=[], model=model, query=query)
 
     try:
         data = json.loads(raw)
@@ -142,5 +183,11 @@ def ai_search(request: Request, body: AiSearchRequest) -> AiSearchResponse:
     except (json.JSONDecodeError, ValueError, TypeError) as e:
         logger.warning("Failed to parse AI response %r: %s", raw, e)
         ids = []
+
+    # Log query to analytics (best-effort, nie blokuj response gdy zapis padnie)
+    try:
+        track_ai_search(query, ip, len(ids), blocked=False)
+    except Exception as e:
+        logger.warning("Failed to log AI search: %s", e)
 
     return AiSearchResponse(ids=ids, model=model, query=query)

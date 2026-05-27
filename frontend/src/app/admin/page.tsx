@@ -7,6 +7,7 @@ import AdminStats from "./components/AdminStats";
 import AdminCompanies from "./components/AdminCompanies";
 import AdminReviews from "./components/AdminReviews";
 import AdminCategories from "./components/AdminCategories";
+import AdminAiSearches from "./components/AdminAiSearches";
 import AdminSettings from "./components/AdminSettings";
 
 type AdminCompany = {
@@ -52,6 +53,8 @@ type AnalyticsDay = {
   new_reviews: number;
   confirmation_emails_sent: number;
   confirmations_received: number;
+  ai_searches: number;
+  ai_searches_blocked: number;
 };
 
 export default function AdminPage() {
@@ -265,6 +268,8 @@ export default function AdminPage() {
           />
 
           <AdminReviews reviews={reviews} setReviews={setReviews} apiUrl={apiUrl} getAuthHeaders={getAuthHeaders} />
+
+          <AdminAiSearches apiUrl={apiUrl} getAuthHeaders={getAuthHeaders} />
         </div>
 
         <AdminCategories categories={categories} setCategories={setCategories} apiUrl={apiUrl} getAuthHeaders={getAuthHeaders} />

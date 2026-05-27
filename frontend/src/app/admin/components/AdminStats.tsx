@@ -10,6 +10,8 @@ type AnalyticsDay = {
   new_reviews: number;
   confirmation_emails_sent: number;
   confirmations_received: number;
+  ai_searches: number;
+  ai_searches_blocked: number;
 };
 
 type Stats = {
@@ -27,6 +29,8 @@ const chartLines = [
   { key: "new_reviews" as const, label: "Nowe opinie klientów", short: "Nowe opinie", color: "#ef4444" },
   { key: "confirmation_emails_sent" as const, label: "Maile z prośbą o potwierdzenie aktywności (wysłane)", short: "Maile wysłane", color: "#8b5cf6" },
   { key: "confirmations_received" as const, label: "Potwierdzenia aktywności od firm (kliknięcia w mail)", short: "Potwierdzenia", color: "#06b6d4" },
+  { key: "ai_searches" as const, label: "Wyszukiwania AI (udane)", short: "AI search", color: "#E1002A" },
+  { key: "ai_searches_blocked" as const, label: "Wyszukiwania AI zablokowane (rate limit / cap)", short: "AI zablok.", color: "#fbbf24" },
 ];
 
 // Cron wysyłki maili: 0 10 */5 * * = dni 5, 10, 15, 20, 25, 30 miesiąca o 10:00
