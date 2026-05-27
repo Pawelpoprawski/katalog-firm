@@ -45,6 +45,8 @@ export default function HomePage() {
   const [mapBounds, setMapBounds] = useState<MapBounds | null>(DEFAULT_CH_BOUNDS);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  // Stable total count — cached separately with long TTL so it doesn't "flicker" on cold loads
+  const [totalCount, setTotalCount] = useState<number | null>(null);
   const PAGE_SIZE = 24;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
@@ -160,13 +162,14 @@ export default function HomePage() {
   // Fetch companies with stale-while-revalidate caching
   useEffect(() => {
     const CACHE_TTL = 5 * 60 * 1000;
+    const COUNT_TTL = 7 * 24 * 60 * 60 * 1000; // 7 dni — tylko liczba, taniej cachowac dlugo
 
-    const getCached = <T,>(key: string): T | null => {
+    const getCached = <T,>(key: string, ttl: number = CACHE_TTL): T | null => {
       try {
         const raw = localStorage.getItem(key);
         if (!raw) return null;
         const { data, ts } = JSON.parse(raw);
-        if (Date.now() - ts > CACHE_TTL) return null;
+        if (Date.now() - ts > ttl) return null;
         return data as T;
       } catch { return null; }
     };
@@ -178,10 +181,17 @@ export default function HomePage() {
     const cachedCompanies = getCached<Company[]>('swr_companies');
     const cachedCategories = getCached<Category[]>('swr_categories');
     const cachedSortOrder = getCached<"newest" | "random" | "alphabetical">('swr_sort_order');
+    const cachedCount = getCached<number>('swr_total_count', COUNT_TTL);
+
+    // Count cache wczytany od razu — eliminuje "skok" liczby przy zaladowaniu
+    if (typeof cachedCount === "number" && cachedCount > 0) {
+      setTotalCount(cachedCount);
+    }
 
     if (cachedCompanies && cachedCompanies.length > 0) {
       setCompanies(cachedCompanies);
       setFilteredCompanies(cachedCompanies);
+      setTotalCount(cachedCompanies.length);
       setLoading(false);
     }
     if (cachedCategories) {
@@ -200,7 +210,9 @@ export default function HomePage() {
         const companiesList: Company[] = Array.isArray(data) ? data : (data.companies || []);
         setCompanies(companiesList);
         setFilteredCompanies(companiesList);
+        setTotalCount(companiesList.length);
         setCache('swr_companies', companiesList);
+        setCache('swr_total_count', companiesList.length);
       } catch (e: any) {
         if (!cachedCompanies) setError(e.message);
       } finally {
@@ -333,33 +345,67 @@ export default function HomePage() {
                 Znajdź <span className="text-[#E1002A]">sprawdzone</span> polskie firmy w&nbsp;Szwajcarii
               </h1>
               <p className="text-base sm:text-lg text-white/70 leading-relaxed max-w-xl">
-                {loading ? null : (
+                {totalCount !== null && (
                   <>
-                    <span className="font-semibold text-white">{filteredCompanies.length}</span> firm w bazie.{" "}
+                    <span className="font-semibold text-white">{totalCount}</span> firm w bazie.{" "}
                   </>
                 )}
                 Przeglądaj na mapie, filtruj po branży i znajdź to, czego szukasz.
               </p>
-              <div className="flex flex-wrap gap-3 pt-2">
+              {/* Search bar — Hays style */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const target = document.getElementById("oferty");
+                  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className="max-w-[600px] bg-white/10 border border-white/20 rounded backdrop-blur-md flex flex-col sm:flex-row overflow-hidden"
+              >
+                <div className="flex-1 relative flex items-center">
+                  <svg className="w-5 h-5 text-white/50 ml-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Czego szukasz? Branża, miasto, nazwa firmy..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="flex-1 bg-transparent border-none outline-none px-4 py-4 text-[0.95rem] text-white placeholder:text-white/50 min-w-0"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="bg-[#E1002A] hover:bg-[#B8001F] text-white px-7 py-4 font-medium text-[0.95rem] transition-colors whitespace-nowrap"
+                >
+                  Szukaj firm
+                </button>
+              </form>
+
+              {/* Subtle popular hints + add link */}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white/60">
+                <span className="text-white/40">Popularne:</span>
+                {["budowlana", "fryzjer", "transport", "Zurich"].map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery(tag);
+                      const target = document.getElementById("oferty");
+                      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }}
+                    className="text-white/70 hover:text-[#E1002A] transition-colors underline-offset-4 hover:underline"
+                  >
+                    {tag}
+                  </button>
+                ))}
+                <span className="text-white/30">·</span>
                 <Link
                   href="/dodaj"
                   onClick={(e) => { e.preventDefault(); goToAdd(); }}
-                  className="btn-hays"
+                  className="text-white hover:text-[#E1002A] font-medium transition-colors inline-flex items-center gap-1"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  Dodaj firmę za darmo
+                  + Dodaj firmę za darmo
                 </Link>
-                <a
-                  href="#oferty"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md font-semibold text-sm border-2 border-white/30 text-white hover:bg-white/10 transition-colors"
-                >
-                  Przeglądaj katalog
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                  </svg>
-                </a>
               </div>
             </div>
 
