@@ -361,6 +361,17 @@ export default function TestHomePage() {
 
   // Filter and sort companies
   useEffect(() => {
+    // If AI search active — preserve AI order (relevance ranking)
+    if (aiIds !== null) {
+      const rank = new Map(aiIds.map((id, idx) => [id, idx]));
+      const sorted = [...filteredWithBounds].sort(
+        (a, b) => (rank.get(a.id) ?? 999) - (rank.get(b.id) ?? 999)
+      );
+      setFilteredCompanies(sorted);
+      setCurrentPage(1);
+      return;
+    }
+
     const sorted = [...filteredWithBounds].sort((a, b) => {
       if (a.is_promoted && !b.is_promoted) return -1;
       if (!a.is_promoted && b.is_promoted) return 1;
@@ -373,31 +384,36 @@ export default function TestHomePage() {
     setFilteredCompanies(sorted);
     setCurrentPage(1);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [companies, searchQuery, selectedCanton, selectedCategory, minRating, mapBounds, mapsReady]);
+  }, [companies, searchQuery, selectedCanton, selectedCategory, minRating, mapBounds, mapsReady, aiIds]);
 
   const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / PAGE_SIZE));
 
-  const promotedCompanies = filteredCompanies.filter(c => c.is_promoted);
-  const regularCompanies = filteredCompanies.filter(c => !c.is_promoted);
+  // When AI search active — preserve order from AI relevance ranking (already set in useEffect)
+  let sortedCompanies: Company[];
+  if (aiIds !== null) {
+    sortedCompanies = filteredCompanies;
+  } else {
+    const promotedCompanies = filteredCompanies.filter(c => c.is_promoted);
+    const regularCompanies = filteredCompanies.filter(c => !c.is_promoted);
 
-  if (sortOrder === 'newest') {
-    promotedCompanies.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
-    regularCompanies.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
-  } else if (sortOrder === 'alphabetical') {
-    promotedCompanies.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
-    regularCompanies.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
-  } else if (sortOrder === 'random') {
-    for (let i = promotedCompanies.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [promotedCompanies[i], promotedCompanies[j]] = [promotedCompanies[j], promotedCompanies[i]];
+    if (sortOrder === 'newest') {
+      promotedCompanies.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+      regularCompanies.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+    } else if (sortOrder === 'alphabetical') {
+      promotedCompanies.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
+      regularCompanies.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
+    } else if (sortOrder === 'random') {
+      for (let i = promotedCompanies.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [promotedCompanies[i], promotedCompanies[j]] = [promotedCompanies[j], promotedCompanies[i]];
+      }
+      for (let i = regularCompanies.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [regularCompanies[i], regularCompanies[j]] = [regularCompanies[j], regularCompanies[i]];
+      }
     }
-    for (let i = regularCompanies.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [regularCompanies[i], regularCompanies[j]] = [regularCompanies[j], regularCompanies[i]];
-    }
+    sortedCompanies = [...promotedCompanies, ...regularCompanies];
   }
-
-  const sortedCompanies = [...promotedCompanies, ...regularCompanies];
   const paginatedCompanies = sortedCompanies.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE
