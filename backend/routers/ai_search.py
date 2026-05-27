@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 
 from ..storage import list_companies, list_categories
 from ..security_middleware import limiter
+from ..settings import get_settings
 
 logger = logging.getLogger(__name__)
 
@@ -52,11 +53,12 @@ def _build_company_summary() -> list[dict[str, Any]]:
 @router.post("/ai-search", response_model=AiSearchResponse)
 @limiter.limit("20/minute")
 def ai_search(request: Request, body: AiSearchRequest) -> AiSearchResponse:
-    api_key = os.getenv("OPEN_AI_KATALOG_FIRM") or os.getenv("OPENAI_API_KEY")
+    settings = get_settings()
+    api_key = settings.open_ai_katalog_firm or os.getenv("OPEN_AI_KATALOG_FIRM") or os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise HTTPException(status_code=503, detail="AI search nieskonfigurowany na serwerze.")
 
-    model = os.getenv("OPENAI_MODEL", "gpt-5.4-mini")
+    model = settings.openai_model or os.getenv("OPENAI_MODEL", "gpt-5.4-mini")
     query = body.query.strip()
     companies_summary = _build_company_summary()
 
