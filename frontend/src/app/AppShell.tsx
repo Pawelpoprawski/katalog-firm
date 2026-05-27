@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -81,13 +80,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 aria-label="Strona główna"
                 className="relative w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0 group"
               >
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={`${basePath}/logo.png`}
                   alt="Katalog Firm"
-                  width={48}
-                  height={48}
                   className="w-full h-full object-contain group-hover:scale-105 transition-transform"
-                  priority
                 />
               </Link>
               <div className="leading-tight min-w-0">
@@ -240,11 +237,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {/* Brand */}
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={`${basePath}/logo.png`}
                   alt="Katalog Firm"
-                  width={48}
-                  height={48}
                   className="w-12 h-12 object-contain flex-shrink-0"
                 />
                 <span className="font-display font-extrabold text-[1.4rem] text-white leading-none">
