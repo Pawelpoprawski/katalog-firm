@@ -13,14 +13,34 @@ import Pagination from "@/components/Pagination";
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const googleMapsKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
 
+// Wszystkie 26 kantonow Szwajcarii — wspolrzedne stolic/miast glownych
 const CANTON_COORDS: Record<string, { lat: number; lng: number }> = {
-  ZH: { lat: 47.3769, lng: 8.5417 },
-  BE: { lat: 46.948, lng: 7.447 },
-  GE: { lat: 46.2044, lng: 6.1432 },
-  LU: { lat: 47.0502, lng: 8.3093 },
-  BS: { lat: 47.5596, lng: 7.5886 },
-  ZG: { lat: 47.1662, lng: 8.5155 },
-  VD: { lat: 46.5197, lng: 6.6323 },
+  AG: { lat: 47.3877, lng: 8.0455 },  // Aarau
+  AI: { lat: 47.3308, lng: 9.4096 },  // Appenzell Innerrhoden
+  AR: { lat: 47.3664, lng: 9.3000 },  // Herisau (Ausserrhoden)
+  BE: { lat: 46.9480, lng: 7.4470 },  // Bern
+  BL: { lat: 47.4419, lng: 7.7644 },  // Liestal (Basel-Landschaft)
+  BS: { lat: 47.5596, lng: 7.5886 },  // Basel-Stadt
+  FR: { lat: 46.8060, lng: 7.1620 },  // Fribourg
+  GE: { lat: 46.2044, lng: 6.1432 },  // Geneva
+  GL: { lat: 47.0407, lng: 9.0668 },  // Glarus
+  GR: { lat: 46.8500, lng: 9.5300 },  // Chur (Graubünden)
+  JU: { lat: 47.3667, lng: 7.1500 },  // Delémont (Jura)
+  LU: { lat: 47.0502, lng: 8.3093 },  // Luzern
+  NE: { lat: 46.9925, lng: 6.9311 },  // Neuchâtel
+  NW: { lat: 46.9583, lng: 8.3667 },  // Stans (Nidwalden)
+  OW: { lat: 46.8771, lng: 8.2519 },  // Sarnen (Obwalden)
+  SG: { lat: 47.4244, lng: 9.3767 },  // St. Gallen
+  SH: { lat: 47.6979, lng: 8.6347 },  // Schaffhausen
+  SO: { lat: 47.2079, lng: 7.5371 },  // Solothurn
+  SZ: { lat: 47.0207, lng: 8.6530 },  // Schwyz
+  TG: { lat: 47.5536, lng: 9.0556 },  // Frauenfeld (Thurgau)
+  TI: { lat: 46.1944, lng: 9.0175 },  // Bellinzona (Ticino)
+  UR: { lat: 46.8714, lng: 8.6336 },  // Altdorf (Uri)
+  VD: { lat: 46.5197, lng: 6.6323 },  // Lausanne (Vaud)
+  VS: { lat: 46.2273, lng: 7.3589 },  // Sion (Valais)
+  ZG: { lat: 47.1662, lng: 8.5155 },  // Zug
+  ZH: { lat: 47.3769, lng: 8.5417 },  // Zürich
 };
 
 type MapBounds = { north: number; south: number; east: number; west: number };
