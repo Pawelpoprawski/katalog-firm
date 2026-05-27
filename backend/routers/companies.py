@@ -78,13 +78,24 @@ def list_companies(
     # Apply limit
     limited = all_companies[:limit]
     
-    # Enrich with ratings, strip heavy fields for listing performance
+    # Enrich with ratings, strip heavy fields for listing performance.
+    # description/offer trzymamy jako KROTKI fragment (HTML zestripowany, max 300 znakow) —
+    # frontend potrzebuje czegos do wyswietlenia gdy short_description jest puste.
+    import re
+    def _excerpt(raw: str | None, max_len: int = 300) -> str:
+        if not raw:
+            return ""
+        # Strip HTML tags + collapse whitespace
+        plain = re.sub(r"<[^>]+>", " ", raw)
+        plain = " ".join(plain.split())
+        return plain[:max_len]
+
     results = []
     for c in limited:
         enriched = _enrich_company(c.copy())
         enriched.pop("photos", None)  # Remove base64 photos array (~MB each)
-        enriched.pop("description", None)  # Remove full HTML description for listing
-        enriched.pop("offer", None)  # Remove full offer text for listing
+        enriched["description"] = _excerpt(enriched.get("description"))
+        enriched["offer"] = _excerpt(enriched.get("offer"))
         results.append(enriched)
     return results
 
