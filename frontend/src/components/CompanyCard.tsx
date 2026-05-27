@@ -97,9 +97,18 @@ export default function CompanyCard({
         )}
 
         <p className="text-xs sm:text-sm text-[#555] line-clamp-2 leading-relaxed">
-          {company.short_description ||
-            (company.description || "").replace(/<[^>]*>/g, "") ||
-            ""}
+          {(() => {
+            const desc = (company.short_description || "").trim() ||
+              (company.description || "").replace(/<[^>]*>/g, "").trim();
+            if (desc) return desc;
+            // Fallback gdy brak opisu — generowany z kategorii + miasta dla spojnosci kart i SEO
+            const bits: string[] = [];
+            if (categoryName && categoryName !== "Inne") bits.push(categoryName);
+            if (company.city) bits.push(company.city);
+            return bits.length
+              ? `Polska firma — ${bits.join(", ")}. Zobacz szczegóły, kontakt i opinie.`
+              : "Polska firma w Szwajcarii. Zobacz szczegóły, kontakt i opinie.";
+          })()}
         </p>
 
         <div className="flex items-center justify-between pt-2 mt-auto border-t border-[#E0E3E8]">
