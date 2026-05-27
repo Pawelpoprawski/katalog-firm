@@ -14,7 +14,7 @@ if str(Path(__file__).resolve().parent.parent) not in sys.path:
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from backend.settings import get_settings  # type: ignore  # noqa: E402
-from backend.routers import auth, companies, categories, reviews, reports, admin  # type: ignore  # noqa: E402
+from backend.routers import auth, companies, categories, reviews, reports, admin, ai_search  # type: ignore  # noqa: E402
 from backend.storage import init_storage  # type: ignore  # noqa: E402
 from backend.security_middleware import (  # type: ignore  # noqa: E402
     limiter,
@@ -113,6 +113,7 @@ app.include_router(categories.router, prefix="/categories", tags=["categories"])
 app.include_router(companies.router, prefix="/companies", tags=["companies"])
 app.include_router(reviews.router, prefix="/reviews", tags=["reviews"])
 app.include_router(reports.router, prefix="/reports", tags=["reports"])
+app.include_router(ai_search.router, prefix="/companies", tags=["ai-search"])
 
 
 if __name__ == "__main__":
