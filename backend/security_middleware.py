@@ -12,8 +12,29 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 
-# Initialize rate limiter
-limiter = Limiter(key_func=get_remote_address)
+def get_client_ip(request: Request) -> str:
+    """
+    Real client IP — za nginx-em request.client.host = 127.0.0.1.
+    Nginx ustawia X-Real-IP na $remote_addr (prawdziwy IP klienta),
+    co jest nie-spoofowalne (klient nie moze go ustawic via headers,
+    bo nginx zawsze nadpisuje).
+
+    Fallback chain: X-Real-IP → ostatni IP z X-Forwarded-For → client.host.
+    """
+    real = request.headers.get("x-real-ip")
+    if real:
+        return real.strip()
+    forwarded = request.headers.get("x-forwarded-for", "")
+    if forwarded:
+        # Nginx APPENDS $remote_addr na koniec XFF, wiec ostatni = trusted client IP.
+        ips = [ip.strip() for ip in forwarded.split(",") if ip.strip()]
+        if ips:
+            return ips[-1]
+    return get_remote_address(request)
+
+
+# Initialize rate limiter — kluczem jest prawdziwy IP klienta (za nginx).
+limiter = Limiter(key_func=get_client_ip)
 
 
 # Security headers middleware

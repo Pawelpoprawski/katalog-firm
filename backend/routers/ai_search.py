@@ -2,18 +2,41 @@
 import json
 import logging
 import os
+import threading
+from datetime import date
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
-
 from ..storage import list_companies, list_categories
-from ..security_middleware import limiter
+from ..security_middleware import limiter, get_client_ip
 from ..settings import get_settings
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+# In-memory daily counter per IP (resets co dzien o polnocy serwera).
+# Bezpieczne dla pojedynczego procesu (PM2 single-instance) — przy clusterze
+# trzeba by przeniesc do Redis / pliku.
+_DAILY_LIMIT = 100
+_daily_counts: dict[str, tuple[date, int]] = {}
+_daily_lock = threading.Lock()
+
+
+def _check_daily_limit(ip: str) -> bool:
+    """Return True if request allowed, False if daily cap exceeded."""
+    if not ip:
+        return True  # nie blokujemy gdy IP nieznane (lepiej niz odciac wszystkich)
+    today = date.today()
+    with _daily_lock:
+        last_day, count = _daily_counts.get(ip, (today, 0))
+        if last_day != today:
+            count = 0
+        if count >= _DAILY_LIMIT:
+            return False
+        _daily_counts[ip] = (today, count + 1)
+    return True
 
 
 class AiSearchRequest(BaseModel):
@@ -51,8 +74,17 @@ def _build_company_summary() -> list[dict[str, Any]]:
 
 
 @router.post("/ai-search", response_model=AiSearchResponse)
-@limiter.limit("20/minute")
+@limiter.limit("5/minute")
 def ai_search(request: Request, body: AiSearchRequest) -> AiSearchResponse:
+    # Daily cap per IP — chroni przed kosztami OpenAI w razie wycieku/bota.
+    ip = get_client_ip(request)
+    if not _check_daily_limit(ip):
+        logger.warning("AI-search daily cap exceeded for IP %s", ip)
+        raise HTTPException(
+            status_code=429,
+            detail=f"Dzienny limit zapytań AI przekroczony ({_DAILY_LIMIT}/dzień). Spróbuj jutro.",
+        )
+
     settings = get_settings()
     api_key = settings.open_ai_katalog_firm or os.getenv("OPEN_AI_KATALOG_FIRM") or os.getenv("OPENAI_API_KEY")
     if not api_key:
