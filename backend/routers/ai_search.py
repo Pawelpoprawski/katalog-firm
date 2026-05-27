@@ -26,26 +26,27 @@ router = APIRouter()
 # trzeba by przeniesc do Redis / pliku.
 _DAILY_LIMIT = 100              # per IP
 _GLOBAL_DAILY_LIMIT = 1000      # total across all IPs
-_PER_MINUTE_LIMIT = 5           # per IP, sliding window 60s
+_BURST_LIMIT = 20               # per IP, sliding window
+_BURST_WINDOW_SECONDS = 300     # 5 minut
 
 _daily_counts: dict[str, tuple[date, int]] = {}
-_minute_buckets: dict[str, list[float]] = {}  # ip -> list[unix_ts] in last 60s
+_burst_buckets: dict[str, list[float]] = {}  # ip -> list[unix_ts] in last window
 _lock = threading.Lock()
 
 
-def _check_minute_limit(ip: str) -> bool:
-    """True if allowed (< 5 calls in last 60s), False if rate-limited."""
+def _check_burst_limit(ip: str) -> bool:
+    """True if allowed (< 20 calls w ostatnich 5 min), False if rate-limited."""
     if not ip:
         return True
     import time as _t
     now = _t.time()
     with _lock:
-        bucket = [t for t in _minute_buckets.get(ip, []) if now - t < 60]
-        if len(bucket) >= _PER_MINUTE_LIMIT:
-            _minute_buckets[ip] = bucket
+        bucket = [t for t in _burst_buckets.get(ip, []) if now - t < _BURST_WINDOW_SECONDS]
+        if len(bucket) >= _BURST_LIMIT:
+            _burst_buckets[ip] = bucket
             return False
         bucket.append(now)
-        _minute_buckets[ip] = bucket
+        _burst_buckets[ip] = bucket
     return True
 
 
@@ -119,8 +120,8 @@ def ai_search(request: Request, body: AiSearchRequest) -> AiSearchResponse:
             pass
         return AiSearchResponse(ids=[], model=model, query=query)
 
-    if not _check_minute_limit(ip):
-        return _skip(f"per-minute limit {_PER_MINUTE_LIMIT}/min")
+    if not _check_burst_limit(ip):
+        return _skip(f"burst limit {_BURST_LIMIT}/{_BURST_WINDOW_SECONDS}s")
     if not _check_daily_limit(ip):
         return _skip(f"per-IP daily cap {_DAILY_LIMIT}")
     global_count = get_ai_search_global_count_today()

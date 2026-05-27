@@ -26,41 +26,52 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const category = await getCategory(params.slug);
   if (!category) {
     return {
-      title: "Kategoria nie znaleziona | PolacySzwajcaria",
+      title: "Kategoria nie znaleziona",
       robots: { index: false, follow: false },
     };
   }
 
-  const title = `${category.name} – Polskie usługi w Szwajcarii | PolacySzwajcaria`;
+  const catName = category.name.toLowerCase();
+  const title = `${category.name} — polskie firmy w Szwajcarii`;
   const description = category.description
-    ? `${category.description}. Znajdź sprawdzone polskie firmy w kategorii ${category.name} w Szwajcarii.`
-    : `Polskie firmy w kategorii ${category.name} w Szwajcarii. Katalog sprawdzonych usług polonijnych.`;
+    ? `${category.description} · Polskie firmy w kategorii ${catName} w Szwajcarii. Sprawdzone usługi polonijne — kontakt, opinie, lokalizacja.`
+    : `Sprawdzone polskie firmy w kategorii ${catName} w Szwajcarii. Polonijny katalog z opisami, kontaktami i opiniami. Dodaj swoją firmę za darmo.`;
 
   return {
     title,
     description,
-    keywords: [category.name, "polskie usługi", "Szwajcaria", "firmy polonijne", "katalog firm"],
+    keywords: [
+      `polski ${catName} Szwajcaria`,
+      `polski ${catName} Zurich`,
+      `polski ${catName} Bern`,
+      `${category.name} po polsku`,
+      `${category.name} polonijne`,
+      `${category.name} w Szwajcarii`,
+      "polskie firmy polonijne",
+      "firmy polskie Szwajcaria",
+      "katalog firm polonijnych",
+    ],
     openGraph: {
-      title,
+      title: `${category.name} | Katalog Firm Polonijnych`,
       description,
       type: "website",
       url: `https://katalog-firm.ch/kategoria/${params.slug}`,
-      siteName: "Polskie Usługi w Szwajcarii",
+      siteName: "Katalog Firm Polonijnych w Szwajcarii",
       locale: "pl_PL",
       images: [
         {
-          url: "https://katalog-firm.ch/logo.png",
-          width: 512,
-          height: 512,
-          alt: `${category.name} - Polskie Usługi w Szwajcarii`,
+          url: "https://katalog-firm.ch/og.png",
+          width: 1200,
+          height: 630,
+          alt: `${category.name} — polskie firmy w Szwajcarii`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: `${category.name} | Katalog Firm`,
       description,
-      images: ["https://katalog-firm.ch/logo.png"],
+      images: ["https://katalog-firm.ch/og.png"],
     },
     alternates: {
       canonical: `https://katalog-firm.ch/kategoria/${params.slug}`,

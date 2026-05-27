@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Company, Category } from "@/types";
 import { resolveImageUrl } from "@/lib/utils";
@@ -67,6 +67,12 @@ export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false);
   // Stable total count — cached separately with long TTL so it doesn't "flicker" on cold loads
   const [totalCount, setTotalCount] = useState<number | null>(null);
+  // Search state — input value (not bound to live filter; only on submit)
+  const [searchInput, setSearchInput] = useState("");
+  // Search result IDs in order: AI matches first, substring matches after (no duplicates).
+  // null = no active search (show all companies).
+  const [searchResultIds, setSearchResultIds] = useState<number[] | null>(null);
+  const [searchLoading, setSearchLoading] = useState(false);
   const PAGE_SIZE = 24;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
@@ -136,7 +142,11 @@ export default function HomePage() {
   };
 
   const baseFiltered = companies.filter((c) => {
-    if (searchQuery.trim()) {
+    // Active search — filter to combined AI + substring result set
+    if (searchResultIds !== null) {
+      if (!searchResultIds.includes(c.id)) return false;
+    } else if (searchQuery.trim()) {
+      // Legacy live filter from Filters component (panel below hero)
       const q = searchQuery.toLowerCase();
       const hit =
         (c.name || "").toLowerCase().includes(q) ||
@@ -152,6 +162,60 @@ export default function HomePage() {
     if (minRating > 0 && (c.rating || 0) < minRating) return false;
     return true;
   });
+
+  // Search: AI najpierw, potem substring-matche dopisane na koncu (bez duplikatow)
+  const runSearch = async (q: string) => {
+    const query = q.trim();
+    if (!query) {
+      setSearchResultIds(null);
+      return;
+    }
+    setSearchLoading(true);
+    let aiList: number[] = [];
+    try {
+      const res = await fetch(`${apiUrl}/companies/ai-search`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        aiList = Array.isArray(data.ids) ? data.ids : [];
+      }
+    } catch {
+      /* AI failure — fall back to substring only */
+    }
+
+    // Substring matches
+    const lq = query.toLowerCase();
+    const substringIds = companies
+      .filter((c) =>
+        (c.name || "").toLowerCase().includes(lq) ||
+        (c.short_description || "").toLowerCase().includes(lq) ||
+        (c.description || "").toLowerCase().includes(lq) ||
+        (c.city || "").toLowerCase().includes(lq) ||
+        (c.canton || "").toLowerCase().includes(lq) ||
+        (c.category || "").toLowerCase().includes(lq)
+      )
+      .map((c) => c.id);
+
+    // Merge: AI first, substring after (no duplicates)
+    const aiSet = new Set(aiList);
+    const merged = [...aiList, ...substringIds.filter((id) => !aiSet.has(id))];
+
+    setSearchResultIds(merged);
+    setSearchLoading(false);
+
+    setTimeout(() => {
+      const target = document.getElementById("oferty");
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  };
+
+  const resetSearch = () => {
+    setSearchResultIds(null);
+    setSearchInput("");
+  };
 
   const filteredWithBounds = isBoundsValid(mapBounds) && mapsReady
     ? baseFiltered.map(withCoords).filter((enriched) => {
@@ -310,6 +374,17 @@ export default function HomePage() {
 
   // Filter and sort companies
   useEffect(() => {
+    // Active search — preserve order (AI first, then substring matches)
+    if (searchResultIds !== null) {
+      const rank = new Map(searchResultIds.map((id, idx) => [id, idx]));
+      const sorted = [...filteredWithBounds].sort(
+        (a, b) => (rank.get(a.id) ?? 9999) - (rank.get(b.id) ?? 9999)
+      );
+      setFilteredCompanies(sorted);
+      setCurrentPage(1);
+      return;
+    }
+
     const sorted = [...filteredWithBounds].sort((a, b) => {
       if (a.is_promoted && !b.is_promoted) return -1;
       if (!a.is_promoted && b.is_promoted) return 1;
@@ -322,31 +397,38 @@ export default function HomePage() {
     setFilteredCompanies(sorted);
     setCurrentPage(1);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [companies, searchQuery, selectedCanton, selectedCategory, minRating, mapBounds, mapsReady]);
+  }, [companies, searchQuery, selectedCanton, selectedCategory, minRating, mapBounds, mapsReady, searchResultIds]);
 
   const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / PAGE_SIZE));
 
-  const promotedCompanies = filteredCompanies.filter(c => c.is_promoted);
-  const regularCompanies = filteredCompanies.filter(c => !c.is_promoted);
-
-  if (sortOrder === 'newest') {
-    promotedCompanies.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
-    regularCompanies.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
-  } else if (sortOrder === 'alphabetical') {
-    promotedCompanies.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
-    regularCompanies.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
-  } else if (sortOrder === 'random') {
-    for (let i = promotedCompanies.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [promotedCompanies[i], promotedCompanies[j]] = [promotedCompanies[j], promotedCompanies[i]];
+  // Memoized — przelicz tylko gdy zmienia sie filteredCompanies / sortOrder / searchResultIds.
+  // Bez tego Math.random() w 'random' przelicza sie przy KAZDYM renderze
+  // (np. przy pisaniu w inpucie), wiec lista wizualnie "tasuje sie".
+  const sortedCompanies: Company[] = useMemo(() => {
+    if (searchResultIds !== null) {
+      return filteredCompanies;
     }
-    for (let i = regularCompanies.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [regularCompanies[i], regularCompanies[j]] = [regularCompanies[j], regularCompanies[i]];
-    }
-  }
+    const promoted = filteredCompanies.filter(c => c.is_promoted);
+    const regular = filteredCompanies.filter(c => !c.is_promoted);
 
-  const sortedCompanies = [...promotedCompanies, ...regularCompanies];
+    if (sortOrder === 'newest') {
+      promoted.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+      regular.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+    } else if (sortOrder === 'alphabetical') {
+      promoted.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
+      regular.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
+    } else if (sortOrder === 'random') {
+      for (let i = promoted.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [promoted[i], promoted[j]] = [promoted[j], promoted[i]];
+      }
+      for (let i = regular.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [regular[i], regular[j]] = [regular[j], regular[i]];
+      }
+    }
+    return [...promoted, ...regular];
+  }, [filteredCompanies, sortOrder, searchResultIds]);
   const paginatedCompanies = sortedCompanies.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE
@@ -372,12 +454,11 @@ export default function HomePage() {
                 )}
                 Przeglądaj na mapie, filtruj po branży i znajdź to, czego szukasz.
               </p>
-              {/* Search bar — Hays style */}
+              {/* Search bar */}
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  const target = document.getElementById("oferty");
-                  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+                  runSearch(searchInput);
                 }}
                 className="max-w-[600px] bg-white/10 border border-white/20 rounded backdrop-blur-md flex flex-col sm:flex-row overflow-hidden"
               >
@@ -388,16 +469,37 @@ export default function HomePage() {
                   <input
                     type="text"
                     placeholder="Czego szukasz? Branża, miasto, nazwa firmy..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="flex-1 bg-transparent border-none outline-none px-4 py-4 text-[0.95rem] text-white placeholder:text-white/50 min-w-0"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    disabled={searchLoading}
+                    className="flex-1 bg-transparent border-none outline-none px-4 py-4 text-[0.95rem] text-white placeholder:text-white/50 min-w-0 disabled:opacity-60"
                   />
+                  {searchResultIds !== null && (
+                    <button
+                      type="button"
+                      onClick={resetSearch}
+                      className="mr-2 p-1.5 rounded text-white/60 hover:text-white hover:bg-white/10 transition-colors flex-shrink-0"
+                      aria-label="Wyczyść wyszukiwanie"
+                      title="Wyczyść"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
                 </div>
                 <button
                   type="submit"
-                  className="bg-[#E1002A] hover:bg-[#B8001F] text-white px-7 py-4 font-medium text-[0.95rem] transition-colors whitespace-nowrap"
+                  disabled={searchLoading || searchInput.trim().length < 2}
+                  className="bg-[#E1002A] hover:bg-[#B8001F] text-white px-7 py-4 font-medium text-[0.95rem] transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2 justify-center"
                 >
-                  Szukaj firm
+                  {searchLoading ? (
+                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                    </svg>
+                  ) : null}
+                  Szukaj
                 </button>
               </form>
 

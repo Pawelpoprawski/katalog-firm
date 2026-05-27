@@ -43,31 +43,53 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const categoryName = company.category || "Usługi";
-  const location = [company.city, company.canton].filter(Boolean).join(", ") || "Szwajcaria";
-  const title = `${company.name} – ${categoryName}, ${location} | PolacySzwajcaria`;
-  const description = company.short_description || company.description || `Polska firma ${company.name} w Szwajcarii. ${categoryName}. ${location}.`;
+  const categoryName = company.category || "usługi";
+  const city = company.city || "";
+  const canton = company.canton || "";
+  const location = [city, canton].filter(Boolean).join(", ") || "Szwajcaria";
+  const title = `${company.name} — ${categoryName}${city ? `, ${city}` : ""}`;
 
+  // Description — strip HTML, prefer short, fallback build w polskim
+  const rawDescription = company.short_description ||
+    (company.description ? company.description.replace(/<[^>]+>/g, "").trim() : "");
+  const description = rawDescription
+    ? rawDescription.slice(0, 200) + (rawDescription.length > 200 ? "..." : "")
+    : `${company.name} — polska firma polonijna w Szwajcarii (${categoryName}, ${location}). Kontakt, opinie i lokalizacja na Katalog Firm.`;
+
+  // Per-firma keywords (long-tail SEO)
+  const keywords = [
+    company.name,
+    `${company.name} ${city}`.trim(),
+    `${categoryName} ${city}`.trim(),
+    `${categoryName} po polsku ${city}`.trim(),
+    `polski ${categoryName} Szwajcaria`,
+    `polska firma ${city}`.trim(),
+    "polska firma w Szwajcarii",
+    "firmy polonijne",
+    location,
+  ].filter((k) => k && k.length > 1);
+
+  // OG image: prefer company's own image, fallback to brand OG (1200x630)
   const ogImage = company.img
     ? (company.img.startsWith("/images/") ? `https://katalog-firm.ch${company.img}` : company.img)
-    : "https://katalog-firm.ch/logo.png";
+    : "https://katalog-firm.ch/og.png";
 
   return {
     title,
     description,
-    keywords: [company.name, categoryName, location, "polskie usługi", "Szwajcaria"],
+    keywords,
     openGraph: {
-      title,
+      title: `${company.name} | Katalog Firm Polonijnych`,
       description,
       type: "website",
       url: `https://katalog-firm.ch/firma/${params.slug}`,
-      siteName: "Polskie Usługi w Szwajcarii",
+      siteName: "Katalog Firm Polonijnych w Szwajcarii",
       locale: "pl_PL",
-      images: [{ url: ogImage, width: 1200, height: 630, alt: company.name }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: `${company.name} — ${categoryName} w ${location}` }],
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: `${company.name} | Katalog Firm`,
       description,
       images: [ogImage],
     },

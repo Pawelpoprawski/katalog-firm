@@ -9,9 +9,26 @@ export const viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://katalog-firm.ch'),
-  title: "Polskie usługi w Szwajcarii | Katalog Firm",
-  description: "Katalog polskich firm i usług w Szwajcarii. Znajdź sprawdzone firmy polonijne – budownictwo, transport, gastronomia, IT i więcej.",
-  keywords: ["polskie usługi", "Szwajcaria", "firmy polskie", "Polonia", "katalog firm", "usługi polonijne", "polscy przedsiębiorcy", "Polacy w Szwajcarii", "polskie firmy w Szwajcarii"],
+  title: {
+    default: "Polskie firmy w Szwajcarii — Katalog Firm Polonijnych",
+    template: "%s | Katalog Firm",
+  },
+  description:
+    "Sprawdzony katalog polskich firm i usług w Szwajcarii. 100+ firm polonijnych — fryzjerstwo, gastronomia, transport, finanse, beauty, edukacja, zdrowie. Dodaj swoją firmę za darmo.",
+  keywords: [
+    "polskie firmy w Szwajcarii",
+    "katalog firm polonijnych",
+    "polskie usługi Szwajcaria",
+    "firmy polonijne",
+    "Polacy w Szwajcarii",
+    "polski biznes Szwajcaria",
+    "polscy przedsiębiorcy w Szwajcarii",
+    "firmy polskie Zürich",
+    "firmy polskie Bern",
+    "firmy polskie Genewa",
+    "katalog-firm.ch",
+    "dodaj firmę za darmo",
+  ],
   authors: [{ name: "Natalia & Paweł Poprawscy" }],
   creator: "PolacySzwajcaria",
   publisher: "PolacySzwajcaria",
@@ -30,26 +47,27 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Polskie usługi w Szwajcarii | Katalog Firm",
-    description: "Katalog polskich firm i usług w Szwajcarii. Najlepsza baza polskich przedsiębiorców.",
+    title: "Polskie firmy w Szwajcarii — Katalog Firm Polonijnych",
+    description:
+      "100+ sprawdzonych polskich firm i usług w Szwajcarii. Znajdź firmę polonijną w swoim kantonie. Dodaj swoją za darmo.",
     type: "website",
     url: "https://katalog-firm.ch",
-    siteName: "Polskie Usługi w Szwajcarii",
+    siteName: "Katalog Firm Polonijnych w Szwajcarii",
     locale: "pl_PL",
     images: [
       {
-        url: "https://katalog-firm.ch/logo.png",
-        width: 512,
-        height: 512,
-        alt: "Polskie Usługi w Szwajcarii - Logo",
+        url: "https://katalog-firm.ch/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Polskie firmy w Szwajcarii — Katalog Firm",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Polskie usługi w Szwajcarii | Katalog Firm",
-    description: "Katalog polskich firm i usług w Szwajcarii",
-    images: ["https://katalog-firm.ch/logo.png"],
+    title: "Polskie firmy w Szwajcarii — Katalog Firm Polonijnych",
+    description: "100+ sprawdzonych polskich firm i usług w Szwajcarii. Dodaj swoją za darmo.",
+    images: ["https://katalog-firm.ch/og.png"],
   },
   alternates: {
     canonical: "https://katalog-firm.ch",
@@ -86,12 +104,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         "@type": "WebSite",
         "@id": "https://katalog-firm.ch#website",
         url: "https://katalog-firm.ch",
-        name: "Polskie Usługi w Szwajcarii",
-        description: "Katalog polskich firm i usług w Szwajcarii. Znajdź sprawdzone firmy polonijne",
-        publisher: {
-          "@id": "https://katalog-firm.ch#organization"
-        },
+        name: "Katalog Firm Polonijnych w Szwajcarii",
+        description: "Katalog polskich firm i usług w Szwajcarii. Znajdź sprawdzone firmy polonijne.",
+        publisher: { "@id": "https://katalog-firm.ch#organization" },
         inLanguage: "pl-PL",
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: "https://katalog-firm.ch/?q={search_term_string}",
+          },
+          "query-input": "required name=search_term_string",
+        },
       }
     ]
   };
