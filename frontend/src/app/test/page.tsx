@@ -67,12 +67,12 @@ export default function TestHomePage() {
   const [isMobile, setIsMobile] = useState(false);
   // Stable total count — cached separately with long TTL so it doesn't "flicker" on cold loads
   const [totalCount, setTotalCount] = useState<number | null>(null);
-  // AI search state
-  const [aiInput, setAiInput] = useState("");
-  const [aiIds, setAiIds] = useState<number[] | null>(null);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiError, setAiError] = useState<string | null>(null);
-  const [aiQueryDisplay, setAiQueryDisplay] = useState("");
+  // Search state — input value (not bound to live filter; only on submit)
+  const [searchInput, setSearchInput] = useState("");
+  // Search result IDs in order: AI matches first, substring matches after (no duplicates).
+  // null = no active search (show all companies).
+  const [searchResultIds, setSearchResultIds] = useState<number[] | null>(null);
+  const [searchLoading, setSearchLoading] = useState(false);
   const PAGE_SIZE = 24;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
@@ -142,11 +142,11 @@ export default function TestHomePage() {
   };
 
   const baseFiltered = companies.filter((c) => {
-    // AI search takes precedence — if active, only show companies in ai-returned id list
-    if (aiIds !== null) {
-      if (!aiIds.includes(c.id)) return false;
-    }
-    if (searchQuery.trim()) {
+    // Active search — filter to combined AI + substring result set
+    if (searchResultIds !== null) {
+      if (!searchResultIds.includes(c.id)) return false;
+    } else if (searchQuery.trim()) {
+      // Legacy live filter from Filters component (panel below hero)
       const q = searchQuery.toLowerCase();
       const hit =
         (c.name || "").toLowerCase().includes(q) ||
@@ -163,45 +163,58 @@ export default function TestHomePage() {
     return true;
   });
 
-  // AI search handler
-  const runAiSearch = async (q: string) => {
-    if (!q.trim()) return;
-    setAiLoading(true);
-    setAiError(null);
+  // Search: AI najpierw, potem substring-matche dopisane na koncu (bez duplikatow)
+  const runSearch = async (q: string) => {
+    const query = q.trim();
+    if (!query) {
+      setSearchResultIds(null);
+      return;
+    }
+    setSearchLoading(true);
+    let aiList: number[] = [];
     try {
       const res = await fetch(`${apiUrl}/companies/ai-search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: q.trim() }),
+        body: JSON.stringify({ query }),
       });
-      if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(`AI search failed: ${res.status} ${txt}`);
+      if (res.ok) {
+        const data = await res.json();
+        aiList = Array.isArray(data.ids) ? data.ids : [];
       }
-      const data = await res.json();
-      setAiIds(data.ids || []);
-      setAiQueryDisplay(q.trim());
-      // Clear classical search to avoid double filtering
-      setSearchQuery("");
-      // Scroll to results
-      setTimeout(() => {
-        const target = document.getElementById("oferty");
-        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 50);
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      setAiError(msg);
-      setAiIds([]);
-    } finally {
-      setAiLoading(false);
+    } catch {
+      /* AI failure — fall back to substring only */
     }
+
+    // Substring matches
+    const lq = query.toLowerCase();
+    const substringIds = companies
+      .filter((c) =>
+        (c.name || "").toLowerCase().includes(lq) ||
+        (c.short_description || "").toLowerCase().includes(lq) ||
+        (c.description || "").toLowerCase().includes(lq) ||
+        (c.city || "").toLowerCase().includes(lq) ||
+        (c.canton || "").toLowerCase().includes(lq) ||
+        (c.category || "").toLowerCase().includes(lq)
+      )
+      .map((c) => c.id);
+
+    // Merge: AI first, substring after (no duplicates)
+    const aiSet = new Set(aiList);
+    const merged = [...aiList, ...substringIds.filter((id) => !aiSet.has(id))];
+
+    setSearchResultIds(merged);
+    setSearchLoading(false);
+
+    setTimeout(() => {
+      const target = document.getElementById("oferty");
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
   };
 
-  const resetAiSearch = () => {
-    setAiIds(null);
-    setAiQueryDisplay("");
-    setAiInput("");
-    setAiError(null);
+  const resetSearch = () => {
+    setSearchResultIds(null);
+    setSearchInput("");
   };
 
   const filteredWithBounds = isBoundsValid(mapBounds) && mapsReady
@@ -361,11 +374,11 @@ export default function TestHomePage() {
 
   // Filter and sort companies
   useEffect(() => {
-    // If AI search active — preserve AI order (relevance ranking)
-    if (aiIds !== null) {
-      const rank = new Map(aiIds.map((id, idx) => [id, idx]));
+    // Active search — preserve order (AI first, then substring matches)
+    if (searchResultIds !== null) {
+      const rank = new Map(searchResultIds.map((id, idx) => [id, idx]));
       const sorted = [...filteredWithBounds].sort(
-        (a, b) => (rank.get(a.id) ?? 999) - (rank.get(b.id) ?? 999)
+        (a, b) => (rank.get(a.id) ?? 9999) - (rank.get(b.id) ?? 9999)
       );
       setFilteredCompanies(sorted);
       setCurrentPage(1);
@@ -384,13 +397,13 @@ export default function TestHomePage() {
     setFilteredCompanies(sorted);
     setCurrentPage(1);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [companies, searchQuery, selectedCanton, selectedCategory, minRating, mapBounds, mapsReady, aiIds]);
+  }, [companies, searchQuery, selectedCanton, selectedCategory, minRating, mapBounds, mapsReady, searchResultIds]);
 
   const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / PAGE_SIZE));
 
-  // When AI search active — preserve order from AI relevance ranking (already set in useEffect)
+  // When search active — preserve order from search ranking (already set in useEffect)
   let sortedCompanies: Company[];
-  if (aiIds !== null) {
+  if (searchResultIds !== null) {
     sortedCompanies = filteredCompanies;
   } else {
     const promotedCompanies = filteredCompanies.filter(c => c.is_promoted);
@@ -439,62 +452,60 @@ export default function TestHomePage() {
                 )}
                 Przeglądaj na mapie, filtruj po branży i znajdź to, czego szukasz.
               </p>
-              {/* AI search bar */}
+              {/* Search bar */}
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  runAiSearch(aiInput);
+                  runSearch(searchInput);
                 }}
                 className="max-w-[600px] bg-white/10 border border-white/20 rounded backdrop-blur-md flex flex-col sm:flex-row overflow-hidden"
               >
                 <div className="flex-1 relative flex items-center">
-                  <svg className="w-5 h-5 text-[#E1002A] ml-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  <svg className="w-5 h-5 text-white/50 ml-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                   <input
                     type="text"
-                    placeholder='Opisz czego szukasz, np. „szukam pierogów" lub „fryzjer w Zurichu"...'
-                    value={aiInput}
-                    onChange={(e) => setAiInput(e.target.value)}
-                    disabled={aiLoading}
+                    placeholder="Czego szukasz? Branża, miasto, nazwa firmy..."
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    disabled={searchLoading}
                     className="flex-1 bg-transparent border-none outline-none px-4 py-4 text-[0.95rem] text-white placeholder:text-white/50 min-w-0 disabled:opacity-60"
                   />
+                  {searchResultIds !== null && (
+                    <button
+                      type="button"
+                      onClick={resetSearch}
+                      className="mr-2 p-1.5 rounded text-white/60 hover:text-white hover:bg-white/10 transition-colors flex-shrink-0"
+                      aria-label="Wyczyść wyszukiwanie"
+                      title="Wyczyść"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
                 </div>
                 <button
                   type="submit"
-                  disabled={aiLoading || aiInput.trim().length < 2}
+                  disabled={searchLoading || searchInput.trim().length < 2}
                   className="bg-[#E1002A] hover:bg-[#B8001F] text-white px-7 py-4 font-medium text-[0.95rem] transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2 justify-center"
                 >
-                  {aiLoading ? (
-                    <>
-                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                      </svg>
-                      AI szuka...
-                    </>
-                  ) : (
-                    <>
-                      Zapytaj AI
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 12h15" />
-                      </svg>
-                    </>
-                  )}
+                  {searchLoading ? (
+                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                    </svg>
+                  ) : null}
+                  Szukaj
                 </button>
               </form>
 
               <div className="flex flex-wrap items-center gap-3 text-sm text-white/70">
-                <span className="text-[10px] uppercase tracking-[0.1em] text-[#E1002A] font-bold">
-                  ⚡ TEST · AI-search
-                </span>
-                {aiError && (
-                  <span className="text-yellow-300 text-xs">Błąd AI: {aiError}</span>
-                )}
                 <Link
                   href="/dodaj"
                   onClick={(e) => { e.preventDefault(); goToAdd(); }}
-                  className="text-white hover:text-[#E1002A] font-medium transition-colors inline-flex items-center gap-1 ml-auto"
+                  className="text-white hover:text-[#E1002A] font-medium transition-colors inline-flex items-center gap-1"
                 >
                   + Dodaj firmę za darmo
                 </Link>
@@ -521,41 +532,6 @@ export default function TestHomePage() {
       {/* COMPANY LIST */}
       <section id="oferty" className="bg-[#F5F6F8] py-12 lg:py-16">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 space-y-8">
-        {/* AI search results banner */}
-        {aiIds !== null && (
-          <div className="rounded-md border-l-4 border-[#E1002A] bg-white p-4 sm:p-5 flex items-start justify-between gap-4 flex-wrap">
-            <div className="flex items-start gap-3 flex-1 min-w-0">
-              <div className="w-10 h-10 rounded-full bg-[#FFF0F3] flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-[#E1002A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#E1002A] mb-1">
-                  Wyniki AI
-                </div>
-                <div className="font-display text-base sm:text-lg font-bold text-[#0D2240]">
-                  {aiIds.length === 0
-                    ? <>AI nie znalazło firm pasujących do „{aiQueryDisplay}”</>
-                    : <>AI znalazło <span className="text-[#E1002A]">{aiIds.length}</span> {aiIds.length === 1 ? "firmę" : aiIds.length < 5 ? "firmy" : "firm"} pasujących do „{aiQueryDisplay}”</>}
-                </div>
-                <p className="text-xs text-[#555] mt-1">
-                  Wyniki AI mogą się różnić od standardowego wyszukiwania tekstowego. Kolejność wg. trafności.
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={resetAiSearch}
-              className="rounded border border-[#E0E3E8] bg-white px-4 py-2 text-sm font-semibold text-[#555] hover:border-[#E1002A] hover:text-[#E1002A] transition-colors inline-flex items-center gap-1.5"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-              Wyczyść AI
-            </button>
-          </div>
-        )}
-
         <Filters
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
