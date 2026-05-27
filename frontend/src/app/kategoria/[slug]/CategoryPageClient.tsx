@@ -99,14 +99,16 @@ export default function CategoryPageClient({ categorySlug }: { categorySlug: str
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-6xl px-6 py-10 space-y-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 w-48 rounded bg-slate-200" />
-          <div className="h-4 w-32 rounded bg-slate-200" />
-          <div className="grid gap-4 md:grid-cols-2">
-            {[...Array(4)].map((_, idx) => (
-              <div key={idx} className="h-32 rounded-2xl bg-slate-200" />
-            ))}
+      <div className="bg-[#F5F6F8] min-h-[80vh] py-10">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 w-48 rounded bg-slate-200" />
+            <div className="h-4 w-32 rounded bg-slate-200" />
+            <div className="grid gap-4 md:grid-cols-2">
+              {[...Array(4)].map((_, idx) => (
+                <div key={idx} className="h-32 rounded-md bg-slate-200" />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -116,94 +118,97 @@ export default function CategoryPageClient({ categorySlug }: { categorySlug: str
   if (!category) return notFound();
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-10 space-y-6">
-      {/* Breadcrumbs */}
-      <nav className="flex items-center gap-2 text-sm text-slate-600" aria-label="Breadcrumb">
-        <Link href="/" className="hover:text-primary">
-          Strona główna
-        </Link>
-        <span>/</span>
-        <Link href="/" className="hover:text-primary">
-          Usługi
-        </Link>
-        <span>/</span>
-        <span className="font-semibold text-slate-900">{category.name}</span>
-      </nav>
+    <div className="bg-[#F5F6F8] min-h-[80vh] py-10">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 space-y-6">
+        <nav className="flex items-center gap-2 text-sm text-[#555]" aria-label="Breadcrumb">
+          <Link href="/" className="hover:text-[#E1002A] transition-colors">
+            Strona główna
+          </Link>
+          <span className="text-[#888]">/</span>
+          <Link href="/" className="hover:text-[#E1002A] transition-colors">
+            Kategorie
+          </Link>
+          <span className="text-[#888]">/</span>
+          <span className="font-semibold text-[#0D2240]">{category.name}</span>
+        </nav>
 
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">{category.name}</h1>
-          <p className="text-sm text-slate-600">
-            {filteredCompanies.length > 0
-              ? `Znaleziono ${filteredCompanies.length} ${filteredCompanies.length === 1 ? "firmę" : filteredCompanies.length < 5 ? "firmy" : "firm"}`
-              : category.description || "Firmy polonijne w tej kategorii"}
-          </p>
+        <div className="flex items-end justify-between flex-wrap gap-3">
+          <div className="space-y-2">
+            <span className="hays-red-line" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold text-[#0D2240]">{category.name}</h1>
+            <p className="text-sm text-[#555]">
+              {filteredCompanies.length > 0
+                ? <><strong className="text-[#E1002A]">{filteredCompanies.length}</strong> {filteredCompanies.length === 1 ? "firma" : filteredCompanies.length < 5 ? "firmy" : "firm"} w kategorii</>
+                : category.description || "Firmy polonijne w tej kategorii"}
+            </p>
+          </div>
+          <Link href="/" className="text-sm font-semibold text-[#E1002A] hover:underline inline-flex items-center gap-1">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Wróć do katalogu
+          </Link>
         </div>
-        <Link href="/" className="text-sm font-semibold text-primary hover:text-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
-          Wróć
-        </Link>
-      </div>
 
-      {/* Filtry */}
-      <div className="flex flex-wrap gap-3">
-        <select
-          value={selectedCity}
-          onChange={(e) => setSelectedCity(e.target.value)}
-          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          aria-label="Filtruj po mieście"
-        >
-          <option value="">Wszystkie miasta</option>
-          {cities.map((city) => (
-            <option key={city} value={city}>
-              {city}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={minRating}
-          onChange={(e) => setMinRating(Number(e.target.value))}
-          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          aria-label="Filtruj po ocenie"
-        >
-          <option value={0}>Wszystkie oceny</option>
-          <option value={4}>Ocena 4+</option>
-          <option value={4.5}>Ocena 4.5+</option>
-          <option value={5}>Tylko 5 gwiazdek</option>
-        </select>
-
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as "rating" | "name" | "newest")}
-          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          aria-label="Sortuj"
-        >
-          <option value="rating">Najwyżej oceniane</option>
-          <option value="name">A-Z</option>
-          <option value="newest">Najnowsze</option>
-        </select>
-
-        {(selectedCity || minRating > 0) && (
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedCity("");
-              setMinRating(0);
-            }}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        {/* Filtry */}
+        <div className="bg-white border border-[#E0E3E8] rounded-md p-4 flex flex-wrap gap-3">
+          <select
+            value={selectedCity}
+            onChange={(e) => setSelectedCity(e.target.value)}
+            className="rounded border border-[#E0E3E8] bg-white px-3 py-2 text-sm text-[#0D2240] focus:border-[#E1002A] focus:outline-none focus:ring-2 focus:ring-[#E1002A]/10 transition-all"
+            aria-label="Filtruj po mieście"
           >
-            Wyczyść filtry
-          </button>
-        )}
-      </div>
+            <option value="">Wszystkie miasta</option>
+            {cities.map((city) => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
 
-      {error ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
-          Błąd ładowania: {error}. Spróbuj odświeżyć stronę.
+          <select
+            value={minRating}
+            onChange={(e) => setMinRating(Number(e.target.value))}
+            className="rounded border border-[#E0E3E8] bg-white px-3 py-2 text-sm text-[#0D2240] focus:border-[#E1002A] focus:outline-none focus:ring-2 focus:ring-[#E1002A]/10 transition-all"
+            aria-label="Filtruj po ocenie"
+          >
+            <option value={0}>Wszystkie oceny</option>
+            <option value={4}>Ocena 4+</option>
+            <option value={4.5}>Ocena 4.5+</option>
+            <option value={5}>Tylko 5 gwiazdek</option>
+          </select>
+
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as "rating" | "name" | "newest")}
+            className="rounded border border-[#E0E3E8] bg-white px-3 py-2 text-sm text-[#0D2240] focus:border-[#E1002A] focus:outline-none focus:ring-2 focus:ring-[#E1002A]/10 transition-all"
+            aria-label="Sortuj"
+          >
+            <option value="rating">Najwyżej oceniane</option>
+            <option value="name">A-Z</option>
+            <option value="newest">Najnowsze</option>
+          </select>
+
+          {(selectedCity || minRating > 0) && (
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedCity("");
+                setMinRating(0);
+              }}
+              className="rounded border border-[#E0E3E8] bg-white px-3 py-2 text-sm text-[#555] hover:border-[#E1002A] hover:text-[#E1002A] transition-colors"
+            >
+              Wyczyść filtry
+            </button>
+          )}
         </div>
-      ) : filteredCompanies.length === 0 ? (
-        <div className="mt-6 space-y-3">
-          <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-6 text-sm text-slate-600">
+
+        {error ? (
+          <div className="rounded border-l-4 border-[#E1002A] bg-[#FFF0F3] p-5 text-sm text-[#B8001F]">
+            Błąd ładowania: {error}. Spróbuj odświeżyć stronę.
+          </div>
+        ) : filteredCompanies.length === 0 ? (
+          <div className="rounded-md border-2 border-dashed border-[#E0E3E8] bg-white p-10 text-sm text-[#555] text-center">
             {selectedCity || minRating > 0 ? (
               <>
                 Nie znaleziono firm dla wybranych filtrów.{" "}
@@ -212,7 +217,7 @@ export default function CategoryPageClient({ categorySlug }: { categorySlug: str
                     setSelectedCity("");
                     setMinRating(0);
                   }}
-                  className="font-semibold text-primary hover:text-red-700 underline"
+                  className="font-semibold text-[#E1002A] hover:underline"
                 >
                   Wyczyść filtry
                 </button>
@@ -220,70 +225,70 @@ export default function CategoryPageClient({ categorySlug }: { categorySlug: str
             ) : (
               <>
                 Brak firm w tej kategorii.{" "}
-                <Link href="/dodaj" className="font-semibold text-primary hover:text-red-700">
+                <Link href="/dodaj" className="font-semibold text-[#E1002A] hover:underline">
                   Dodaj firmę za darmo!
                 </Link>
               </>
             )}
           </div>
-        </div>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2">
-          {filteredCompanies.map((item) => (
-            <Link
-              key={item.id}
-              href={`/firma/${item.slug || item.id}`}
-              className={`flex flex-col gap-3 rounded-2xl border bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${item.is_promoted ? "border-yellow-400 ring-1 ring-yellow-400 shadow-md bg-yellow-50/30" : "border-slate-200 hover:border-primary/40"
-                }`}
-            >
-              <div className="flex gap-3">
-                <div className="h-20 w-28 overflow-hidden rounded-xl bg-slate-100">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={resolveImageUrl(item.img, apiUrl)}
-                    alt={item.name}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="flex-1 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <div className="text-sm font-semibold text-primary">{category.name}</div>
-                    {item.is_promoted && (
-                      <span className="rounded-full bg-yellow-100 px-2 py-0.5 text-[11px] font-bold text-yellow-800 border border-yellow-200">
-                        PROMOWANA
-                      </span>
-                    )}
-                    {item.rating && (
-                      <span className="rounded-full bg-green-100 px-2 py-0.5 text-[11px] font-semibold text-green-800">
-                        ★ {item.rating.toFixed(1)}
-                      </span>
-                    )}
-
-                  </div>
-                  <div className="text-base font-bold text-slate-900">{item.name}</div>
-                  <div className="text-sm text-slate-600">
-                    {[item.city, item.canton].filter(Boolean).join(", ") || item.address || ""}
-                    {item.rating && ` • Ocena ${item.rating.toFixed(1)}`}
-                  </div>
-                </div>
-              </div>
-              <p
-                className="text-sm text-slate-700"
-                style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2">
+            {filteredCompanies.map((item) => (
+              <Link
+                key={item.id}
+                href={`/firma/${item.slug || item.id}`}
+                className={`hays-job-card flex flex-col gap-3 rounded-md border bg-white p-5 transition-all no-underline ${item.is_promoted ? "border-[#C5A253] ring-1 ring-[#C5A253]/30" : "border-[#E0E3E8]"}`}
               >
-                {item.description || "Brak opisu"}
-              </p>
-              <div className="flex flex-wrap gap-2 text-xs text-slate-600">
-                <span className="rounded-full bg-slate-100 px-3 py-1">Polska obsługa</span>
-                {item.rating && (
-                  <span className="rounded-full bg-slate-100 px-3 py-1">Ocena {item.rating.toFixed(1)}</span>
-                )}
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+                <div className="flex gap-3">
+                  <div className="h-20 w-28 overflow-hidden rounded border border-[#E0E3E8] bg-[#F5F6F8] flex-shrink-0 flex items-center justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={resolveImageUrl(item.img, apiUrl)}
+                      alt={item.name}
+                      className="max-h-full max-w-full object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="flex-1 space-y-1.5 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-[10px] font-semibold text-[#E1002A] uppercase tracking-wider">
+                        {category.name}
+                      </span>
+                      {item.is_promoted && (
+                        <span className="rounded bg-[#C5A253] text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                          Promowana
+                        </span>
+                      )}
+                      {item.rating && (
+                        <span className="inline-flex items-center gap-1 rounded bg-[#C5A253]/10 px-2 py-0.5 text-[10px] font-semibold text-[#C5A253]">
+                          <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 20 20">
+                            <path d="M10 1l2.928 5.93 6.542.95-4.735 4.616 1.118 6.52L10 16l-5.853 3.016 1.118-6.52L.53 7.88l6.542-.95z" />
+                          </svg>
+                          {item.rating.toFixed(1)}
+                        </span>
+                      )}
+                    </div>
+                    <div className="font-display text-base font-bold text-[#0D2240] line-clamp-1">{item.name}</div>
+                    <div className="text-xs text-[#555] inline-flex items-center gap-1">
+                      <svg className="w-3 h-3 text-[#888]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      {[item.city, item.canton].filter(Boolean).join(", ") || item.address || ""}
+                    </div>
+                  </div>
+                </div>
+                <p
+                  className="text-sm text-[#555] leading-relaxed"
+                  style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
+                >
+                  {item.description?.replace(/<[^>]*>/g, "") || "Brak opisu"}
+                </p>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

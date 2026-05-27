@@ -33,70 +33,53 @@ export default function Filters({
   loading,
 }: FiltersProps) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-      {/* Category Dropdown */}
+    <div className="bg-white border border-[#E0E3E8] rounded-md p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+      {/* Category dropdown */}
       <div className="relative flex-shrink-0">
         <button
           onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
-          className="group flex items-center gap-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-5 py-3 text-sm font-bold text-slate-800 dark:text-slate-200 hover:border-primary/50 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none cursor-pointer transition-all shadow-sm hover:shadow-md w-full sm:w-auto sm:min-w-[200px]"
+          className="flex items-center gap-3 rounded border border-[#E0E3E8] bg-white px-4 py-2.5 text-sm font-semibold text-[#0D2240] hover:border-[#E1002A] focus:border-[#E1002A] outline-none transition-colors w-full sm:w-auto sm:min-w-[220px]"
         >
+          <svg className="w-4 h-4 text-[#888]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
           <span className="flex-1 text-left">
             {selectedCategory
               ? categories.find((c) => c.id === selectedCategory)?.name
               : "Wszystkie branże"}
           </span>
           <svg
-            className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${
+            className={`w-4 h-4 text-[#888] transition-transform duration-200 ${
               isCategoryDropdownOpen ? "rotate-180" : ""
             }`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
 
         {isCategoryDropdownOpen && (
           <>
-            <div
-              className="fixed inset-0 z-10"
-              onClick={() => setIsCategoryDropdownOpen(false)}
-            />
-            <div className="absolute z-20 mt-2 w-full min-w-[280px] rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-2xl overflow-hidden animate-fade-in">
+            <div className="fixed inset-0 z-10" onClick={() => setIsCategoryDropdownOpen(false)} />
+            <div className="absolute z-20 mt-2 w-full min-w-[280px] rounded-md border border-[#E0E3E8] bg-white shadow-xl overflow-hidden animate-fade-in">
               <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
                 <button
                   onClick={() => {
                     setSelectedCategory(null);
                     setIsCategoryDropdownOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-6 py-3 text-left text-sm font-bold transition-all hover:bg-primary/10 ${
+                  className={`hays-cat-card w-full flex items-center gap-3 px-5 py-2.5 text-left text-sm font-medium transition-colors ${
                     !selectedCategory
-                      ? "bg-primary/20 text-primary dark:text-primary-light"
-                      : "text-slate-700 dark:text-slate-300"
+                      ? "bg-[#FFF0F3] text-[#E1002A] font-semibold"
+                      : "text-[#0D2240] hover:bg-[#F5F6F8]"
                   }`}
                 >
                   <span className="flex-1">Wszystkie branże</span>
-                  {!selectedCategory && (
-                    <svg
-                      className="w-5 h-5 text-primary"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  )}
+                  <span className="text-xs text-[#888]">{companies.length}</span>
                 </button>
-                <div className="border-t border-slate-200 dark:border-slate-700" />
+                <div className="border-t border-[#E0E3E8]" />
                 {categories.map((cat) => (
                   <button
                     key={cat.id}
@@ -104,29 +87,16 @@ export default function Filters({
                       setSelectedCategory(cat.id);
                       setIsCategoryDropdownOpen(false);
                     }}
-                    className={`w-full flex items-center gap-3 px-6 py-3 text-left text-sm font-bold transition-all hover:bg-primary/10 ${
+                    className={`hays-cat-card w-full flex items-center gap-3 px-5 py-2.5 text-left text-sm font-medium transition-colors ${
                       selectedCategory === cat.id
-                        ? "bg-primary/20 text-primary dark:text-primary-light"
-                        : "text-slate-700 dark:text-slate-300"
+                        ? "bg-[#FFF0F3] text-[#E1002A] font-semibold"
+                        : "text-[#0D2240] hover:bg-[#F5F6F8]"
                     }`}
                   >
                     <span className="flex-1">{cat.name}</span>
-                    <span className="text-xs font-normal text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full">
+                    <span className="text-xs text-[#888]">
                       {companies.filter((c) => c.category_id === cat.id).length}
                     </span>
-                    {selectedCategory === cat.id && (
-                      <svg
-                        className="w-5 h-5 text-primary"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    )}
                   </button>
                 ))}
               </div>
@@ -135,36 +105,26 @@ export default function Filters({
         )}
       </div>
 
-      {/* Search Bar */}
-      <div className="relative w-full sm:w-80 md:w-96 group">
-        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
+      {/* Search bar */}
+      <div className="relative w-full sm:flex-1 sm:max-w-md">
+        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-[#888]">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Szukaj..."
-          className="w-full pl-10 pr-4 py-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-base font-medium focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none dark:text-white"
+          placeholder="Szukaj firmy, miasta, branży..."
+          className="w-full pl-10 pr-4 py-2.5 rounded border border-[#E0E3E8] bg-white text-sm focus:border-[#E1002A] focus:ring-2 focus:ring-[#E1002A]/10 transition-all outline-none placeholder:text-[#888]"
         />
       </div>
 
       {/* Results count */}
       {!loading && (
-        <div className="hidden md:flex items-center gap-2 ml-auto text-sm text-slate-500">
-          <span className="font-bold text-primary">{totalResults}</span>
+        <div className="hidden md:flex items-center gap-2 ml-auto text-sm text-[#555]">
+          <span className="font-bold text-[#E1002A]">{totalResults}</span>
           <span>wyników</span>
         </div>
       )}

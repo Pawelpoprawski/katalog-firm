@@ -127,9 +127,11 @@ export default function EditListingPage() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-10">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 w-48 rounded bg-slate-200" />
+      <div className="bg-[#F5F6F8] min-h-[60vh] py-10">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 w-48 rounded bg-slate-200" />
+          </div>
         </div>
       </div>
     );
@@ -137,42 +139,47 @@ export default function EditListingPage() {
 
   if (!company) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-10">
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">
-          {error || "Ogłoszenie nie znalezione"}
+      <div className="bg-[#F5F6F8] min-h-[60vh] py-10">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6">
+          <div className="rounded border-l-4 border-[#E1002A] bg-[#FFF0F3] p-5 text-sm text-[#B8001F]">
+            {error || "Ogłoszenie nie znalezione"}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10 space-y-6">
-      {/* Breadcrumbs */}
-      <nav className="flex items-center gap-2 text-sm text-slate-600" aria-label="Breadcrumb">
-        <Link href="/" className="hover:text-primary">
+    <div className="bg-[#F5F6F8] min-h-[80vh] py-10">
+    <div className="mx-auto max-w-4xl px-4 sm:px-6 space-y-6">
+      <nav className="flex items-center gap-2 text-sm text-[#555] flex-wrap" aria-label="Breadcrumb">
+        <Link href="/" className="hover:text-[#E1002A] transition-colors">
           Strona główna
         </Link>
-        <span>/</span>
-        <Link href="/konto" className="hover:text-primary">
+        <span className="text-[#888]">/</span>
+        <Link href="/konto" className="hover:text-[#E1002A] transition-colors">
           Moje konto
         </Link>
-        <span>/</span>
-        <Link href="/konto/moje-ogloszenia" className="hover:text-primary">
+        <span className="text-[#888]">/</span>
+        <Link href="/konto/moje-ogloszenia" className="hover:text-[#E1002A] transition-colors">
           Moje ogłoszenia
         </Link>
-        <span>/</span>
-        <span className="font-semibold text-slate-900">Edytuj</span>
+        <span className="text-[#888]">/</span>
+        <span className="font-semibold text-[#0D2240]">Edytuj</span>
       </nav>
 
-      <h1 className="text-2xl font-bold text-slate-900">Edytuj ogłoszenie</h1>
+      <div className="space-y-2">
+        <span className="hays-red-line" />
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-[#0D2240]">Edytuj ogłoszenie</h1>
+      </div>
 
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="rounded border-l-4 border-[#E1002A] bg-[#FFF0F3] p-3 text-sm text-[#B8001F]">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <form onSubmit={handleSubmit} className="space-y-5 rounded-md border border-[#E0E3E8] bg-white p-6 sm:p-8">
         <div>
           <label className="block text-sm font-semibold text-slate-900 mb-1">
             Nazwa firmy *
@@ -336,6 +343,7 @@ export default function EditListingPage() {
           </button>
         </div>
       </form>
+    </div>
     </div>
   );
 }

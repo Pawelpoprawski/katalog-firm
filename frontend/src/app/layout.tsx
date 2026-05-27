@@ -54,14 +54,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://katalog-firm.ch",
   },
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/icon.png', type: 'image/png', sizes: '512x512' },
-    ],
-    apple: { url: '/icon.png', type: 'image/png', sizes: '512x512' },
-  },
+  // icons handled automatically by App Router via src/app/favicon.ico, icon.png, apple-icon.png
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
   },
@@ -107,15 +100,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="pl">
       <head>
         {/* viewport set via metadata export — no duplicate here */}
-        <meta name="theme-color" content="#E30613" />
+        <meta name="theme-color" content="#E1002A" />
         <link rel="manifest" href="/manifest.json" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
         <script defer src="https://stats.katalog-firm.ch/script.js" data-website-id="29e9d993-03f9-4c30-976b-bc2fc1cd1f20" />
       </head>
-      <body className="bg-slate-50 text-slate-900 antialiased">
+      <body className="bg-white text-slate-900 antialiased font-sans">
         <AppShell>{children}</AppShell>
       </body>
     </html>

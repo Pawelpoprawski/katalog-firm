@@ -2,6 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    /* Hays-style brand tokens */
+    --hays-red: #E1002A;
+    --hays-red-dark: #B8001F;
+    --hays-red-light: #FFF0F3;
+    --hays-navy: #0D2240;
+    --hays-navy-light: #1A3A5C;
+    --hays-navy-lighter: #2A5080;
+    --hays-border: #E0E3E8;
+    --hays-bg-soft: #F5F6F8;
+    --hays-text-muted: #555;
+
+    /* Design System - Button Colors (legacy, used in admin) */
+    --btn-danger: #dc2626;
+    --btn-danger-hover: #b91c1c;
+    --btn-warning: #f59e0b;
+    --btn-warning-hover: #d97706;
+    --btn-success: #10b981;
+    --btn-success-hover: #059669;
+    --btn-primary: #E1002A;
+    --btn-primary-hover: #B8001F;
+    --btn-promo: #fbbf24;
+    --btn-promo-hover: #f59e0b;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-slate-900 transition-colors duration-300;
+    font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Roboto Slab', Georgia, serif;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Anchor scroll offset for sticky header */
+  [id] {
+    scroll-margin-top: 80px;
+  }
+}
+
 /* Company description styling */
 .company-description p {
   margin-bottom: 1em;
@@ -40,96 +91,184 @@
   padding: 2px 6px;
   border-radius: 4px;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
   white-space: nowrap;
 }
 
-@layer base {
-  :root {
-    /* Design System - Button Colors */
-    --btn-danger: #dc2626;
-    /* Delete actions */
-    --btn-danger-hover: #b91c1c;
-    --btn-warning: #f59e0b;
-    /* Block, Draft status */
-    --btn-warning-hover: #d97706;
-    --btn-success: #10b981;
-    /* Published status */
-    --btn-success-hover: #059669;
-    --btn-primary: #3b82f6;
-    /* Primary actions */
-    --btn-primary-hover: #2563eb;
-    --btn-promo: #fbbf24;
-    /* Promotion */
-    --btn-promo-hover: #f59e0b;
-  }
-
-  body {
-    @apply bg-slate-50 text-slate-900 transition-colors duration-300;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  }
-}
-
 @layer components {
+  /* --- Hays-style components --- */
 
-  /* Button Base Styles */
+  .font-display {
+    font-family: 'Roboto Slab', Georgia, serif;
+  }
+
+  /* 3px red accent line under section labels */
+  .hays-red-line {
+    display: block;
+    width: 48px;
+    height: 3px;
+    background: var(--hays-red);
+    margin-bottom: 16px;
+  }
+
+  /* Diagonal pattern overlay (subtle, used over navy hero) */
+  .hays-pattern {
+    background-image:
+      linear-gradient(30deg, transparent 48%, rgba(255, 255, 255, 0.03) 48%, rgba(255, 255, 255, 0.03) 52%, transparent 52%),
+      linear-gradient(150deg, transparent 48%, rgba(255, 255, 255, 0.03) 48%, rgba(255, 255, 255, 0.03) 52%, transparent 52%),
+      linear-gradient(60deg, transparent 48%, rgba(255, 255, 255, 0.02) 48%, rgba(255, 255, 255, 0.02) 52%, transparent 52%);
+    background-size: 80px 80px;
+  }
+
+  .hays-red-glow {
+    background: radial-gradient(circle, rgba(225, 0, 42, 0.15), transparent 70%);
+  }
+
+  /* Category card with left red accent on hover */
+  .hays-cat-card {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .hays-cat-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--hays-red);
+    transform: scaleY(0);
+    transition: transform 0.2s;
+    transform-origin: top;
+  }
+  .hays-cat-card:hover::before {
+    transform: scaleY(1);
+  }
+  .hays-cat-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Company/job card hover - red border + red shadow */
+  .hays-job-card {
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .hays-job-card:hover {
+    border-color: var(--hays-red);
+    box-shadow: 0 4px 16px rgba(225, 0, 42, 0.08);
+  }
+
+  /* Nav link with red underline grow on hover */
+  .hays-nav-link {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #555;
+    padding: 8px 0;
+    position: relative;
+    transition: color 0.2s;
+    text-decoration: none;
+  }
+  .hays-nav-link:hover {
+    color: var(--hays-navy);
+  }
+  .hays-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--hays-red);
+    transition: width 0.2s;
+  }
+  .hays-nav-link:hover::after {
+    width: 100%;
+  }
+  .hays-nav-link.active {
+    color: var(--hays-navy);
+  }
+  .hays-nav-link.active::after {
+    width: 100%;
+  }
+
+  /* Primary button (Hays red) */
+  .btn-hays {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md font-semibold text-sm transition-all;
+    background: var(--hays-red);
+    color: white;
+  }
+  .btn-hays:hover {
+    background: var(--hays-red-dark);
+    box-shadow: 0 4px 12px rgba(225, 0, 42, 0.25);
+  }
+
+  .btn-hays-outline {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md font-semibold text-sm transition-all border-2;
+    border-color: var(--hays-navy);
+    color: var(--hays-navy);
+    background: transparent;
+  }
+  .btn-hays-outline:hover {
+    background: var(--hays-navy);
+    color: white;
+  }
+
+  /* Legacy admin buttons (kept) */
   .btn {
     @apply px-3 py-1.5 rounded-lg font-bold text-xs transition-all duration-200 inline-flex items-center gap-1;
   }
-
   .btn-danger {
     background-color: var(--btn-danger);
     @apply text-white hover:shadow-md;
   }
-
   .btn-danger:hover {
     background-color: var(--btn-danger-hover);
   }
-
   .btn-warning {
     background-color: var(--btn-warning);
     @apply text-white hover:shadow-md;
   }
-
   .btn-warning:hover {
     background-color: var(--btn-warning-hover);
   }
-
   .btn-success {
     background-color: var(--btn-success);
     @apply text-white hover:shadow-md;
   }
-
   .btn-success:hover {
     background-color: var(--btn-success-hover);
   }
-
   .btn-primary {
     background-color: var(--btn-primary);
     @apply text-white hover:shadow-md;
   }
-
   .btn-primary:hover {
     background-color: var(--btn-primary-hover);
   }
-
   .btn:disabled {
     @apply opacity-50 cursor-not-allowed;
   }
 
-  /* Spinner for loading states */
+  /* Spinner */
   .spinner {
     @apply inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin;
   }
 }
 
 @layer utilities {
-  .glass {
-    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl;
+  .bg-soft {
+    background-color: var(--hays-bg-soft);
+  }
+  .border-hays {
+    border-color: var(--hays-border);
+  }
+  .text-muted {
+    color: var(--hays-text-muted);
   }
 
-  .dark .glass {
-    @apply bg-slate-900/70 backdrop-blur-md border border-slate-700/30 shadow-2xl;
+  .glass {
+    @apply bg-white/80 backdrop-blur-md border border-white/40 shadow-xl;
   }
 
   .hover-lift {
@@ -140,16 +279,13 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-dark;
   }
 
-  /* Custom scrollbar for dropdowns */
   .custom-scrollbar::-webkit-scrollbar {
     width: 8px;
   }
-
   .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-slate-100 dark:bg-slate-900 rounded-lg;
+    @apply bg-slate-100 rounded-lg;
   }
-
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 dark:bg-slate-600 rounded-lg hover:bg-slate-400 dark:hover:bg-slate-500;
+    @apply bg-slate-300 rounded-lg hover:bg-slate-400;
   }
 }

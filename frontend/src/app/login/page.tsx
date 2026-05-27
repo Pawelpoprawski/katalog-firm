@@ -43,68 +43,73 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="mx-auto max-w-md px-4 py-10">
-      {/* Breadcrumbs */}
-      <nav className="flex items-center gap-2 text-sm text-slate-600 mb-6" aria-label="Breadcrumb">
-        <Link href="/" className="hover:text-primary">
-          Strona główna
-        </Link>
-        <span>/</span>
-        <span className="font-semibold text-slate-900">Logowanie</span>
-      </nav>
-
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-        <h1 className="text-2xl font-bold text-slate-900 mb-6">Zaloguj się</h1>
-
-        {error && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-base font-semibold text-slate-900 mb-1">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-base font-semibold text-slate-900 mb-1">
-              Hasło
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-primary px-4 py-2 font-semibold text-white hover:bg-red-700 disabled:opacity-50"
-          >
-            {loading ? "Logowanie..." : "Zaloguj się"}
-          </button>
-        </form>
-
-        <div className="mt-6 text-center text-sm text-slate-600">
-          Nie masz konta?{" "}
-          <Link href="/rejestracja" className="font-semibold text-primary hover:text-red-700">
-            Zarejestruj się
+    <div className="bg-[#F5F6F8] min-h-[80vh] py-12">
+      <div className="mx-auto max-w-md px-4 sm:px-6">
+        <nav className="flex items-center gap-2 text-sm text-[#555] mb-6" aria-label="Breadcrumb">
+          <Link href="/" className="hover:text-[#E1002A] transition-colors">
+            Strona główna
           </Link>
+          <span className="text-[#888]">/</span>
+          <span className="font-semibold text-[#0D2240]">Logowanie</span>
+        </nav>
+
+        <div className="rounded-md border border-[#E0E3E8] bg-white p-8">
+          <div className="space-y-2 mb-6">
+            <span className="hays-red-line" />
+            <h1 className="font-display text-2xl font-bold text-[#0D2240]">Zaloguj się</h1>
+            <p className="text-sm text-[#555]">Zarządzaj wpisami swojej firmy.</p>
+          </div>
+
+          {error && (
+            <div className="mb-4 rounded border-l-4 border-[#E1002A] bg-[#FFF0F3] p-3 text-sm text-[#B8001F]">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-xs font-bold text-[#0D2240] uppercase tracking-wider mb-1.5">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full rounded border border-[#E0E3E8] px-3 py-2.5 text-sm focus:border-[#E1002A] focus:outline-none focus:ring-2 focus:ring-[#E1002A]/10 transition-all"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-xs font-bold text-[#0D2240] uppercase tracking-wider mb-1.5">
+                Hasło
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full rounded border border-[#E0E3E8] px-3 py-2.5 text-sm focus:border-[#E1002A] focus:outline-none focus:ring-2 focus:ring-[#E1002A]/10 transition-all"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full btn-hays disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Logowanie..." : "Zaloguj się"}
+            </button>
+          </form>
+
+          <div className="mt-6 pt-6 border-t border-[#E0E3E8] text-center text-sm text-[#555]">
+            Nie masz konta?{" "}
+            <Link href="/rejestracja" className="font-semibold text-[#E1002A] hover:underline">
+              Zarejestruj się
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -16,133 +16,140 @@ export const metadata: Metadata = {
 export default function HowItWorksPage() {
   const steps = [
     {
-      number: "1",
-      icon: "📝",
+      number: "01",
       title: "Dodaj swoją firmę",
-      description: "Wypełnij prosty formularz z danymi Twojej firmy — nazwa, opis, zdjęcia, kontakt. Zajmie Ci to max 5 minut.",
-      color: "bg-blue-50 border-blue-200",
-      iconBg: "bg-blue-500",
+      description: "Wypełnij prosty formularz z danymi Twojej firmy — nazwa, opis, zdjęcia, kontakt. Zajmie Ci to maks. 5 minut.",
     },
     {
-      number: "2",
-      icon: "✅",
+      number: "02",
       title: "Weryfikacja",
       description: "Nasz zespół sprawdzi Twoje ogłoszenie i opublikuje je w katalogu. Otrzymasz email z linkiem do edycji.",
-      color: "bg-amber-50 border-amber-200",
-      iconBg: "bg-amber-500",
     },
     {
-      number: "3",
-      icon: "🚀",
+      number: "03",
       title: "Zdobywaj klientów",
-      description: "Twoja firma jest widoczna dla tysięcy Polaków w Szwajcarii. Otrzymujesz zapytania, opinie i rosniesz!",
-      color: "bg-green-50 border-green-200",
-      iconBg: "bg-green-500",
+      description: "Twoja firma jest widoczna dla tysięcy Polaków w Szwajcarii. Otrzymujesz zapytania, opinie i rośniesz!",
     },
   ];
 
   const benefits = [
-    { icon: "💰", title: "Całkowicie za darmo", desc: "Dodanie firmy nie kosztuje nic. Zero ukrytych opłat." },
-    { icon: "📱", title: "Widoczność na mapie", desc: "Twoja firma pojawia się na interaktywnej mapie Szwajcarii." },
-    { icon: "⭐", title: "Opinie klientów", desc: "Klienci mogą wystawiać recenzje, budując Twoją reputację." },
-    { icon: "✏️", title: "Łatwa edycja", desc: "W każdej chwili możesz zmienić dane przez link z emaila." },
-    { icon: "📧", title: "Powiadomienia email", desc: "Dostajesz email z linkiem do edycji i o nowych recenzjach." },
-    { icon: "🔍", title: "SEO & Google", desc: "Twoja firma jest indeksowana przez Google — klienci Cię znajdą." },
+    { title: "Całkowicie za darmo", desc: "Dodanie firmy nie kosztuje nic. Zero ukrytych opłat." },
+    { title: "Widoczność na mapie", desc: "Twoja firma pojawia się na interaktywnej mapie Szwajcarii." },
+    { title: "Opinie klientów", desc: "Klienci mogą wystawiać recenzje, budując Twoją reputację." },
+    { title: "Łatwa edycja", desc: "W każdej chwili możesz zmienić dane przez link z emaila." },
+    { title: "Powiadomienia email", desc: "Dostajesz email z linkiem do edycji i o nowych recenzjach." },
+    { title: "SEO & Google", desc: "Twoja firma jest indeksowana przez Google — klienci Cię znajdą." },
   ];
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12 space-y-16 sm:px-6 lg:px-8">
+    <div>
       {/* Hero */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">
-          Jak to <span className="text-primary">działa?</span>
-        </h1>
-        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-          Dodanie firmy do katalogu jest proste, szybkie i całkowicie darmowe. Wystarczą 3 kroki.
-        </p>
-      </div>
-
-      {/* Steps */}
-      <div className="grid gap-8 md:grid-cols-3">
-        {steps.map((step) => (
-          <div
-            key={step.number}
-            className={`relative rounded-3xl border-2 ${step.color} p-8 text-center space-y-4 hover:shadow-lg transition-shadow`}
-          >
-            <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl ${step.iconBg} text-3xl shadow-lg`}>
-              {step.icon}
-            </div>
-            <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-primary text-white font-black text-lg flex items-center justify-center shadow-lg">
-              {step.number}
-            </div>
-            <h3 className="text-xl font-bold text-slate-900">{step.title}</h3>
-            <p className="text-slate-600 leading-relaxed">{step.description}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* CTA */}
-      <div className="text-center">
-        <Link
-          href="/dodaj"
-          className="inline-flex items-center gap-2 rounded-2xl bg-primary px-10 py-5 text-lg font-bold text-white shadow-xl shadow-primary/20 hover:bg-red-700 transition-all hover:scale-105"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-          Dodaj swoją firmę za darmo
-        </Link>
-      </div>
-
-      {/* Benefits */}
-      <div className="space-y-8">
-        <h2 className="text-3xl font-bold text-slate-900 text-center">Dlaczego warto?</h2>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {benefits.map((b) => (
-            <div key={b.title} className="flex gap-4 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-              <span className="text-3xl flex-shrink-0">{b.icon}</span>
-              <div>
-                <h3 className="font-bold text-slate-900">{b.title}</h3>
-                <p className="text-sm text-slate-600 mt-1">{b.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* FAQ */}
-      <div className="space-y-6">
-        <h2 className="text-3xl font-bold text-slate-900 text-center">Częste pytania</h2>
-        <div className="space-y-4 max-w-3xl mx-auto">
-          {[
-            { q: "Ile kosztuje dodanie firmy?", a: "Nic! Dodanie firmy do katalogu jest całkowicie darmowe." },
-            { q: "Jak długo trwa weryfikacja?", a: "Zazwyczaj weryfikujemy nowe firmy w ciągu 24 godzin." },
-            { q: "Czy mogę edytować dane firmy po dodaniu?", a: "Tak! Po dodaniu firmy otrzymasz email z unikalnym linkiem do edycji. Możesz zmieniać dane w dowolnym momencie." },
-            { q: "Czy muszę się rejestrować?", a: "Nie trzeba zakładać konta. Wystarczy podać email — na niego dostaniesz link do zarządzania ogłoszeniem." },
-            { q: "Kto może dodać firmę?", a: "Każdy kto prowadzi polską firmę lub oferuje usługi w Szwajcarii." },
-          ].map((faq) => (
-            <div key={faq.q} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h3 className="font-bold text-slate-900">{faq.q}</h3>
-              <p className="text-slate-600 mt-2 text-sm">{faq.a}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Bottom CTA */}
-      <div className="relative overflow-hidden rounded-3xl bg-primary px-8 py-14 text-center">
-        <div className="relative z-10 space-y-6">
-          <h2 className="text-3xl font-bold text-white">Gotowy aby dołączyć?</h2>
-          <p className="text-white/80 text-lg max-w-lg mx-auto">
-            Dołącz do ponad 100 polskich firm już obecnych w katalogu i zacznij zdobywać nowych klientów.
+      <section className="relative bg-[#0D2240] text-white overflow-hidden">
+        <div className="absolute inset-0 hays-pattern opacity-100 pointer-events-none" />
+        <div className="absolute -top-32 -right-32 w-[480px] h-[480px] hays-red-glow pointer-events-none" />
+        <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 py-16 lg:py-20 text-center">
+          <span className="hays-red-line mx-auto" />
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+            Jak to <span className="text-[#E1002A]">działa?</span>
+          </h1>
+          <p className="mt-5 text-base sm:text-lg text-white/70 max-w-2xl mx-auto">
+            Dodanie firmy do katalogu jest proste, szybkie i całkowicie darmowe. Wystarczą 3 kroki.
           </p>
+        </div>
+      </section>
+
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-14 lg:py-20 space-y-20">
+        {/* Steps */}
+        <div className="grid gap-6 md:grid-cols-3">
+          {steps.map((step) => (
+            <div
+              key={step.number}
+              className="hays-cat-card relative rounded-md border border-[#E0E3E8] bg-white p-7 space-y-3"
+            >
+              <div className="font-display text-5xl font-bold text-[#E1002A]/20 leading-none">
+                {step.number}
+              </div>
+              <h3 className="font-display text-xl font-bold text-[#0D2240]">{step.title}</h3>
+              <p className="text-sm text-[#555] leading-relaxed">{step.description}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div className="text-center">
           <Link
             href="/dodaj"
-            className="inline-block rounded-2xl bg-white px-10 py-4 text-lg font-bold text-primary shadow-xl hover:scale-105 transition-all"
+            className="btn-hays text-base px-8 py-4"
           >
-            Dodaj firmę — to trwa 5 minut
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Dodaj swoją firmę za darmo
           </Link>
         </div>
+
+        {/* Benefits */}
+        <div className="space-y-8">
+          <div className="text-center space-y-3">
+            <span className="hays-red-line mx-auto" />
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#0D2240]">Dlaczego warto?</h2>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {benefits.map((b) => (
+              <div key={b.title} className="hays-cat-card flex flex-col gap-2 p-5 rounded-md bg-white border border-[#E0E3E8]">
+                <h3 className="font-display font-bold text-[#0D2240]">{b.title}</h3>
+                <p className="text-sm text-[#555] leading-relaxed">{b.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* FAQ */}
+        <div className="space-y-8">
+          <div className="text-center space-y-3">
+            <span className="hays-red-line mx-auto" />
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#0D2240]">Częste pytania</h2>
+          </div>
+          <div className="space-y-3 max-w-3xl mx-auto">
+            {[
+              { q: "Ile kosztuje dodanie firmy?", a: "Nic! Dodanie firmy do katalogu jest całkowicie darmowe." },
+              { q: "Jak długo trwa weryfikacja?", a: "Zazwyczaj weryfikujemy nowe firmy w ciągu 24 godzin." },
+              { q: "Czy mogę edytować dane firmy po dodaniu?", a: "Tak! Po dodaniu firmy otrzymasz email z unikalnym linkiem do edycji. Możesz zmieniać dane w dowolnym momencie." },
+              { q: "Czy muszę się rejestrować?", a: "Nie trzeba zakładać konta. Wystarczy podać email — na niego dostaniesz link do zarządzania ogłoszeniem." },
+              { q: "Kto może dodać firmę?", a: "Każdy kto prowadzi polską firmę lub oferuje usługi w Szwajcarii." },
+            ].map((faq) => (
+              <details key={faq.q} className="hays-cat-card group rounded-md border border-[#E0E3E8] bg-white">
+                <summary className="cursor-pointer list-none p-5 flex items-center justify-between gap-3">
+                  <h3 className="font-display font-bold text-[#0D2240]">{faq.q}</h3>
+                  <svg className="w-5 h-5 text-[#E1002A] flex-shrink-0 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="px-5 pb-5 text-sm text-[#555] leading-relaxed border-t border-[#E0E3E8] pt-3">
+                  {faq.a}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom CTA */}
+        <section className="relative overflow-hidden rounded-md bg-[#0D2240] px-8 py-14 text-center">
+          <div className="absolute inset-0 hays-pattern pointer-events-none" />
+          <div className="absolute -top-20 -right-20 w-80 h-80 hays-red-glow pointer-events-none" />
+          <div className="relative z-10 space-y-5">
+            <span className="hays-red-line mx-auto" />
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-white">Gotowy aby dołączyć?</h2>
+            <p className="text-white/70 text-base sm:text-lg max-w-lg mx-auto">
+              Dołącz do ponad 100 polskich firm już obecnych w katalogu i zacznij zdobywać nowych klientów.
+            </p>
+            <div>
+              <Link href="/dodaj" className="btn-hays text-base px-8 py-4">
+                Dodaj firmę — to trwa 5 minut
+              </Link>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

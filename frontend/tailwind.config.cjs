@@ -8,17 +8,31 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#E30613",
-          dark: "#B2050F",
-          light: "#FF2B38",
+          DEFAULT: "#E1002A",
+          dark: "#B8001F",
+          light: "#FFF0F3",
         },
         accent: {
-          DEFAULT: "#0F172A",
-          light: "#1E293B",
+          DEFAULT: "#0D2240",
+          light: "#1A3A5C",
         },
+        hays: {
+          red: "#E1002A",
+          "red-dark": "#B8001F",
+          "red-light": "#FFF0F3",
+          navy: "#0D2240",
+          "navy-light": "#1A3A5C",
+          "navy-lighter": "#2A5080",
+          gold: "#C5A253",
+        },
+        soft: "#F5F6F8",
         slate: {
           950: "#020617",
         }
+      },
+      fontFamily: {
+        sans: ['Roboto', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Roboto Slab', 'Georgia', 'serif'],
       },
       borderRadius: {
         '3xl': '1.5rem',
@@ -42,4 +56,3 @@ module.exports = {
   },
   plugins: []
 };
-

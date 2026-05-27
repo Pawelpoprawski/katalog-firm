@@ -376,19 +376,20 @@ export default function AddCompanyPage() {
 
   if (submitStatus === "success") {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-20 text-center space-y-8 animate-fade-in">
-        <div className="relative mx-auto w-32 h-32 flex items-center justify-center rounded-4xl bg-green-50 dark:bg-green-900/20 text-green-600 shadow-inner">
-          <svg className="w-16 h-16 animate-scale-in" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-          </svg>
-          <div className="absolute inset-0 rounded-4xl bg-green-400/20 animate-ping" />
-        </div>
-        <div className="space-y-4">
-          <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white">Firma dodana!</h1>
-          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
-            Dziękujemy za dodanie firmy do naszego katalogu. Twoje ogłoszenie zostanie sprawdzone przez moderatora i opublikowane w katalogu.
-          </p>
-        </div>
+      <div className="bg-[#F5F6F8] py-12 sm:py-20">
+        <div className="mx-auto max-w-2xl px-4 sm:px-6 text-center space-y-8 animate-fade-in">
+          <div className="relative mx-auto w-24 h-24 flex items-center justify-center rounded-full bg-green-100 text-green-600">
+            <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div className="space-y-3">
+            <span className="hays-red-line mx-auto" />
+            <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#0D2240]">Firma dodana!</h1>
+            <p className="text-base sm:text-lg text-[#555] max-w-md mx-auto leading-relaxed">
+              Dziękujemy za dodanie firmy do naszego katalogu. Twoje ogłoszenie zostanie sprawdzone przez moderatora i opublikowane w katalogu.
+            </p>
+          </div>
 
         {/* Edit Link Section */}
         {createdEditToken && (
@@ -431,56 +432,49 @@ export default function AddCompanyPage() {
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-          <Link
-            href={`/firma/${createdCompanySlug || createdCompanyId}`}
-            className="rounded-2xl bg-primary px-8 py-4 font-bold text-white shadow-xl shadow-primary/20 hover:bg-primary-dark transition-all hover:scale-105"
-          >
-            Zobacz ogłoszenie
-          </Link>
-          <Link
-            href="/"
-            className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-8 py-4 font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 transition-all hover:scale-105"
-          >
-            Wróć do strony głównej
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+            <Link href={`/firma/${createdCompanySlug || createdCompanyId}`} className="btn-hays">
+              Zobacz ogłoszenie
+            </Link>
+            <Link href="/" className="btn-hays-outline">
+              Wróć do strony głównej
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 space-y-10 sm:px-6">
-      {/* Breadcrumbs */}
-      <nav className="flex items-center gap-3 text-sm font-medium animate-fade-in text-slate-500">
-        <Link href="/" className="hover:text-primary transition-colors">Start</Link>
-        <svg className="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" strokeWidth={2.5} /></svg>
-        <span className="text-slate-900 dark:text-white">Dodaj firmę</span>
-      </nav>
+    <div className="bg-[#F5F6F8] py-10">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 space-y-6">
+        <nav className="flex items-center gap-2 text-sm font-medium text-[#555]">
+          <Link href="/" className="hover:text-[#E1002A] transition-colors">Strona główna</Link>
+          <span className="text-[#888]">/</span>
+          <span className="font-semibold text-[#0D2240]">Dodaj firmę</span>
+        </nav>
 
-      <div className="relative overflow-hidden rounded-4xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl transition-all duration-500">
-        {/* Design Accents */}
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />
-
-        <div className="relative p-8 md:p-12 space-y-10">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div className="space-y-2">
-              <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
-                Nowe ogłoszenie
-              </span>
-              <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white sm:text-4xl">Dodaj swoje usługi</h1>
-              <p className="text-slate-600 dark:text-slate-400 text-lg">
-                Pokaż się tysiącom klientów w Szwajcarii.
-              </p>
+        <div className="relative overflow-hidden rounded-md border border-[#E0E3E8] bg-white">
+          <div className="relative p-6 sm:p-10 space-y-8">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div className="space-y-3">
+                <span className="hays-red-line" />
+                <span className="inline-block text-[10px] font-bold uppercase tracking-[0.15em] text-[#E1002A]">
+                  Nowe ogłoszenie
+                </span>
+                <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#0D2240]">Dodaj firmę</h1>
+                <p className="text-[#555] text-base">
+                  Pokaż się tysiącom klientów w Szwajcarii. Dodanie jest <strong className="text-[#E1002A]">całkowicie darmowe</strong>.
+                </p>
+              </div>
+              <Link
+                href="/"
+                className="group inline-flex items-center gap-2 text-sm font-semibold text-[#555] hover:text-[#E1002A] transition-colors"
+              >
+                <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" /></svg>
+                Anuluj
+              </Link>
             </div>
-            <Link
-              href="/"
-              className="group inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-primary transition-all"
-            >
-              <svg className="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" /></svg>
-              Anuluj i wróć
-            </Link>
-          </div>
 
           {/* Stepper Display */}
           <div className="space-y-6">
@@ -491,11 +485,11 @@ export default function AddCompanyPage() {
                     key={s}
                     type="button"
                     onClick={() => i < step && setStep(i)}
-                    className={`h-10 px-5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 ${i === step
-                      ? "bg-primary text-white shadow-lg shadow-primary/25 scale-105"
+                    className={`h-10 px-4 rounded text-xs font-bold uppercase tracking-wider transition-all duration-200 ${i === step
+                      ? "bg-[#E1002A] text-white"
                       : i < step
-                        ? "bg-green-50 dark:bg-green-900/20 text-green-600 cursor-pointer hover:bg-green-100"
-                        : "bg-slate-50 dark:bg-slate-800 text-slate-400 cursor-not-allowed"
+                        ? "bg-[#FFF0F3] text-[#E1002A] cursor-pointer hover:bg-[#FFE0E6]"
+                        : "bg-[#F5F6F8] text-[#888] cursor-not-allowed"
                       }`}
                     disabled={i > step}
                   >
@@ -504,18 +498,16 @@ export default function AddCompanyPage() {
                 ))}
               </div>
               <div className="text-right">
-                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Status postępu</div>
-                <div className="text-xl font-black text-primary">{Math.round(((step + 1) / steps.length) * 100)}%</div>
+                <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest mb-1">Postęp</div>
+                <div className="text-xl font-bold text-[#E1002A]">{Math.round(((step + 1) / steps.length) * 100)}%</div>
               </div>
             </div>
 
-            <div className="h-3 w-full rounded-full bg-slate-100 dark:bg-slate-800 p-0.5 overflow-hidden">
+            <div className="h-1.5 w-full rounded-full bg-[#F5F6F8] overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-primary to-primary-light rounded-full shadow-sm transition-all duration-700 ease-out relative overflow-hidden"
+                className="h-full bg-[#E1002A] rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${((step + 1) / steps.length) * 100}%` }}
-              >
-                <div className="absolute inset-0 bg-white/20 animate-pulse-slow" />
-              </div>
+              />
             </div>
           </div>
 
@@ -943,6 +935,7 @@ export default function AddCompanyPage() {
             </form>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

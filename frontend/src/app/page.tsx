@@ -321,44 +321,68 @@ export default function HomePage() {
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 space-y-24 sm:px-6 lg:px-8">
-      {/* HERO */}
-      <section className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-        <div className="relative grid gap-12 p-8 md:p-12 lg:grid-cols-[1.2fr,1fr] items-center">
-          <div className="space-y-8">
-            <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-5xl leading-[1.15]">
-              Znajdź <span className="text-primary">sprawdzone</span> polskie firmy w Szwajcarii
-            </h1>
-            <p className="text-lg text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
-              {loading ? "" : <><span className="font-semibold text-slate-700">{filteredCompanies.length}</span> firm w bazie. </>}Przeglądaj na mapie, filtruj po branży i znajdź to czego szukasz.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/dodaj"
-                onClick={(e) => { e.preventDefault(); goToAdd(); }}
-                className="rounded-xl bg-primary px-6 py-3.5 font-semibold text-white hover:bg-red-700 transition-colors flex items-center gap-2"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-                Dodaj usługę za darmo
-              </Link>
+    <div>
+      {/* HERO — Hays-style navy with pattern + red accent */}
+      <section className="relative bg-[#0D2240] text-white overflow-hidden">
+        <div className="absolute inset-0 hays-pattern opacity-100 pointer-events-none" />
+        <div className="absolute -top-32 -right-32 w-[480px] h-[480px] hays-red-glow pointer-events-none" />
+        <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 py-16 lg:py-20">
+          <div className="grid gap-10 lg:grid-cols-[1.2fr,1fr] items-center">
+            <div className="space-y-6">
+              <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.25rem] leading-[1.1] tracking-tight">
+                Znajdź <span className="text-[#E1002A]">sprawdzone</span> polskie firmy w&nbsp;Szwajcarii
+              </h1>
+              <p className="text-base sm:text-lg text-white/70 leading-relaxed max-w-xl">
+                {loading ? null : (
+                  <>
+                    <span className="font-semibold text-white">{filteredCompanies.length}</span> firm w bazie.{" "}
+                  </>
+                )}
+                Przeglądaj na mapie, filtruj po branży i znajdź to, czego szukasz.
+              </p>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Link
+                  href="/dodaj"
+                  onClick={(e) => { e.preventDefault(); goToAdd(); }}
+                  className="btn-hays"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  Dodaj firmę za darmo
+                </Link>
+                <a
+                  href="#oferty"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md font-semibold text-sm border-2 border-white/30 text-white hover:bg-white/10 transition-colors"
+                >
+                  Przeglądaj katalog
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                  </svg>
+                </a>
+              </div>
             </div>
-          </div>
 
-          {/* MAP */}
-          <div id="mapa" className="relative aspect-square sm:h-[400px] sm:aspect-auto overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700">
-            <GoogleMap
-              companies={filteredWithBounds}
-              onBoundsChange={setMapBounds}
-              onCompanyClick={goToCompany}
-              isMobile={isMobile}
-              mapsReady={mapsReady}
-            />
+            {/* MAP */}
+            <div
+              id="mapa"
+              className="relative aspect-square sm:h-[420px] sm:aspect-auto overflow-hidden rounded-md border border-white/10 shadow-2xl bg-white"
+            >
+              <GoogleMap
+                companies={filteredWithBounds}
+                onBoundsChange={setMapBounds}
+                onCompanyClick={goToCompany}
+                isMobile={isMobile}
+                mapsReady={mapsReady}
+              />
+            </div>
           </div>
         </div>
       </section>
 
       {/* COMPANY LIST */}
-      <section id="oferty" className="space-y-8">
+      <section id="oferty" className="bg-[#F5F6F8] py-12 lg:py-16">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 space-y-8">
         <Filters
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -377,86 +401,93 @@ export default function HomePage() {
           loading={loading}
         />
 
-        {loading ? (
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {[...Array(6)].map((_, i) => (
-              <div
-                key={i}
-                className="group flex flex-col overflow-hidden rounded-4xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm animate-pulse"
-              >
-                <div className="relative h-60 bg-slate-200 dark:bg-slate-800" />
-                <div className="flex flex-1 flex-col p-6 space-y-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="h-7 bg-slate-200 dark:bg-slate-800 rounded-lg w-3/4" />
-                    <div className="h-7 w-12 bg-slate-200 dark:bg-slate-800 rounded-lg shrink-0" />
-                  </div>
-                  <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-lg w-1/2" />
-                  <div className="space-y-2">
-                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-lg w-full" />
-                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-lg w-4/5" />
-                  </div>
-                  <div className="pt-4 mt-auto border-t border-slate-100 dark:border-slate-800">
-                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-lg w-1/3" />
+          {loading ? (
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col overflow-hidden rounded-md border border-[#E0E3E8] bg-white animate-pulse"
+                >
+                  <div className="relative h-48 bg-slate-200" />
+                  <div className="flex flex-1 flex-col p-5 space-y-3">
+                    <div className="h-5 bg-slate-200 rounded w-3/4" />
+                    <div className="h-3 bg-slate-200 rounded w-1/2" />
+                    <div className="space-y-2 pt-2">
+                      <div className="h-3 bg-slate-200 rounded w-full" />
+                      <div className="h-3 bg-slate-200 rounded w-4/5" />
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          ) : filteredCompanies.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-md border border-[#E0E3E8]">
+              <div className="bg-[#FFF0F3] p-4 rounded-full mb-4">
+                <svg className="w-10 h-10 text-[#E1002A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
               </div>
-            ))}
-          </div>
-        ) : filteredCompanies.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center rounded-4xl border-2 border-dashed border-slate-200 dark:border-slate-800">
-            <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-3xl mb-4">
-              <svg className="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <h3 className="font-display text-xl font-bold text-[#0D2240]">Nie znaleziono polskich firm</h3>
+              <p className="text-[#555] mt-2 max-w-xs">Zmień filtry lub spróbuj innego wyszukiwania.</p>
+              <button
+                onClick={() => { setSearchQuery(""); setSelectedCategory(null); }}
+                className="mt-6 font-semibold text-[#E1002A] hover:underline"
+              >
+                Wyczyść wszystkie filtry
+              </button>
             </div>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Nie znaleziono polskich usług</h3>
-            <p className="text-slate-500 mt-2 max-w-xs">Zmień filtry lub spróbuj innego wyszukiwania.</p>
-            <button onClick={() => { setSearchQuery(""); setSelectedCategory(null); }} className="mt-6 font-bold text-primary hover:underline">Wyczyść wszystkie filtry</button>
-          </div>
-        ) : (
-          <div className="space-y-12">
-            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {paginatedCompanies.map((item) => {
-                const categoryName = categories.find(c => c.id === item.category_id)?.name || item.category || "Inne";
-                return (
-                  <CompanyCard
-                    key={item.id}
-                    company={item}
-                    onNavigate={goToCompany}
-                    onToggleFavorite={toggleFavorite}
-                    isFavorite={favorites.includes(item.id)}
-                    resolveImage={resolveImage}
-                    trackImpression={trackImpression}
-                    categoryName={categoryName}
-                  />
-                );
-              })}
-            </div>
+          ) : (
+            <div className="space-y-10">
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                {paginatedCompanies.map((item) => {
+                  const categoryName = categories.find(c => c.id === item.category_id)?.name || item.category || "Inne";
+                  return (
+                    <CompanyCard
+                      key={item.id}
+                      company={item}
+                      onNavigate={goToCompany}
+                      onToggleFavorite={toggleFavorite}
+                      isFavorite={favorites.includes(item.id)}
+                      resolveImage={resolveImage}
+                      trackImpression={trackImpression}
+                      categoryName={categoryName}
+                    />
+                  );
+                })}
+              </div>
 
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          </div>
-        )}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          )}
+        </div>
       </section>
 
       {/* CTA SECTION */}
-      <section>
-        <div className="rounded-2xl bg-slate-900 px-8 py-14">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-10 text-center lg:text-left">
-            <div className="space-y-3">
-              <h2 className="text-3xl font-bold text-white">Masz firmę w Szwajcarii?</h2>
-              <p className="text-lg text-slate-400 max-w-lg">
-                Dodaj się do katalogu za darmo i dotrzyj do tysięcy Polaków szukających usług.
-              </p>
-            </div>
-            <div>
+      <section className="bg-white border-t border-[#E0E3E8]">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-14 lg:py-20">
+          <div className="relative overflow-hidden rounded-md bg-[#0D2240] px-8 py-12 lg:px-12 lg:py-14">
+            <div className="absolute inset-0 hays-pattern pointer-events-none" />
+            <div className="absolute -top-20 -right-20 w-80 h-80 hays-red-glow pointer-events-none" />
+            <div className="relative flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
+              <div className="space-y-3 max-w-2xl">
+                <span className="hays-red-line mx-auto lg:mx-0" />
+                <h2 className="font-display text-3xl sm:text-4xl font-bold text-white">
+                  Masz firmę w Szwajcarii?
+                </h2>
+                <p className="text-base sm:text-lg text-white/70">
+                  Dodaj się do katalogu <span className="font-semibold text-white">za darmo</span> i dotrzyj do tysięcy Polaków szukających usług.
+                </p>
+              </div>
               <Link
                 href="/dodaj"
                 onClick={(e) => { e.preventDefault(); goToAdd(); }}
-                className="rounded-xl bg-primary px-8 py-4 text-base font-semibold text-white hover:bg-red-700 transition-colors"
+                className="btn-hays whitespace-nowrap px-7 py-4 text-base"
               >
-                + Dodaj swoją usługę za darmo
+                + Dodaj firmę za darmo
               </Link>
             </div>
           </div>

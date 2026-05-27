@@ -449,63 +449,69 @@ export default function EditCompanyPage() {
 
     // REUSING UI FROM ADD PAGE
     return (
-        <div className="mx-auto max-w-4xl px-4 py-12 space-y-10 sm:px-6">
-            <nav className="flex items-center gap-3 text-sm font-medium animate-fade-in text-slate-500">
-                <Link href="/" className="hover:text-primary transition-colors">Start</Link>
-                <svg className="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" strokeWidth={2.5} /></svg>
-                <span className="text-slate-900 dark:text-white">Edycja danych</span>
-            </nav>
+        <div className="bg-[#F5F6F8] py-10">
+            <div className="mx-auto max-w-4xl px-4 sm:px-6 space-y-6">
+                <nav className="flex items-center gap-2 text-sm font-medium text-[#555]">
+                    <Link href="/" className="hover:text-[#E1002A] transition-colors">Strona główna</Link>
+                    <span className="text-[#888]">/</span>
+                    <span className="font-semibold text-[#0D2240]">Edycja firmy</span>
+                </nav>
 
-            <div className="relative overflow-hidden rounded-4xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl transition-all duration-500">
-                <div className="relative p-8 md:p-12 space-y-10">
-                    <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-                        <div className="space-y-2">
-                            <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
-                                Tryb Edycji
-                            </span>
-                            <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white sm:text-4xl">Edytuj swoją firmę</h1>
-                            <p className="text-slate-600 dark:text-slate-400 text-lg">
-                                Zaktualizuj dane, aby klienci mieli zawsze świeże informacje.
-                            </p>
+                <div className="relative overflow-hidden rounded-md border border-[#E0E3E8] bg-white">
+                    <div className="relative p-6 sm:p-10 space-y-8">
+                        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                            <div className="space-y-3">
+                                <span className="hays-red-line" />
+                                <span className="inline-block text-[10px] font-bold uppercase tracking-[0.15em] text-[#E1002A]">
+                                    Tryb edycji
+                                </span>
+                                <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#0D2240]">Edytuj swoją firmę</h1>
+                                <p className="text-[#555] text-base">
+                                    Zaktualizuj dane, aby klienci mieli zawsze świeże informacje.
+                                </p>
+                            </div>
+                            <Link
+                                href="/"
+                                className="group inline-flex items-center gap-2 text-sm font-semibold text-[#555] hover:text-[#E1002A] transition-colors"
+                            >
+                                <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" /></svg>
+                                Anuluj
+                            </Link>
                         </div>
-                        <Link
-                            href="/"
-                            className="group inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-primary transition-all"
-                        >
-                            <svg className="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" /></svg>
-                            Anuluj
-                        </Link>
-                    </div>
 
-                    <div className="space-y-6">
-                        <div className="flex flex-wrap items-center justify-between gap-4">
-                            <div className="flex flex-wrap gap-2">
-                                {steps.map((s, i) => (
-                                    <button
-                                        key={s}
-                                        type="button"
-                                        onClick={() => i < step && setStep(i)}
-                                        className={`h-10 px-5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 ${i === step
-                                            ? "bg-primary text-white shadow-lg shadow-primary/25 scale-105"
-                                            : i < step
-                                                ? "bg-green-50 dark:bg-green-900/20 text-green-600 cursor-pointer hover:bg-green-100"
-                                                : "bg-slate-50 dark:bg-slate-800 text-slate-400 cursor-not-allowed"
-                                            }`}
-                                        disabled={i > step}
-                                    >
-                                        <span className="mr-2 opacity-50">{i + 1}.</span> {s}
-                                    </button>
-                                ))}
+                        <div className="space-y-4">
+                            <div className="flex flex-wrap items-center justify-between gap-4">
+                                <div className="flex flex-wrap gap-2">
+                                    {steps.map((s, i) => (
+                                        <button
+                                            key={s}
+                                            type="button"
+                                            onClick={() => i < step && setStep(i)}
+                                            className={`h-10 px-4 rounded text-xs font-bold uppercase tracking-wider transition-all duration-200 ${i === step
+                                                ? "bg-[#E1002A] text-white"
+                                                : i < step
+                                                    ? "bg-[#FFF0F3] text-[#E1002A] cursor-pointer hover:bg-[#FFE0E6]"
+                                                    : "bg-[#F5F6F8] text-[#888] cursor-not-allowed"
+                                                }`}
+                                            disabled={i > step}
+                                        >
+                                            <span className="mr-2 opacity-50">{i + 1}.</span> {s}
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="text-right">
+                                    <div className="text-[10px] font-bold text-[#888] uppercase tracking-widest mb-1">Postęp</div>
+                                    <div className="text-xl font-bold text-[#E1002A]">{Math.round(((step + 1) / steps.length) * 100)}%</div>
+                                </div>
+                            </div>
+
+                            <div className="h-1.5 w-full rounded-full bg-[#F5F6F8] overflow-hidden">
+                                <div
+                                    className="h-full bg-[#E1002A] rounded-full transition-all duration-500 ease-out"
+                                    style={{ width: `${((step + 1) / steps.length) * 100}%` }}
+                                />
                             </div>
                         </div>
-
-                        <div className="h-3 w-full rounded-full bg-slate-100 dark:bg-slate-800 p-0.5 overflow-hidden">
-                            <div
-                                className="h-full bg-gradient-to-r from-primary to-primary-light rounded-full shadow-sm transition-all duration-700 ease-out"
-                                style={{ width: `${((step + 1) / steps.length) * 100}%` }}
-                            />
-                        </div>
-                    </div>
 
                     <div className="animate-slide-up">
                         <form className="space-y-10">
@@ -932,6 +938,7 @@ export default function EditCompanyPage() {
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     );
 }

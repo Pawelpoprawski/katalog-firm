@@ -35,35 +35,32 @@ export default function ConfirmActivityPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-16 px-4">
+        <div className="min-h-screen bg-[#F5F6F8] py-12 px-4">
             <div className="max-w-2xl mx-auto">
-                <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
-                    {/* Header */}
-                    <div className="text-center mb-8">
-                        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                            Potwierdź Aktywność Ogłoszenia
+                <div className="bg-white rounded-md border border-[#E0E3E8] p-8 md:p-12">
+                    <div className="space-y-3 mb-8">
+                        <span className="hays-red-line" />
+                        <h1 className="font-display text-3xl md:text-4xl font-bold text-[#0D2240]">
+                            Potwierdź aktywność ogłoszenia
                         </h1>
-                        <div className="w-20 h-1 bg-primary mx-auto rounded-full mb-6"></div>
                     </div>
 
-                    {/* Description */}
-                    <div className="bg-slate-50 rounded-xl p-6 mb-8 border border-slate-200">
-                        <p className="text-slate-700 leading-relaxed text-center">
-                            Wprowadź email firmowy aby potwierdzić, że nadal potrzebujesz u nas ogłoszenia.
-                            <br />
-                            <br />
-                            <strong>Ogłoszenia niepotwierdzone zostaną usunięte.</strong>
-                            <br />
-                            <br />
-                            Robimy to po to, aby usuwać nieaktywne usługi co jakiś czas. Dziękujemy!
+                    <div className="bg-[#F5F6F8] rounded-md border-l-4 border-[#E1002A] p-5 mb-8">
+                        <p className="text-[#1A1A1A] leading-relaxed text-sm">
+                            Wprowadź email firmowy, aby potwierdzić, że nadal potrzebujesz u nas ogłoszenia.
+                        </p>
+                        <p className="text-[#1A1A1A] leading-relaxed text-sm mt-3 font-semibold">
+                            Ogłoszenia niepotwierdzone zostaną usunięte.
+                        </p>
+                        <p className="text-[#555] leading-relaxed text-sm mt-3">
+                            Robimy to po to, aby usuwać nieaktywne wpisy co jakiś czas. Dziękujemy!
                         </p>
                     </div>
 
-                    {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label htmlFor="email" className="block text-sm font-bold text-slate-700 mb-2">
-                                Email Firmowy *
+                            <label htmlFor="email" className="block text-xs font-bold text-[#0D2240] uppercase tracking-wider mb-1.5">
+                                Email firmowy <span className="text-[#E1002A]">*</span>
                             </label>
                             <input
                                 type="email"
@@ -72,21 +69,21 @@ export default function ConfirmActivityPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                                 placeholder="firma@example.com"
-                                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-base"
+                                className="w-full px-4 py-3 rounded border border-[#E0E3E8] focus:border-[#E1002A] focus:ring-2 focus:ring-[#E1002A]/10 outline-none transition-all text-sm"
                             />
                         </div>
 
-                        {/* Message */}
                         {message && (
                             <div
-                                className={`p-4 rounded-xl border ${message.type === "success"
-                                        ? "bg-green-50 border-green-200 text-green-800"
-                                        : "bg-red-50 border-red-200 text-red-800"
-                                    }`}
+                                className={`p-4 rounded border-l-4 ${
+                                    message.type === "success"
+                                        ? "bg-green-50 border-[#10b981] text-green-800"
+                                        : "bg-[#FFF0F3] border-[#E1002A] text-[#B8001F]"
+                                }`}
                             >
-                                <p className="text-sm font-medium text-center">{message.text}</p>
+                                <p className="text-sm font-medium">{message.text}</p>
                                 {message.type === "error" && message.text.includes("Nie ma takiego") && (
-                                    <p className="text-xs mt-2 text-center">
+                                    <p className="text-xs mt-2">
                                         Skontaktuj się:{" "}
                                         <a href="mailto:kontakt@polacyszwajcaria.com" className="underline font-semibold">
                                             kontakt@polacyszwajcaria.com
@@ -96,19 +93,17 @@ export default function ConfirmActivityPage() {
                             </div>
                         )}
 
-                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={loading || !email}
-                            className="w-full bg-primary hover:bg-primary-light text-white font-bold py-4 px-6 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                            className="w-full btn-hays disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {loading ? "Potwierdzanie..." : "Potwierdź Aktywność"}
+                            {loading ? "Potwierdzanie..." : "Potwierdź aktywność"}
                         </button>
                     </form>
 
-                    {/* Back Link */}
-                    <div className="mt-8 text-center">
-                        <a href="/" className="text-sm text-slate-600 hover:text-primary transition-colors">
+                    <div className="mt-8 pt-6 border-t border-[#E0E3E8] text-center">
+                        <a href="/" className="text-sm text-[#555] hover:text-[#E1002A] transition-colors">
                             ← Powrót do strony głównej
                         </a>
                     </div>
