@@ -46,6 +46,9 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
   const [company, setCompany] = useState<Company>(initialCompany);
   const { favorites, toggleFavorite, isLoaded } = useFavorites();
   const [reviews, setReviews] = useState<Array<{ id: number; author: string; rating: number; comment: string; created_at?: number }>>([]);
+  const [relatedCompanies, setRelatedCompanies] = useState<Company[]>([]);
+  const [relatedCategoryName, setRelatedCategoryName] = useState<string>("");
+  const [relatedCategorySlug, setRelatedCategorySlug] = useState<string>("");
 
   const [reviewSort, setReviewSort] = useState<"newest" | "oldest" | "highest">("newest");
 
@@ -130,6 +133,50 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
       fetchReviews();
     }
   }, [apiUrl, company]);
+
+  // Fetch related companies (same category, excluding current)
+  useEffect(() => {
+    if (!company?.category_id) return;
+
+    const fetchRelated = async () => {
+      try {
+        const [companiesRes, categoriesRes] = await Promise.all([
+          fetch(`${apiUrl}/companies/`),
+          fetch(`${apiUrl}/categories/`),
+        ]);
+        if (!companiesRes.ok) return;
+
+        const companiesData = await companiesRes.json();
+        const all: Company[] = Array.isArray(companiesData)
+          ? companiesData
+          : companiesData.companies || [];
+
+        const sameCategory = all.filter(
+          (c) => c.category_id === company.category_id && c.id !== company.id
+        );
+
+        // shuffle (Fisher-Yates) and take up to 6
+        for (let i = sameCategory.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [sameCategory[i], sameCategory[j]] = [sameCategory[j], sameCategory[i]];
+        }
+        setRelatedCompanies(sameCategory.slice(0, 6));
+
+        if (categoriesRes.ok) {
+          const cats: Array<{ id: number; name: string; slug: string }> = await categoriesRes.json();
+          const cat = cats.find((c) => c.id === company.category_id);
+          setRelatedCategoryName(cat?.name || company.category || "");
+          setRelatedCategorySlug(cat?.slug || "");
+        } else {
+          setRelatedCategoryName(company.category || "");
+        }
+      } catch (err) {
+        console.error("Failed to fetch related companies:", err);
+      }
+    };
+
+    fetchRelated();
+  }, [apiUrl, company?.id, company?.category_id, company?.category]);
 
   if (!company) {
     return <div className="mx-auto max-w-5xl px-4 py-10">Ładowanie...</div>;
@@ -667,6 +714,70 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
           </div>
         </div>
       </div>
+
+      {/* Related companies — same category */}
+      {relatedCompanies.length > 0 && (
+        <div className="bg-[#F5F6F8] border-t border-[#E0E3E8]">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 py-10 lg:py-14">
+            <div className="flex items-end justify-between gap-3 flex-wrap mb-6">
+              <div className="space-y-2">
+                <span className="hays-red-line" />
+                <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#0D2240]">
+                  Inne firmy z kategorii{relatedCategoryName ? " " : ""}
+                  {relatedCategoryName && (
+                    <span className="text-[#E1002A]">„{relatedCategoryName}”</span>
+                  )}
+                </h2>
+              </div>
+              {relatedCategorySlug && (
+                <Link
+                  href={`/kategoria/${relatedCategorySlug}`}
+                  className="text-sm font-semibold text-[#E1002A] hover:underline inline-flex items-center gap-1"
+                >
+                  Zobacz wszystkie
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              )}
+            </div>
+
+            <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+              {relatedCompanies.map((rc) => (
+                <Link
+                  key={rc.id}
+                  href={`/firma/${rc.slug || rc.id}`}
+                  className="hays-job-card group flex flex-col rounded-md border border-[#E0E3E8] bg-white overflow-hidden no-underline transition-all"
+                >
+                  <div className="h-24 sm:h-28 bg-[#F5F6F8] flex items-center justify-center overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={resolveImageUrl(rc.img, apiUrl)}
+                      alt={rc.name}
+                      className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="flex-1 p-3 space-y-1">
+                    <div className="font-display text-xs sm:text-sm font-bold text-[#0D2240] leading-tight line-clamp-2 group-hover:text-[#E1002A] transition-colors">
+                      {rc.name}
+                    </div>
+                    {(rc.city || rc.canton) && (
+                      <div className="text-[10px] sm:text-[11px] text-[#888] inline-flex items-center gap-1">
+                        <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        {[rc.city, rc.canton].filter(Boolean).join(", ")}
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Contact Modal - simplified */}
       {showContactModal && (
