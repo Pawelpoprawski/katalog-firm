@@ -471,8 +471,8 @@ export default function HomePage() {
                 </div>
                 <button
                   type="submit"
-                  disabled={searchLoading || searchInput.trim().length < 2}
-                  className="bg-[#E1002A] hover:bg-[#B8001F] text-white px-7 py-4 font-medium text-[0.95rem] transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2 justify-center"
+                  disabled={searchLoading}
+                  className="bg-[#E1002A] hover:bg-[#B8001F] text-white px-7 py-4 font-medium text-[0.95rem] transition-colors whitespace-nowrap disabled:opacity-70 disabled:cursor-wait inline-flex items-center gap-2 justify-center"
                 >
                   {searchLoading ? (
                     <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
