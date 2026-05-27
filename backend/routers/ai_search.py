@@ -140,10 +140,17 @@ def ai_search(request: Request, body: AiSearchRequest) -> AiSearchResponse:
 
     system_prompt = (
         "Jestes asystentem wyszukiwania w katalogu polskich firm w Szwajcarii. "
-        "Uzytkownik wpisuje czego szuka po polsku (np. 'szukam pierogow', 'fryzjer w Zurichu', 'pomoc prawna'). "
-        "Na podstawie listy firm (id, name, category, city, canton, desc) zwroc TYLKO JSON z kluczem 'ids' "
-        "zawierajacym tablice ID firm pasujacych do zapytania, posortowanych od najbardziej do najmniej trafnych. "
-        "Maksymalnie 12 ID. Jesli nic nie pasuje — pusta tablica. "
+        "Uzytkownik wpisuje czego szuka po polsku (np. 'szukam pierogow', 'fryzjer Bern', "
+        "'mechanik Zurich', 'paznokcie Lozanna'). "
+        "Kazda firma ma pola: id, name, category, city, canton, desc. "
+        "WAZNE: jezeli zapytanie zawiera miejscowosc, kanton lub region (np. 'Bern', "
+        "'w Zurichu', 'Genewa', 'BS', 'kanton VD') — priorytetowo zwracaj firmy z tej "
+        "lokalizacji (porownuj z polami city i canton, uwzgledniaj polskie i niemieckie/"
+        "francuskie nazwy: Zurych=Zurich=ZH, Bazylea=Basel=BS, Genewa=Geneve=GE, "
+        "Lozanna=Lausanne=VD, Berno=Bern=BE, Lucerna=Luzern=LU itd.). "
+        "Jezeli zapytanie nie wymienia lokalizacji — sortuj wylacznie po dopasowaniu uslugi. "
+        "Zwroc TYLKO JSON z kluczem 'ids' (tablica ID, max 12, sortowana od najbardziej "
+        "trafnych do najmniej). Jesli nic nie pasuje — pusta tablica. "
         "Format odpowiedzi: {\"ids\": [3, 17, 42]} — nic wiecej, czysty JSON."
     )
     user_prompt = (

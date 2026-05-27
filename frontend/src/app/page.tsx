@@ -58,7 +58,6 @@ export default function HomePage() {
   const [selectedCanton, setSelectedCanton] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [minRating] = useState<number>(0);
-  const [favorites, setFavorites] = useState<number[]>([]);
   const [sortOrder, setSortOrder] = useState<'newest' | 'random' | 'alphabetical'>('random');
   const [currentPage, setCurrentPage] = useState(1);
   const [mapsReady, setMapsReady] = useState(false);
@@ -331,25 +330,6 @@ export default function HomePage() {
     fetchData();
   }, [apiUrl]);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const stored = window.localStorage.getItem("favorites");
-    if (stored) {
-      try { setFavorites(JSON.parse(stored)); } catch { setFavorites([]); }
-    }
-  }, []);
-
-  const toggleFavorite = (id: number) => {
-    setFavorites((prev) => {
-      const exists = prev.includes(id);
-      const next = exists ? prev.filter((x) => x !== id) : [...prev, id];
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("favorites", JSON.stringify(next));
-      }
-      return next;
-    });
-  };
-
   // Load Google Maps API script with delay
   useEffect(() => {
     if (!googleMapsKey || typeof window === "undefined") return;
@@ -468,11 +448,12 @@ export default function HomePage() {
                   </svg>
                   <input
                     type="text"
-                    placeholder="Czego szukasz? Branża, miasto, nazwa firmy..."
+                    placeholder="Czego szukasz? np. mechanik, tort, paznokcie"
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                     disabled={searchLoading}
-                    className="flex-1 bg-transparent border-none outline-none px-4 py-4 text-[0.95rem] text-white placeholder:text-white/50 min-w-0 disabled:opacity-60"
+                    // text-base (16px) na iOS prevent auto-zoom przy focusie na inpucie
+                    className="flex-1 bg-transparent border-none outline-none px-4 py-4 text-base text-white placeholder:text-white/50 min-w-0 disabled:opacity-60"
                   />
                   {searchResultIds !== null && (
                     <button
@@ -597,8 +578,6 @@ export default function HomePage() {
                       key={item.id}
                       company={item}
                       onNavigate={goToCompany}
-                      onToggleFavorite={toggleFavorite}
-                      isFavorite={favorites.includes(item.id)}
                       resolveImage={resolveImage}
                       trackImpression={trackImpression}
                       categoryName={categoryName}

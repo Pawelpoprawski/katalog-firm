@@ -92,6 +92,8 @@ export default function AdminStats({ stats, analytics }: AdminStatsProps) {
     new_reviews: true,
     confirmation_emails_sent: true,
     confirmations_received: true,
+    ai_searches: true,
+    ai_searches_blocked: true,
   });
   const [hoveredDay, setHoveredDay] = useState<number | null>(null);
 

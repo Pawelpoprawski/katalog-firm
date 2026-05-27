@@ -7,8 +7,6 @@ import { Company } from "@/types";
 interface CompanyCardProps {
   company: Company;
   onNavigate: (slug?: string, id?: number) => void;
-  onToggleFavorite: (id: number) => void;
-  isFavorite: boolean;
   resolveImage: (img?: string) => string;
   trackImpression: (id: number) => void;
   categoryName: string;
@@ -17,8 +15,6 @@ interface CompanyCardProps {
 export default function CompanyCard({
   company,
   onNavigate,
-  onToggleFavorite,
-  isFavorite,
   resolveImage,
   trackImpression,
   categoryName,

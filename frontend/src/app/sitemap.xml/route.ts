@@ -64,8 +64,9 @@ export async function GET() {
 
   const entries: string[] = [
     urlEntry(`${baseUrl}`, now, "daily", "1.0"),
-    urlEntry(`${baseUrl}/dodaj`, now, "monthly", "0.6"),
+    urlEntry(`${baseUrl}/dodaj`, now, "monthly", "0.7"),
     urlEntry(`${baseUrl}/jak-to-dziala`, now, "monthly", "0.6"),
+    urlEntry(`${baseUrl}/regulamin`, now, "yearly", "0.3"),
     urlEntry(`${baseUrl}/polityka-prywatnosci`, now, "yearly", "0.3"),
   ];
 

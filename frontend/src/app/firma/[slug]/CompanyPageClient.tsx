@@ -40,11 +40,8 @@ function formatDescriptionHtml(text: string): string {
 }
 
 
-import { useFavorites } from "../../../hooks/useFavorites";
-
 export default function CompanyPageClient({ company: initialCompany, slug }: Props) {
   const [company, setCompany] = useState<Company>(initialCompany);
-  const { favorites, toggleFavorite, isLoaded } = useFavorites();
   const [reviews, setReviews] = useState<Array<{ id: number; author: string; rating: number; comment: string; created_at?: number }>>([]);
   const [relatedCompanies, setRelatedCompanies] = useState<Company[]>([]);
   const [relatedCategoryName, setRelatedCategoryName] = useState<string>("");

@@ -5,13 +5,10 @@ import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Company, Category } from "@/types";
 import { resolveImageUrl } from "@/lib/utils";
-import { useFavorites } from "../../../hooks/useFavorites";
-
 export default function CategoryPageClient({ categorySlug }: { categorySlug: string }) {
   const [category, setCategory] = useState<Category | null>(null);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [filteredCompanies, setFilteredCompanies] = useState<Company[]>([]);
-  const { favorites, toggleFavorite } = useFavorites();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<string>("");

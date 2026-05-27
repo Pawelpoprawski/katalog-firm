@@ -11,7 +11,6 @@ const privateDisallow = [
   '/login',
   '/rejestracja',
   '/konto', '/konto/',
-  '/ulubione',
   '/edycja/',
   '/potwierdz', '/potwierdz/',
 ];
