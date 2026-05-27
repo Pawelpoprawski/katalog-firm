@@ -189,10 +189,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 </Link>
               ))}
 
-              <div className="h-px bg-[#E0E3E8] my-2" />
-
-              {isMounted && user ? (
+              {isMounted && user && (
                 <>
+                  <div className="h-px bg-[#E0E3E8] my-2" />
                   <Link
                     href="/konto"
                     className="flex items-center gap-3 text-[#0D2240] font-semibold py-3 px-4 rounded hover:bg-[#F5F6F8] transition-colors no-underline"
@@ -214,13 +213,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                     Wyloguj się
                   </button>
                 </>
-              ) : (
-                <Link
-                  href="/dodaj"
-                  className="block text-[#0D2240] font-semibold py-3 px-4 rounded hover:bg-[#F5F6F8] transition-colors no-underline"
-                >
-                  Dodaj firmę
-                </Link>
               )}
             </div>
           </div>

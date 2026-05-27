@@ -381,24 +381,7 @@ export default function HomePage() {
                 </button>
               </form>
 
-              {/* Subtle popular hints + add link */}
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white/60">
-                <span className="text-white/40">Popularne:</span>
-                {["budowlana", "fryzjer", "transport", "Zurich"].map((tag) => (
-                  <button
-                    key={tag}
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery(tag);
-                      const target = document.getElementById("oferty");
-                      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }}
-                    className="text-white/70 hover:text-[#E1002A] transition-colors underline-offset-4 hover:underline"
-                  >
-                    {tag}
-                  </button>
-                ))}
-                <span className="text-white/30">·</span>
+              <div className="flex flex-wrap items-center gap-3 text-sm text-white/70">
                 <Link
                   href="/dodaj"
                   onClick={(e) => { e.preventDefault(); goToAdd(); }}
