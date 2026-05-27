@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Company, Category } from "@/types";
 import { resolveImageUrl } from "@/lib/utils";
@@ -401,32 +401,34 @@ export default function TestHomePage() {
 
   const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / PAGE_SIZE));
 
-  // When search active — preserve order from search ranking (already set in useEffect)
-  let sortedCompanies: Company[];
-  if (searchResultIds !== null) {
-    sortedCompanies = filteredCompanies;
-  } else {
-    const promotedCompanies = filteredCompanies.filter(c => c.is_promoted);
-    const regularCompanies = filteredCompanies.filter(c => !c.is_promoted);
+  // Memoized — przelicz tylko gdy zmienia sie filteredCompanies / sortOrder / searchResultIds.
+  // Bez tego Math.random() w 'random' przelicza sie przy KAZDYM renderze
+  // (np. przy pisaniu w inpucie), wiec lista wizualnie "tasuje sie".
+  const sortedCompanies: Company[] = useMemo(() => {
+    if (searchResultIds !== null) {
+      return filteredCompanies;
+    }
+    const promoted = filteredCompanies.filter(c => c.is_promoted);
+    const regular = filteredCompanies.filter(c => !c.is_promoted);
 
     if (sortOrder === 'newest') {
-      promotedCompanies.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
-      regularCompanies.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+      promoted.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+      regular.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
     } else if (sortOrder === 'alphabetical') {
-      promotedCompanies.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
-      regularCompanies.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
+      promoted.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
+      regular.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
     } else if (sortOrder === 'random') {
-      for (let i = promotedCompanies.length - 1; i > 0; i--) {
+      for (let i = promoted.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [promotedCompanies[i], promotedCompanies[j]] = [promotedCompanies[j], promotedCompanies[i]];
+        [promoted[i], promoted[j]] = [promoted[j], promoted[i]];
       }
-      for (let i = regularCompanies.length - 1; i > 0; i--) {
+      for (let i = regular.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [regularCompanies[i], regularCompanies[j]] = [regularCompanies[j], regularCompanies[i]];
+        [regular[i], regular[j]] = [regular[j], regular[i]];
       }
     }
-    sortedCompanies = [...promotedCompanies, ...regularCompanies];
-  }
+    return [...promoted, ...regular];
+  }, [filteredCompanies, sortOrder, searchResultIds]);
   const paginatedCompanies = sortedCompanies.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE
