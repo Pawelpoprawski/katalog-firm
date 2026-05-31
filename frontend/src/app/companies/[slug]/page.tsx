@@ -330,7 +330,7 @@ export default function CompanyPage({ params }: Props) {
             <div className="space-y-2 text-sm text-slate-700">
               {company.email && <div>Email: <a href={`mailto:${company.email}`} className="text-primary hover:underline">{company.email}</a></div>}
               {company.phone && <div>Telefon: <a href={`tel:${company.phone}`} className="text-primary hover:underline">{company.phone}</a></div>}
-              {company.website && <div>Strona: <a href={company.website} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{company.website}</a></div>}
+              {company.website && <div>Strona: <a href={/^https?:\/\//i.test(company.website) ? company.website : `https://${company.website}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{company.website.replace(/^https?:\/\//, "")}</a></div>}
               {company.address && <div>Adres: {company.address}</div>}
               <div>{company.city}, {company.canton} {company.postal_code && company.postal_code}</div>
               {(company.facebook || company.instagram) && (
