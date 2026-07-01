@@ -198,9 +198,6 @@ export default function AddCompanyPage() {
       }
     }
     if (current === 2) {
-      // Moved to step 1
-    }
-    if (current === 3) {
       if (!mainPhoto) {
         setUploadError("Zdjęcie główne jest wymagane.");
         return { mainPhoto: "Wymagane" }; // Stop navigation
@@ -275,6 +272,14 @@ export default function AddCompanyPage() {
   };
 
   const submitForm = async () => {
+    // Zabezpieczenie: zdjęcie główne jest obowiązkowe
+    if (!mainPhoto) {
+      setStep(2);
+      setUploadError("Zdjęcie główne jest wymagane.");
+      setErrors((prev) => ({ ...prev, mainPhoto: "Wymagane" }));
+      scrollTop();
+      return;
+    }
     setSubmitStatus("loading");
     setSubmitError("");
     try {
