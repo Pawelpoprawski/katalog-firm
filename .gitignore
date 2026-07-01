@@ -59,6 +59,9 @@ _dummy_company.json
 migration_send_log.jsonl
 email_preview_*.html
 send_confirmations_cron.sh
+send_photo_request_cron.sh
+logs/
+photo_request_log.jsonl
 
 # Marketing leads (research output)
 leady_pitch_deck.md
