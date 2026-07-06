@@ -49,7 +49,10 @@ SUBJECT = "katalog-firm.ch — dodaj zdjecie glowne swojej firmy"
 BASE = "https://katalog-firm.ch"
 
 TEST_EMAIL = "poprawskipawel@gmail.com"
-TEST_ID = 28  # Elektryk
+# Tryb testowy renderuje FIKCYJNA firme z martwym tokenem —
+# nigdy nie uzywamy danych/tokenow prawdziwych firm w mailach testowych.
+TEST_COMPANY_NAME = "Przykladowa Firma (TEST)"
+TEST_TOKEN = "TEST-TOKEN-NIEAKTYWNY"
 
 RATE_SLEEP = 0.6      # ~1.6 req/s (Resend free tier = 2/s)
 COOLDOWN_DAYS = 25    # nie wysylaj ponownie do firmy czesciej niz co 25 dni
@@ -226,13 +229,8 @@ def run_batch(auto):
 
 
 def run_test():
-    by = {c["id"]: c for c in load_companies()}
-    c = by.get(TEST_ID)
-    if not c:
-        print(f"Brak firmy testowej id={TEST_ID}", file=sys.stderr)
-        return 1
-    print(f"TEST -> {TEST_EMAIL} (renderowany jako '{c['name']}', id={c['id']})")
-    ok, info = send(TEST_EMAIL, render(c["name"], c["edit_token"]))
+    print(f"TEST -> {TEST_EMAIL} (renderowany jako '{TEST_COMPANY_NAME}', martwy token)")
+    ok, info = send(TEST_EMAIL, render(TEST_COMPANY_NAME, TEST_TOKEN))
     print(("OK  " if ok else "ERR ") + str(info))
     return 0 if ok else 2
 

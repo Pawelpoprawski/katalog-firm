@@ -546,3 +546,49 @@ def confirm_company_by_token(request: Request, body: dict[str, str]) -> dict[str
         "message": "Dziękujemy! Aktywność Waszej usługi została potwierdzona.",
         "company_name": company.get("name", ""),
     }
+
+
+@router.post("/archive-token")
+@limiter.limit("10/minute")
+def archive_company_by_token(request: Request, body: dict[str, str]) -> dict[str, str]:
+    """
+    Suspend (archive) a company by edit_token — self-service from email link.
+    Sets status to "archived": hidden from the site and excluded from mailings,
+    but still visible in the admin panel (can be restored there).
+    """
+    from datetime import datetime
+
+    token = (body.get("token") or "").strip()
+    if not token:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Token wymagany")
+
+    all_companies = storage_list_companies()
+    company = next((c for c in all_companies if (c.get("edit_token") or "") == token), None)
+
+    if not company:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nieprawidłowy token")
+
+    if company.get("status") == "archived":
+        return {
+            "status": "archived",
+            "message": "Ta usługa jest już zawieszona.",
+            "company_name": company.get("name", ""),
+        }
+
+    storage_update_company(company["id"], {
+        "status": "archived",
+        "archived_at": datetime.now().isoformat(),
+        "archived_reason": "self_service_email",
+    })
+
+    try:
+        from ..clear_cache import clear_nginx_cache
+        clear_nginx_cache()
+    except Exception:
+        pass
+
+    return {
+        "status": "archived",
+        "message": "Usługa została zawieszona. Nie będzie już widoczna w katalogu ani nie będziemy wysyłać do Was maili.",
+        "company_name": company.get("name", ""),
+    }

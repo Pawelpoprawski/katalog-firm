@@ -2,6 +2,21 @@
 
 Format: data (RRRR-MM-DD), najnowsze na górze.
 
+## 2026-07-06
+
+### Dodane
+- **Skrypt `send_update_reminder.py`** — cykliczny mail „czas odświeżyć ogłoszenie", który **zastępuje stary mail potwierdzający** (`send_migration_emails.py --confirmation`).
+  - Każda firma dostaje maila max co **3 miesiące** od najpóźniejszego z: utworzenia (`created_at`), edycji (`updated_at`), potwierdzenia (`last_confirmed_at`), ostatniej wysyłki (log `logs/update_reminder_log.jsonl`).
+  - Tryby: `test` (fikcyjna firma, martwy token) / `real` (pyta y/N) / `cron`.
+  - Mail (szablon w stylu maili systemowych, granatowy baner, bez hiperlinków w stopce): „Edytuj swoje ogłoszenie" (`/edycja/{token}`), „Nie potrzebuję zmian" (`/potwierdz/{token}` → ustawia `last_confirmed_at`), „Zawieś / usuń moją usługę" (`/archiwizuj/{token}`).
+- **Cron `send_update_reminder_cron.sh`** co 5 dni o 10:00 (rytm per-firma pilnuje filtr 90 dni) — **zastąpił** `send_confirmations_cron.sh` w crontabie.
+- **Endpoint `POST /companies/archive-token`** — samoobsługowe zawieszenie usługi przez `edit_token`: status → `archived` + `archived_at` + `archived_reason`. Firma znika ze strony i ze wszystkich wysyłek (filtrują `published`), pozostaje widoczna w adminie. Idempotentny, rate-limit 10/min.
+- **Strona `/archiwizuj/[token]`** — potwierdzenie przyciskiem przed zawieszeniem (celowo nie przy wejściu — ochrona przed prefetch skanerów antyspamowych).
+- **Admin**: status `archived` dozwolony w `PATCH /admin/companies/{id}/status`; badge „📦 Zawieszone" w liście firm, klik przywraca publikację.
+
+### Naprawione
+- Tryb `test` w `send_photo_request.py` i `send_update_reminder.py` nie używa już danych/tokenów prawdziwych firm — renderuje fikcyjną firmę z martwym tokenem.
+
 ## 2026-07-01
 
 ### Dodane

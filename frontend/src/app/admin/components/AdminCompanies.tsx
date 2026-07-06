@@ -79,7 +79,8 @@ export default function AdminCompanies({
   };
 
   const toggleStatus = async (company: AdminCompany) => {
-    const newStatus = company.status === "draft" ? "published" : "draft";
+    // archiwum (zawieszone przez firmę) → klik przywraca publikację
+    const newStatus = company.status === "published" ? "draft" : "published";
     setUpdatingStatus(company.id);
     const originalCompanies = companies;
     setCompanies((prev) => prev.map((c) => (c.id === company.id ? { ...c, status: newStatus } : c)));
@@ -309,11 +310,19 @@ export default function AdminCompanies({
                       className={`inline-flex px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all hover:scale-105 cursor-pointer ${
                         c.status === "published"
                           ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 hover:bg-green-200"
+                          : c.status === "archived"
+                          ? "bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300 hover:bg-slate-300"
                           : "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 hover:bg-orange-200"
                       }`}
-                      title={c.status === "published" ? "Kliknij aby wycofać do szkicu" : "Kliknij aby opublikować"}
+                      title={
+                        c.status === "published"
+                          ? "Kliknij aby wycofać do szkicu"
+                          : c.status === "archived"
+                          ? "Zawieszone przez firmę — kliknij aby przywrócić publikację"
+                          : "Kliknij aby opublikować"
+                      }
                     >
-                      {c.status === "published" ? "✓ Opublikowane" : "⏳ Szkic"}
+                      {c.status === "published" ? "✓ Opublikowane" : c.status === "archived" ? "📦 Zawieszone" : "⏳ Szkic"}
                     </button>
                   </td>
                   <td className="px-6 py-4 text-center">

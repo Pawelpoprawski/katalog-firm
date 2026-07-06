@@ -147,11 +147,11 @@ def update_company_status(
     company_id: int,
     status_value: str = Body(..., embed=True, alias="status")
 ):
-    """Update company status (draft/published). Admin only."""
-    if status_value not in ["draft", "published"]:
+    """Update company status (draft/published/archived). Admin only."""
+    if status_value not in ["draft", "published", "archived"]:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Status must be 'draft' or 'published'"
+            detail="Status must be 'draft', 'published' or 'archived'"
         )
     
     try:

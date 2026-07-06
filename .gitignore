@@ -60,6 +60,7 @@ migration_send_log.jsonl
 email_preview_*.html
 send_confirmations_cron.sh
 send_photo_request_cron.sh
+send_update_reminder_cron.sh
 logs/
 photo_request_log.jsonl
 
