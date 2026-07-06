@@ -178,7 +178,7 @@ def render(company_name, edit_token):
       Cześć, <strong>{name}</strong>!
     </p>
     <p style="color:#475569;font-size:15px;line-height:1.6;margin:0 0 16px;">
-      Wasze ogłoszenie nie było aktualizowane od ponad 3 miesięcy. Możecie
+      Twoje ogłoszenie nie było aktualizowane od ponad 3 miesięcy. Możecie
       <strong>dodać nowe zdjęcia</strong>, <strong>odświeżyć opis</strong>,
       zaktualizować dane kontaktowe czy cennik — aktualne ogłoszenia wyglądają
       wiarygodniej i są częściej klikane przez klientów.
