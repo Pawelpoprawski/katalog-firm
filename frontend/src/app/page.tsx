@@ -385,27 +385,29 @@ export default function HomePage() {
   // Bez tego Math.random() w 'random' przelicza sie przy KAZDYM renderze
   // (np. przy pisaniu w inpucie), wiec lista wizualnie "tasuje sie".
   const sortedCompanies: Company[] = useMemo(() => {
-    if (searchResultIds !== null) {
-      return filteredCompanies;
-    }
-    const promoted = filteredCompanies.filter(c => c.is_promoted);
+    const shuffle = (arr: Company[]) => {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    };
+
+    // Polecane zawsze na gorze i zawsze w losowej kolejnosci miedzy soba
+    const promoted = shuffle(filteredCompanies.filter(c => c.is_promoted));
     const regular = filteredCompanies.filter(c => !c.is_promoted);
 
+    if (searchResultIds !== null) {
+      // Zwykle firmy w kolejnosci wynikow wyszukiwania (AI najpierw, potem tekstowe)
+      return [...promoted, ...regular];
+    }
+
     if (sortOrder === 'newest') {
-      promoted.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
       regular.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
     } else if (sortOrder === 'alphabetical') {
-      promoted.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
       regular.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
     } else if (sortOrder === 'random') {
-      for (let i = promoted.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [promoted[i], promoted[j]] = [promoted[j], promoted[i]];
-      }
-      for (let i = regular.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [regular[i], regular[j]] = [regular[j], regular[i]];
-      }
+      shuffle(regular);
     }
     return [...promoted, ...regular];
   }, [filteredCompanies, sortOrder, searchResultIds]);
