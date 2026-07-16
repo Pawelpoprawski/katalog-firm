@@ -43,10 +43,10 @@ if not RESEND_API_KEY:
     print("BLAD: RESEND_API_KEY nie ustawione.", file=sys.stderr)
     sys.exit(1)
 
-FROM_EMAIL = "PolacySzwajcaria <kontakt@katalog-firm.ch>"
+FROM_EMAIL = "PolacySzwajcaria <katalog.firm@polacyszwajcaria.com>"
 REPLY_TO = "kontakt@polacyszwajcaria.com"
-SUBJECT = "katalog-firm.ch — dodaj zdjecie glowne swojej firmy"
-BASE = "https://katalog-firm.ch"
+SUBJECT = "Katalog Firm Polonijnych — dodaj zdjecie glowne swojej firmy"
+BASE = "https://polacyszwajcaria.com/katalog-firm"
 
 TEST_EMAIL = "poprawskipawel@gmail.com"
 # Tryb testowy renderuje FIKCYJNA firme z martwym tokenem —
@@ -130,7 +130,7 @@ def render(company_name, edit_token):
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border:1px solid #E0E3E8;border-radius:8px;overflow:hidden;">
   <tr><td style="background:#0D2240;padding:24px 32px;">
     <div style="height:4px;width:44px;background:#E1002A;border-radius:2px;margin-bottom:14px;"></div>
-    <span style="color:#ffffff;font-size:20px;font-weight:bold;letter-spacing:0.3px;">katalog-firm.ch</span>
+    <span style="color:#ffffff;font-size:20px;font-weight:bold;letter-spacing:0.3px;">Katalog Firm Polonijnych</span>
     <div style="color:#9fb0c7;font-size:12px;margin-top:4px;">Katalog Polskich Firm w Szwajcarii</div>
   </td></tr>
   <tr><td style="padding:32px;">
@@ -167,8 +167,8 @@ def render(company_name, edit_token):
   </td></tr>
   <tr><td style="padding:20px 32px;border-top:1px solid #E0E3E8;background:#fafbfc;">
     <p style="font-size:12px;color:#888;line-height:1.5;margin:0;">
-      Pozdrawiamy,<br>Zespol katalog-firm.ch<br>
-      <a href="{BASE}" style="color:#888;">katalog-firm.ch</a> &middot;
+      Pozdrawiamy,<br>Zespol Katalogu Firm — PolacySzwajcaria<br>
+      <a href="{BASE}" style="color:#888;">polacyszwajcaria.com/katalog-firm</a> &middot;
       <a href="mailto:kontakt@polacyszwajcaria.com" style="color:#888;">kontakt@polacyszwajcaria.com</a>
     </p>
   </td></tr>

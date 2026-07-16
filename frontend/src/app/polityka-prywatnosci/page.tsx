@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/siteUrl";
 
 export const metadata: Metadata = {
   title: "Polityka prywatności | Katalog Firm w Szwajcarii",
@@ -6,10 +7,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Polityka prywatności | Katalog Firm",
     description: "Informacje o przetwarzaniu danych osobowych w katalogu polskich firm w Szwajcarii.",
-    url: "https://katalog-firm.ch/polityka-prywatnosci",
+    url: `${SITE_URL}/polityka-prywatnosci`,
   },
   alternates: {
-    canonical: "https://katalog-firm.ch/polityka-prywatnosci",
+    canonical: `${SITE_URL}/polityka-prywatnosci`,
   },
 };
 

@@ -19,9 +19,18 @@ def _get_api_key() -> str:
     return RESEND_API_KEY
 
 
-def send_email(to: str, subject: str, html: str, from_email: str = "Katalog Firm <kontakt@katalog-firm.ch>") -> bool:
+def _site_url() -> str:
+    """Public site URL for links inside emails (PUBLIC_SITE_URL env)."""
+    from .settings import get_settings
+    return get_settings().public_site_url.rstrip("/")
+
+
+def send_email(to: str, subject: str, html: str, from_email: str | None = None) -> bool:
     """Send email via Resend API using curl (most reliable method)."""
     api_key = _get_api_key()
+    if from_email is None:
+        from .settings import get_settings
+        from_email = get_settings().email_from
     if not api_key:
         logger.warning("RESEND_API_KEY not set, skipping email")
         return False
@@ -60,8 +69,9 @@ def send_email(to: str, subject: str, html: str, from_email: str = "Katalog Firm
 
 def send_company_created_email(email: str, company_name: str, edit_token: str, company_slug: str) -> bool:
     """Send email with edit link after company creation."""
-    edit_url = f"https://katalog-firm.ch/edycja/{edit_token}"
-    company_url = f"https://katalog-firm.ch/firma/{company_slug}"
+    site = _site_url()
+    edit_url = f"{site}/edycja/{edit_token}"
+    company_url = f"{site}/firma/{company_slug}"
 
     html = f"""
     <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
@@ -104,7 +114,7 @@ def send_company_created_email(email: str, company_name: str, edit_token: str, c
       <div style="background: #f8fafc; padding: 24px; text-align: center; border-top: 1px solid #e2e8f0;">
         <p style="color: #94a3b8; font-size: 12px; margin: 0;">
           Katalog Firm Polonijnych w Szwajcarii<br/>
-          <a href="https://katalog-firm.ch" style="color: #E30613;">katalog-firm.ch</a>
+          <a href="{site}" style="color: #E30613;">{site.replace("https://", "")}</a>
         </p>
       </div>
     </div>
@@ -122,7 +132,8 @@ def send_company_created_email(email: str, company_name: str, edit_token: str, c
 def send_new_review_email(company_name: str, company_slug: str, rating: int, comment: str | None) -> bool:
     """Notify admin about a new review."""
     stars = "★" * rating + "☆" * (5 - rating)
-    company_url = f"https://katalog-firm.ch/firma/{company_slug}"
+    site = _site_url()
+    company_url = f"{site}/firma/{company_slug}"
 
     html = f"""
     <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
@@ -140,7 +151,7 @@ def send_new_review_email(company_name: str, company_slug: str, rating: int, com
         </div>
 
         <p style="color: #475569; font-size: 14px;">
-          <a href="https://katalog-firm.ch/admin" style="color: #E30613; font-weight: 600;">Otwórz panel admina</a> aby zarządzać recenzjami.
+          <a href="{site}/admin" style="color: #E30613; font-weight: 600;">Otwórz panel admina</a> aby zarządzać recenzjami.
         </p>
       </div>
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SITE_URL } from "@/lib/siteUrl";
 
 export const metadata: Metadata = {
   title: "Jak to działa? | Katalog Firm w Szwajcarii",
@@ -8,9 +9,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Jak to działa? | Katalog Firm",
     description: "3 proste kroki do dodania firmy w katalogu polskich usług w Szwajcarii.",
-    url: "https://katalog-firm.ch/jak-to-dziala",
+    url: `${SITE_URL}/jak-to-dziala`,
   },
-  alternates: { canonical: "https://katalog-firm.ch/jak-to-dziala" },
+  alternates: { canonical: `${SITE_URL}/jak-to-dziala` },
 };
 
 export default function HowItWorksPage() {

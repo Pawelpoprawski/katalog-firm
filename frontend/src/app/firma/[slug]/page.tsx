@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CompanyPageClient from "./CompanyPageClient";
+import { SITE_URL } from "@/lib/siteUrl";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
@@ -71,8 +72,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // OG image: prefer company's own image, fallback to brand OG (1200x630)
   const ogImage = company.img
-    ? (company.img.startsWith("/images/") ? `https://katalog-firm.ch${company.img}` : company.img)
-    : "https://katalog-firm.ch/og.png";
+    ? (company.img.startsWith("/images/") ? `${SITE_URL}/api${company.img}` : company.img)
+    : `${SITE_URL}/og.png`;
 
   return {
     title,
@@ -82,7 +83,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${company.name} | Katalog Firm Polonijnych`,
       description,
       type: "website",
-      url: `https://katalog-firm.ch/firma/${params.slug}`,
+      url: `${SITE_URL}/firma/${params.slug}`,
       siteName: "Katalog Firm Polonijnych w Szwajcarii",
       locale: "pl_PL",
       images: [{ url: ogImage, width: 1200, height: 630, alt: `${company.name} — ${categoryName} w ${location}` }],
@@ -94,7 +95,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [ogImage],
     },
     alternates: {
-      canonical: `https://katalog-firm.ch/firma/${params.slug}`,
+      canonical: `${SITE_URL}/firma/${params.slug}`,
     },
   };
 }
@@ -109,17 +110,17 @@ export default async function CompanyPage({ params }: Props) {
   const location = [company.city, company.canton].filter(Boolean).join(", ");
   const categorySlug = (company.category_slug || "").toString();
   const breadcrumbItems: Array<{ name: string; item: string }> = [
-    { name: "Strona główna", item: "https://katalog-firm.ch" },
+    { name: "Strona główna", item: SITE_URL },
   ];
   if (company.category && categorySlug) {
     breadcrumbItems.push({
       name: company.category,
-      item: `https://katalog-firm.ch/kategoria/${categorySlug}`,
+      item: `${SITE_URL}/kategoria/${categorySlug}`,
     });
   }
   breadcrumbItems.push({
     name: company.name,
-    item: `https://katalog-firm.ch/firma/${params.slug}`,
+    item: `${SITE_URL}/firma/${params.slug}`,
   });
   const breadcrumbData = {
     "@context": "https://schema.org",
@@ -136,8 +137,8 @@ export default async function CompanyPage({ params }: Props) {
     "@type": "LocalBusiness",
     name: company.name,
     description: company.short_description || company.description?.replace(/<[^>]*>/g, "").slice(0, 200) || "",
-    url: company.website || `https://katalog-firm.ch/firma/${params.slug}`,
-    ...(company.img ? { image: company.img.startsWith("/images/") ? `https://katalog-firm.ch${company.img}` : company.img } : {}),
+    url: company.website || `${SITE_URL}/firma/${params.slug}`,
+    ...(company.img ? { image: company.img.startsWith("/images/") ? `${SITE_URL}/api${company.img}` : company.img } : {}),
     ...(company.phone ? { telephone: company.phone } : {}),
     ...(company.email ? { email: company.email } : {}),
     address: {
@@ -155,10 +156,11 @@ export default async function CompanyPage({ params }: Props) {
         longitude: company.longitude,
       },
     } : {}),
-    ...(company.rating ? {
+    ...(company.rating && company.rating_count ? {
       aggregateRating: {
         "@type": "AggregateRating",
         ratingValue: company.rating,
+        ratingCount: company.rating_count,
         bestRating: 5,
       },
     } : {}),

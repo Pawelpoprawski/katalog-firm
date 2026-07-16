@@ -25,6 +25,7 @@ export type Company = {
   category_id?: number;
   category?: string;
   rating?: number;
+  rating_count?: number;
   img?: string;
   photos?: string[];
   is_promoted?: boolean;

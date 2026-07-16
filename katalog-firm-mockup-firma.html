@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Creatique Agency — Katalog firm polonijnych w Szwajcarii (mockup)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<style>
+  :root {
+    --hays-red: #E1002A;
+    --hays-red-dark: #B8001F;
+    --hays-red-light: #FFF0F3;
+    --hays-navy: #0D2240;
+    --hays-navy-light: #1A3A5C;
+    --border: #E0E3E8;
+    --bg-soft: #F5F6F8;
+    --text-muted: #555;
+  }
+  html { scroll-behavior:smooth; }
+  body {
+    font-family:'Roboto', system-ui, -apple-system, sans-serif;
+    background:#fff; color:#1A1A1A; line-height:1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3,h4 {
+    font-family:'Roboto Slab', Georgia, serif;
+    letter-spacing:-0.01em; font-weight:700;
+    text-rendering:optimizeLegibility;
+  }
+  .font-display { font-family:'Roboto Slab', Georgia, serif; }
+
+  .hays-pattern{
+    background-image:
+      linear-gradient(30deg, transparent 48%, rgba(255,255,255,0.03) 48%, rgba(255,255,255,0.03) 52%, transparent 52%),
+      linear-gradient(150deg, transparent 48%, rgba(255,255,255,0.03) 48%, rgba(255,255,255,0.03) 52%, transparent 52%);
+    background-size:80px 80px;
+  }
+  .hays-red-line{
+    display:block; width:48px; height:3px; background:var(--hays-red); margin-bottom:16px;
+  }
+  .py-15{ padding-top:60px; padding-bottom:60px; }
+
+  /* Nav link */
+  .hays-nav-link{
+    font-weight:500; font-size:.9rem; color:#555;
+    padding:8px 0; position:relative; transition:color .2s; text-decoration:none;
+  }
+  .hays-nav-link:hover{ color:var(--hays-navy); }
+  .hays-nav-link::after{
+    content:''; position:absolute; bottom:0; left:0; width:0; height:2px;
+    background:var(--hays-red); transition:width .2s;
+  }
+  .hays-nav-link:hover::after{ width:100%; }
+
+  /* Gallery */
+  .gallery-main{
+    aspect-ratio:16/10;
+    background:var(--bg-soft);
+    overflow:hidden;
+    border:1px solid var(--border);
+    border-radius:8px;
+  }
+  .gallery-main img{
+    width:100%; height:100%; object-fit:cover;
+    transition: transform .35s cubic-bezier(.4,0,.2,1);
+  }
+  .gallery-main:hover img{ transform:scale(1.02); }
+  .gallery-thumb{
+    aspect-ratio:1/1;
+    border:1px solid var(--border);
+    border-radius:6px; overflow:hidden;
+    cursor:pointer;
+    transition: all .2s;
+    position:relative;
+  }
+  .gallery-thumb img{ width:100%; height:100%; object-fit:cover; }
+  .gallery-thumb:hover{ border-color:var(--hays-red); transform:translateY(-2px); }
+  .gallery-thumb.active{
+    border-color:var(--hays-red);
+    box-shadow:0 0 0 2px var(--hays-red);
+  }
+  .gallery-more{
+    position:absolute; inset:0;
+    background:rgba(13,34,64,0.78);
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-family:'Roboto Slab', serif;
+    font-size:.95rem;
+  }
+
+  /* Action button */
+  .btn-action{
+    display:inline-flex; align-items:center; justify-content:center;
+    gap:.5rem; padding:.85rem 1.2rem;
+    border-radius:6px; font-size:.9rem; font-weight:500;
+    transition: all .15s; text-decoration:none;
+  }
+  .btn-red{ background:var(--hays-red); color:#fff; }
+  .btn-red:hover{ background:var(--hays-red-dark); }
+  .btn-navy{ background:var(--hays-navy); color:#fff; }
+  .btn-navy:hover{ background:var(--hays-navy-light); }
+  .btn-ghost{ background:#fff; color:var(--hays-navy); border:1px solid var(--border); }
+  .btn-ghost:hover{ border-color:var(--hays-navy); }
+  .btn-wa{ background:#25D366; color:#fff; }
+  .btn-wa:hover{ background:#1FB759; }
+
+  .star{ color:#F5B400; fill:currentColor; }
+  .star-empty{ color:#D1D5DB; }
+
+  /* Tag chip */
+  .chip{
+    display:inline-flex; align-items:center; gap:4px;
+    padding:4px 10px;
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    border-radius:999px;
+    font-size:.78rem; color:var(--text-muted);
+    transition: all .15s;
+  }
+  .chip:hover{ border-color:var(--hays-red); color:var(--hays-red); }
+
+  /* Sidebar card */
+  .side-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:1.5rem;
+  }
+  .side-card h4{
+    font-size:.78rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--hays-navy);
+    margin-bottom:1rem;
+    position:relative;
+    padding-left:.65rem;
+  }
+  .side-card h4::before{
+    content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
+    width:3px; height:12px; background:var(--hays-red);
+  }
+
+  /* Review card */
+  .review-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:1.5rem;
+    transition: border-color .2s;
+  }
+  .review-card:hover{ border-color:var(--hays-red); }
+
+  /* Map placeholder */
+  .map-placeholder{
+    aspect-ratio:16/9;
+    background:
+      linear-gradient(45deg, #DFE5EC 25%, transparent 25%),
+      linear-gradient(-45deg, #DFE5EC 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #DFE5EC 75%),
+      linear-gradient(-45deg, transparent 75%, #DFE5EC 75%),
+      #E8EDF4;
+    background-size: 24px 24px;
+    background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+    border-radius:6px;
+    position:relative;
+    border:1px solid var(--border);
+  }
+  .map-pin{
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-100%);
+    background:var(--hays-red);
+    color:#fff;
+    padding:8px 12px;
+    border-radius:6px;
+    font-weight:600; font-size:.78rem;
+    white-space:nowrap;
+    box-shadow:0 4px 12px rgba(225,0,42,0.35);
+  }
+  .map-pin::after{
+    content:'';
+    position:absolute;
+    bottom:-6px; left:50%;
+    transform:translateX(-50%) rotate(45deg);
+    width:10px; height:10px;
+    background:var(--hays-red);
+  }
+
+  /* Mockup ribbon */
+  .ribbon{
+    position:fixed; top:14px; right:-44px; transform:rotate(35deg);
+    background:var(--hays-red); color:#fff; font-size:.72rem; font-weight:700;
+    letter-spacing:.12em; padding:6px 56px; z-index:9999;
+    box-shadow:0 2px 8px rgba(0,0,0,.18); text-transform:uppercase;
+  }
+
+  details > summary{ list-style:none; }
+  details > summary::-webkit-details-marker{ display:none; }
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<div class="ribbon">Mockup designu</div>
+
+<!-- ============ HEADER ============ -->
+<header class="sticky top-0 z-50 bg-white border-b" style="border-color:var(--border)">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <div class="flex justify-between items-center h-[72px]">
+      <div class="flex items-center gap-3 min-w-0">
+        <a href="./katalog-firm-mockup.html" aria-label="Strona główna"
+           class="relative w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0 rounded-lg"
+           style="background:var(--hays-navy)">
+          <i data-lucide="building-2" class="text-white" style="width:24px;height:24px;"></i>
+          <span class="absolute -top-1 -right-1 w-3 h-3 rounded-full" style="background:var(--hays-red)"></span>
+        </a>
+        <div class="leading-tight min-w-0">
+          <a href="./katalog-firm-mockup.html" class="block font-display font-extrabold text-[1.05rem] sm:text-[1.4rem] whitespace-nowrap no-underline"
+             style="color:var(--hays-navy)">
+            Katalog <span style="color:var(--hays-red)">firm</span>
+          </a>
+          <span class="block text-[.6rem] sm:text-[.65rem] text-[#888] tracking-[.05em] -mt-0.5">
+            część portalu <span class="font-semibold">PolacySzwajcaria.com</span>
+          </span>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-4 lg:gap-7">
+        <a href="./katalog-firm-mockup.html#kategorie" class="hays-nav-link">Kategorie</a>
+        <a href="./katalog-firm-mockup.html#firmy" class="hays-nav-link">Firmy</a>
+        <a href="./katalog-firm-mockup.html#dodaj" class="hays-nav-link">Dodaj firmę</a>
+        <a href="./katalog-firm-mockup.html#faq" class="hays-nav-link">Pomoc</a>
+      </nav>
+
+      <div class="hidden md:flex items-center gap-3">
+        <a href="./katalog-firm-mockup.html#dodaj"
+           class="inline-flex items-center gap-2 px-5 py-2.5 rounded font-medium text-[.88rem] transition-colors text-white"
+           style="background:var(--hays-red)"
+           onmouseover="this.style.background='var(--hays-red-dark)'"
+           onmouseout="this.style.background='var(--hays-red)'">
+          <i data-lucide="plus" style="width:16px;height:16px;"></i>
+          Dodaj firmę
+        </a>
+      </div>
+
+      <button class="md:hidden p-2 hover:bg-[#F5F6F8] rounded transition-colors" aria-label="Menu">
+        <i data-lucide="menu" style="width:24px;height:24px;color:var(--hays-navy)"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="flex-1">
+
+<!-- ============ BREADCRUMB ============ -->
+<nav class="border-b" style="background:var(--bg-soft); border-color:var(--border)">
+  <div class="max-w-[1200px] mx-auto px-6 py-3 flex items-center gap-2 text-[.85rem]" style="color:var(--text-muted)">
+    <a href="./katalog-firm-mockup.html" class="hover:text-[#E1002A] transition-colors no-underline">Strona główna</a>
+    <i data-lucide="chevron-right" style="width:14px;height:14px;opacity:.4"></i>
+    <a href="./katalog-firm-mockup.html#kategorie" class="hover:text-[#E1002A] transition-colors no-underline">Kategorie</a>
+    <i data-lucide="chevron-right" style="width:14px;height:14px;opacity:.4"></i>
+    <a href="#" class="hover:text-[#E1002A] transition-colors no-underline">Różne</a>
+    <i data-lucide="chevron-right" style="width:14px;height:14px;opacity:.4"></i>
+    <span class="truncate font-medium" style="color:var(--hays-navy)">Creatique Agency</span>
+  </div>
+</nav>
+
+<!-- ============ COMPANY HEADER ============ -->
+<section class="max-w-[1200px] mx-auto px-6 pt-10 pb-6">
+  <!-- Title row -->
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-6">
+    <div class="min-w-0">
+      <span class="hays-red-line"></span>
+      <div class="flex items-center gap-3 flex-wrap mb-3">
+        <a href="#" class="text-[.78rem] font-semibold uppercase tracking-[.1em] inline-flex items-center gap-1.5 no-underline"
+           style="color:var(--hays-red)">
+          <i data-lucide="tag" style="width:13px;height:13px;"></i> Różne
+        </a>
+        <span class="inline-flex items-center gap-1 text-[.7rem] font-semibold px-2.5 py-1 rounded" style="background:var(--hays-red-light); color:var(--hays-red)">
+          <i data-lucide="badge-check" style="width:12px;height:12px;"></i> Zweryfikowana
+        </span>
+      </div>
+      <h1 class="font-display text-[1.8rem] sm:text-[2.2rem] font-bold leading-tight mb-3" style="color:var(--hays-navy)">
+        Creatique Agency<span style="color:var(--text-muted); font-weight:500;"> — Reklamy Online, Pozyskiwanie Klientów</span>
+      </h1>
+
+      <!-- Meta row -->
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-[.9rem]" style="color:var(--text-muted)">
+        <span class="flex items-center gap-1.5">
+          <i data-lucide="map-pin" style="width:16px;height:16px;color:var(--hays-red)"></i>
+          Zürich, ZH
+        </span>
+        <span class="flex items-center gap-1.5">
+          <i data-lucide="star" class="star" style="width:16px;height:16px;"></i>
+          <span class="font-semibold" style="color:var(--hays-navy)">5,0</span>
+          <a href="#recenzje" class="underline decoration-dotted hover:text-[#E1002A]">1 opinia</a>
+        </span>
+        <span class="flex items-center gap-1.5">
+          <i data-lucide="eye" style="width:16px;height:16px;opacity:.6"></i>
+          259 wyświetleń
+        </span>
+        <span class="flex items-center gap-1.5">
+          <i data-lucide="calendar" style="width:16px;height:16px;opacity:.6"></i>
+          W katalogu od kwietnia 2026
+        </span>
+      </div>
+    </div>
+
+    <!-- Secondary actions -->
+    <div class="flex items-center gap-2 flex-shrink-0">
+      <button class="btn-ghost" aria-label="Zapisz">
+        <i data-lucide="bookmark" style="width:16px;height:16px;"></i>
+        <span class="hidden sm:inline">Zapisz</span>
+      </button>
+      <button class="btn-ghost" aria-label="Udostępnij">
+        <i data-lucide="share-2" style="width:16px;height:16px;"></i>
+        <span class="hidden sm:inline">Udostępnij</span>
+      </button>
+      <button class="btn-ghost" aria-label="Zgłoś" style="color:var(--text-muted)">
+        <i data-lucide="flag" style="width:16px;height:16px;"></i>
+        <span class="hidden sm:inline">Zgłoś</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main action bar -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+    <a href="tel:+41788964220" class="btn-action btn-red">
+      <i data-lucide="phone" style="width:16px;height:16px;"></i> Zadzwoń
+    </a>
+    <a href="https://wa.me/41788964220" target="_blank" rel="noopener" class="btn-action btn-wa">
+      <i data-lucide="message-circle" style="width:16px;height:16px;"></i> WhatsApp
+    </a>
+    <a href="mailto:info@creatique.agency" class="btn-action btn-navy">
+      <i data-lucide="mail" style="width:16px;height:16px;"></i> E-mail
+    </a>
+    <a href="https://www.creatique.agency/pl" target="_blank" rel="noopener" class="btn-action btn-ghost" style="background:#fff;color:var(--hays-navy)">
+      <i data-lucide="external-link" style="width:16px;height:16px;"></i> Strona WWW
+    </a>
+  </div>
+</section>
+
+<!-- ============ GALLERY ============ -->
+<section class="max-w-[1200px] mx-auto px-6 mb-12">
+  <div class="grid lg:grid-cols-[2fr_1fr] gap-3">
+    <!-- Main photo -->
+    <div class="gallery-main" id="mainPhoto">
+      <img id="mainImg" src="https://katalog-firm.ch/images/company_110_main_0.webp" alt="Creatique Agency — zdjęcie główne" />
+    </div>
+    <!-- Thumb grid -->
+    <div class="grid grid-cols-3 lg:grid-cols-2 gap-3">
+      <div class="gallery-thumb" data-src="https://katalog-firm.ch/images/company_110_photo_0.webp">
+        <img src="https://katalog-firm.ch/images/company_110_photo_0.webp" alt="zdjęcie 1" loading="lazy" />
+      </div>
+      <div class="gallery-thumb" data-src="https://katalog-firm.ch/images/company_110_photo_1.webp">
+        <img src="https://katalog-firm.ch/images/company_110_photo_1.webp" alt="zdjęcie 2" loading="lazy" />
+      </div>
+      <div class="gallery-thumb" data-src="https://katalog-firm.ch/images/company_110_photo_2.webp">
+        <img src="https://katalog-firm.ch/images/company_110_photo_2.webp" alt="zdjęcie 3" loading="lazy" />
+      </div>
+      <div class="gallery-thumb relative" data-src="https://katalog-firm.ch/images/company_110_photo_3.webp">
+        <img src="https://katalog-firm.ch/images/company_110_photo_3.webp" alt="zdjęcie 4" loading="lazy" />
+        <div class="gallery-more">+4 zdjęcia</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MAIN CONTENT GRID ============ -->
+<section class="max-w-[1200px] mx-auto px-6 pb-15">
+  <div class="grid lg:grid-cols-[1fr_360px] gap-8">
+
+    <!-- LEFT: CONTENT -->
+    <div class="space-y-10 min-w-0">
+
+      <!-- About / Description -->
+      <article>
+        <span class="hays-red-line"></span>
+        <h2 class="font-display text-[1.4rem] font-bold mb-4" style="color:var(--hays-navy)">O firmie</h2>
+        <p class="text-[.95rem] leading-[1.7] mb-4" style="color:var(--text-muted)">
+          Kompleksowe wsparcie marketingowe dla polskich firm w Szwajcarii. Pozyskujemy klientów, prowadzimy kampanie reklamowe i opracowujemy strategie sprzedażowe — wszystko po polsku.
+        </p>
+      </article>
+
+      <!-- Services list -->
+      <article>
+        <span class="hays-red-line"></span>
+        <h2 class="font-display text-[1.4rem] font-bold mb-5" style="color:var(--hays-navy)">Co oferujemy</h2>
+        <ul class="grid sm:grid-cols-2 gap-3">
+          <li class="flex items-start gap-3 bg-white border rounded-lg p-4" style="border-color:var(--border)">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--hays-red-light)">
+              <i data-lucide="target" style="width:18px;height:18px;color:var(--hays-red)"></i>
+            </div>
+            <div>
+              <div class="font-display font-semibold text-[.95rem]" style="color:var(--hays-navy)">Pozyskiwanie klientów</div>
+              <p class="text-[.85rem] mt-0.5" style="color:var(--text-muted)">Generowanie leadów i sprzedaży dla firm usługowych.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3 bg-white border rounded-lg p-4" style="border-color:var(--border)">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--hays-red-light)">
+              <i data-lucide="megaphone" style="width:18px;height:18px;color:var(--hays-red)"></i>
+            </div>
+            <div>
+              <div class="font-display font-semibold text-[.95rem]" style="color:var(--hays-navy)">Reklamy online</div>
+              <p class="text-[.85rem] mt-0.5" style="color:var(--text-muted)">Google Ads, Meta (Facebook/Instagram), LinkedIn, TikTok.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3 bg-white border rounded-lg p-4" style="border-color:var(--border)">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--hays-red-light)">
+              <i data-lucide="trending-up" style="width:18px;height:18px;color:var(--hays-red)"></i>
+            </div>
+            <div>
+              <div class="font-display font-semibold text-[.95rem]" style="color:var(--hays-navy)">Strategia marketingowa</div>
+              <p class="text-[.85rem] mt-0.5" style="color:var(--text-muted)">Plan działań, dobór kanałów, optymalizacja budżetu reklamowego.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3 bg-white border rounded-lg p-4" style="border-color:var(--border)">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--hays-red-light)">
+              <i data-lucide="sparkles" style="width:18px;height:18px;color:var(--hays-red)"></i>
+            </div>
+            <div>
+              <div class="font-display font-semibold text-[.95rem]" style="color:var(--hays-navy)">AI pozycjonowanie</div>
+              <p class="text-[.85rem] mt-0.5" style="color:var(--text-muted)">Materiały reklamowe i pozycjonowanie z wykorzystaniem AI.</p>
+            </div>
+          </li>
+        </ul>
+
+        <!-- Pozdrowienia -->
+        <div class="mt-6 p-5 rounded-lg border-l-4 bg-white" style="border-left-color:var(--hays-red); border:1px solid var(--border); border-left:4px solid var(--hays-red);">
+          <p class="text-[.95rem] italic" style="color:var(--text-muted)">
+            "Pozdrawiam i zapraszam do kontaktu :)" — <span class="font-semibold not-italic" style="color:var(--hays-navy)">Hanna</span>
+          </p>
+        </div>
+      </article>
+
+      <!-- Tags -->
+      <article>
+        <h3 class="font-display text-[1rem] font-semibold mb-3" style="color:var(--hays-navy)">Słowa kluczowe</h3>
+        <div class="flex flex-wrap gap-2">
+          <a class="chip" href="#">reklama online</a>
+          <a class="chip" href="#">marketing</a>
+          <a class="chip" href="#">Google Ads</a>
+          <a class="chip" href="#">Meta Ads</a>
+          <a class="chip" href="#">LinkedIn</a>
+          <a class="chip" href="#">TikTok</a>
+          <a class="chip" href="#">AI</a>
+          <a class="chip" href="#">pozyskiwanie klientów</a>
+        </div>
+      </article>
+
+      <!-- Reviews -->
+      <article id="recenzje">
+        <span class="hays-red-line"></span>
+        <div class="flex items-end justify-between mb-5 flex-wrap gap-3">
+          <h2 class="font-display text-[1.4rem] font-bold" style="color:var(--hays-navy)">Recenzje klientów</h2>
+          <button class="btn-action btn-red text-[.85rem]">
+            <i data-lucide="message-square-plus" style="width:16px;height:16px;"></i>
+            Dodaj recenzję
+          </button>
+        </div>
+
+        <!-- Rating summary -->
+        <div class="bg-white border rounded-lg p-6 mb-5 grid sm:grid-cols-[auto_1fr] gap-6 items-center" style="border-color:var(--border)">
+          <div class="text-center">
+            <div class="font-display text-[3rem] font-extrabold leading-none" style="color:var(--hays-navy)">5,0</div>
+            <div class="flex justify-center gap-0.5 mt-2">
+              <i data-lucide="star" class="star" style="width:18px;height:18px;"></i>
+              <i data-lucide="star" class="star" style="width:18px;height:18px;"></i>
+              <i data-lucide="star" class="star" style="width:18px;height:18px;"></i>
+              <i data-lucide="star" class="star" style="width:18px;height:18px;"></i>
+              <i data-lucide="star" class="star" style="width:18px;height:18px;"></i>
+            </div>
+            <div class="text-[.78rem] mt-1.5" style="color:var(--text-muted)">na podstawie 1 opinii</div>
+          </div>
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-3 text-[.78rem]" style="color:var(--text-muted)">
+              <span class="w-3 text-right">5</span>
+              <i data-lucide="star" class="star" style="width:12px;height:12px;"></i>
+              <div class="flex-1 h-2 rounded-full" style="background:var(--bg-soft)">
+                <div class="h-full rounded-full" style="width:100%; background:var(--hays-red)"></div>
+              </div>
+              <span class="w-6">100%</span>
+            </div>
+            <div class="flex items-center gap-3 text-[.78rem]" style="color:var(--text-muted)">
+              <span class="w-3 text-right">4</span>
+              <i data-lucide="star" class="star" style="width:12px;height:12px;"></i>
+              <div class="flex-1 h-2 rounded-full" style="background:var(--bg-soft)"><div class="h-full rounded-full" style="width:0%; background:var(--hays-red)"></div></div>
+              <span class="w-6">0%</span>
+            </div>
+            <div class="flex items-center gap-3 text-[.78rem]" style="color:var(--text-muted)">
+              <span class="w-3 text-right">3</span>
+              <i data-lucide="star" class="star" style="width:12px;height:12px;"></i>
+              <div class="flex-1 h-2 rounded-full" style="background:var(--bg-soft)"><div class="h-full rounded-full" style="width:0%; background:var(--hays-red)"></div></div>
+              <span class="w-6">0%</span>
+            </div>
+            <div class="flex items-center gap-3 text-[.78rem]" style="color:var(--text-muted)">
+              <span class="w-3 text-right">2</span>
+              <i data-lucide="star" class="star" style="width:12px;height:12px;"></i>
+              <div class="flex-1 h-2 rounded-full" style="background:var(--bg-soft)"><div class="h-full rounded-full" style="width:0%; background:var(--hays-red)"></div></div>
+              <span class="w-6">0%</span>
+            </div>
+            <div class="flex items-center gap-3 text-[.78rem]" style="color:var(--text-muted)">
+              <span class="w-3 text-right">1</span>
+              <i data-lucide="star" class="star" style="width:12px;height:12px;"></i>
+              <div class="flex-1 h-2 rounded-full" style="background:var(--bg-soft)"><div class="h-full rounded-full" style="width:0%; background:var(--hays-red)"></div></div>
+              <span class="w-6">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Single review (real, from DB) -->
+        <div class="review-card">
+          <div class="flex items-start gap-4">
+            <div class="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 font-display font-bold" style="background:var(--hays-red-light); color:var(--hays-red)">M</div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-3 mb-1 flex-wrap">
+                <div>
+                  <div class="font-display font-semibold" style="color:var(--hays-navy)">Marta K.</div>
+                  <div class="text-[.78rem]" style="color:#888">właścicielka salonu, Zürich</div>
+                </div>
+                <div class="text-right">
+                  <div class="flex gap-0.5">
+                    <i data-lucide="star" class="star" style="width:14px;height:14px;"></i>
+                    <i data-lucide="star" class="star" style="width:14px;height:14px;"></i>
+                    <i data-lucide="star" class="star" style="width:14px;height:14px;"></i>
+                    <i data-lucide="star" class="star" style="width:14px;height:14px;"></i>
+                    <i data-lucide="star" class="star" style="width:14px;height:14px;"></i>
+                  </div>
+                  <div class="text-[.72rem] mt-1" style="color:#888">2 tygodnie temu</div>
+                </div>
+              </div>
+              <p class="text-[.92rem] leading-[1.7] mt-2" style="color:var(--text-muted)">
+                Świetna! Pani Hania pomogła mi zapełnić cały kalendarz rezerwacji na 2026 w moim salonie, dzięki jednej reklamie na instagramie. Bardzo polecam, bardzo miła osoba.
+              </p>
+              <div class="flex items-center gap-4 mt-3 text-[.8rem]" style="color:#888">
+                <button class="flex items-center gap-1 hover:text-[#E1002A] transition-colors">
+                  <i data-lucide="thumbs-up" style="width:14px;height:14px;"></i> Pomocna (3)
+                </button>
+                <button class="flex items-center gap-1 hover:text-[#E1002A] transition-colors">
+                  <i data-lucide="flag" style="width:14px;height:14px;"></i> Zgłoś
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- RIGHT: SIDEBAR -->
+    <aside class="space-y-4 lg:sticky lg:top-[88px] lg:self-start">
+      <!-- Contact -->
+      <div class="side-card">
+        <h4>Kontakt</h4>
+        <ul class="space-y-3 text-[.9rem]">
+          <li class="flex items-center gap-3" style="color:var(--text-muted)">
+            <i data-lucide="phone" style="width:18px;height:18px;color:var(--hays-red);flex-shrink:0"></i>
+            <a href="tel:+41788964220" class="hover:text-[#E1002A] transition-colors no-underline font-medium" style="color:var(--hays-navy)">
+              +41 78 896 42 20
+            </a>
+          </li>
+          <li class="flex items-center gap-3" style="color:var(--text-muted)">
+            <i data-lucide="mail" style="width:18px;height:18px;color:var(--hays-red);flex-shrink:0"></i>
+            <a href="mailto:info@creatique.agency" class="hover:text-[#E1002A] transition-colors no-underline break-all" style="color:var(--hays-navy)">
+              info@creatique.agency
+            </a>
+          </li>
+          <li class="flex items-center gap-3" style="color:var(--text-muted)">
+            <i data-lucide="globe" style="width:18px;height:18px;color:var(--hays-red);flex-shrink:0"></i>
+            <a href="https://www.creatique.agency/pl" target="_blank" rel="noopener" class="hover:text-[#E1002A] transition-colors no-underline break-all" style="color:var(--hays-navy)">
+              creatique.agency/pl
+            </a>
+          </li>
+          <li class="flex items-center gap-3" style="color:var(--text-muted)">
+            <i data-lucide="message-circle" style="width:18px;height:18px;color:#25D366;flex-shrink:0"></i>
+            <a href="https://wa.me/41788964220" target="_blank" rel="noopener" class="hover:text-[#E1002A] transition-colors no-underline" style="color:var(--hays-navy)">
+              WhatsApp
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Location -->
+      <div class="side-card">
+        <h4>Lokalizacja</h4>
+        <div class="map-placeholder mb-3">
+          <span class="map-pin">
+            <i data-lucide="map-pin" style="width:12px;height:12px;display:inline;vertical-align:-2px;margin-right:3px"></i>
+            Creatique Agency
+          </span>
+        </div>
+        <p class="text-[.88rem] leading-[1.6]" style="color:var(--text-muted)">
+          Witikonerstrasse 519<br>
+          8053 Zürich<br>
+          Kanton Zürich, Szwajcaria
+        </p>
+        <a href="https://www.google.com/maps/search/?api=1&query=47.3615343,8.6018972" target="_blank" rel="noopener"
+           class="inline-flex items-center gap-1.5 mt-3 text-[.85rem] font-medium no-underline hover:underline" style="color:var(--hays-red)">
+          <i data-lucide="navigation" style="width:14px;height:14px;"></i>
+          Wyznacz trasę
+        </a>
+      </div>
+
+      <!-- Hours -->
+      <div class="side-card">
+        <h4>Godziny otwarcia</h4>
+        <ul class="space-y-1.5 text-[.85rem]">
+          <li class="flex items-center justify-between" style="color:var(--text-muted)">
+            <span>Poniedziałek</span>
+            <span style="color:var(--hays-navy)">09:00 – 18:00</span>
+          </li>
+          <li class="flex items-center justify-between" style="color:var(--text-muted)">
+            <span>Wtorek</span>
+            <span style="color:var(--hays-navy)">09:00 – 18:00</span>
+          </li>
+          <li class="flex items-center justify-between" style="color:var(--text-muted)">
+            <span>Środa</span>
+            <span style="color:var(--hays-navy)">09:00 – 18:00</span>
+          </li>
+          <li class="flex items-center justify-between" style="color:var(--text-muted)">
+            <span>Czwartek</span>
+            <span style="color:var(--hays-navy)">09:00 – 18:00</span>
+          </li>
+          <li class="flex items-center justify-between font-semibold" style="background:var(--hays-red-light); margin:0 -8px; padding:6px 8px; border-radius:4px; color:var(--hays-red)">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full" style="background:var(--hays-red)"></span>
+              Piątek (dziś)
+            </span>
+            <span>09:00 – 17:00</span>
+          </li>
+          <li class="flex items-center justify-between" style="color:var(--text-muted)">
+            <span>Sobota</span>
+            <span style="color:#999">zamknięte</span>
+          </li>
+          <li class="flex items-center justify-between" style="color:var(--text-muted)">
+            <span>Niedziela</span>
+            <span style="color:#999">zamknięte</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- CTA owner -->
+      <div class="p-5 rounded-lg text-white" style="background:var(--hays-navy)">
+        <div class="flex items-center gap-2 mb-2 text-[.78rem] font-semibold uppercase tracking-[.08em]" style="color:rgba(255,255,255,0.6)">
+          <i data-lucide="info" style="width:14px;height:14px;"></i> Właściciel firmy?
+        </div>
+        <p class="text-[.88rem] text-white/80 mb-4 leading-relaxed">
+          To Twoja firma? Zaktualizuj dane, dodaj zdjęcia lub odpowiedz na recenzje.
+        </p>
+        <a href="#" class="inline-flex items-center gap-1.5 text-[.85rem] font-medium no-underline hover:underline" style="color:var(--hays-red)">
+          Zarządzaj wizytówką <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+        </a>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ SIMILAR COMPANIES ============ -->
+<section class="py-15" style="background:var(--bg-soft)">
+  <div class="max-w-[1200px] mx-auto px-6">
+    <span class="hays-red-line"></span>
+    <h2 class="font-display text-[1.4rem] font-bold mb-6" style="color:var(--hays-navy)">Inne firmy z kategorii Różne</h2>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <a href="./katalog-firm-mockup-firma.html" class="bg-white border rounded-lg overflow-hidden transition-all hover:shadow-[0_4px_16px_rgba(225,0,42,0.08)] no-underline" style="border-color:var(--border)" onmouseover="this.style.borderColor='var(--hays-red)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div class="aspect-[16/10] overflow-hidden" style="background:var(--bg-soft)">
+          <img src="https://katalog-firm.ch/images/company_112_photo_0.webp" alt="PKS Finanz" loading="lazy" class="w-full h-full object-cover" />
+        </div>
+        <div class="p-4">
+          <div class="text-[.7rem] font-semibold uppercase tracking-[.08em] mb-1.5" style="color:var(--hays-red)">Finanse i Podatki</div>
+          <h3 class="font-display font-semibold text-[1rem] mb-1 line-clamp-1" style="color:var(--hays-navy)">PKS Finanz GmbH</h3>
+          <p class="text-[.85rem] line-clamp-2 mb-2" style="color:var(--text-muted)">Doradztwo po polsku w zakresie kredytów i rozliczeń podatkowych.</p>
+          <div class="flex items-center justify-between text-[.78rem]" style="color:#888">
+            <span class="flex items-center gap-1"><i data-lucide="map-pin" style="width:12px;height:12px;"></i> Sursee</span>
+            <span class="flex items-center gap-1"><i data-lucide="eye" style="width:12px;height:12px;"></i> 697</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="./katalog-firm-mockup-firma.html" class="bg-white border rounded-lg overflow-hidden transition-all hover:shadow-[0_4px_16px_rgba(225,0,42,0.08)] no-underline" style="border-color:var(--border)" onmouseover="this.style.borderColor='var(--hays-red)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div class="aspect-[16/10] overflow-hidden" style="background:var(--bg-soft)">
+          <img src="https://katalog-firm.ch/images/company_111_main_0.webp" alt="NYKS" loading="lazy" class="w-full h-full object-cover" />
+        </div>
+        <div class="p-4">
+          <div class="text-[.7rem] font-semibold uppercase tracking-[.08em] mb-1.5" style="color:var(--hays-red)">Ubezpieczenia</div>
+          <h3 class="font-display font-semibold text-[1rem] mb-1 line-clamp-1" style="color:var(--hays-navy)">NYKS — Ubezpieczenia w Szwajcarii</h3>
+          <p class="text-[.85rem] line-clamp-2 mb-2" style="color:var(--text-muted)">Doradztwo ubezpieczeniowe po polsku — prywatne, biznesowe, zdrowotne.</p>
+          <div class="flex items-center justify-between text-[.78rem]" style="color:#888">
+            <span class="flex items-center gap-1"><i data-lucide="map-pin" style="width:12px;height:12px;"></i> Pfäffikon</span>
+            <span class="flex items-center gap-1"><i data-lucide="eye" style="width:12px;height:12px;"></i> 824</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="./katalog-firm-mockup-firma.html" class="bg-white border rounded-lg overflow-hidden transition-all hover:shadow-[0_4px_16px_rgba(225,0,42,0.08)] no-underline" style="border-color:var(--border)" onmouseover="this.style.borderColor='var(--hays-red)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div class="aspect-[16/10] overflow-hidden" style="background:var(--bg-soft)">
+          <img src="https://katalog-firm.ch/images/company_24_main_0.webp" alt="Chrust Translations" loading="lazy" class="w-full h-full object-cover" />
+        </div>
+        <div class="p-4">
+          <div class="text-[.7rem] font-semibold uppercase tracking-[.08em] mb-1.5" style="color:var(--hays-red)">CV &amp; Tłumaczenia</div>
+          <h3 class="font-display font-semibold text-[1rem] mb-1 line-clamp-1" style="color:var(--hays-navy)">Chrust Translations</h3>
+          <p class="text-[.85rem] line-clamp-2 mb-2" style="color:var(--text-muted)">Profesjonalne tłumaczenia dla Polaków w niemieckojęzycznej Szwajcarii.</p>
+          <div class="flex items-center justify-between text-[.78rem]" style="color:#888">
+            <span class="flex items-center gap-1"><i data-lucide="map-pin" style="width:12px;height:12px;"></i> Grenchen</span>
+            <span class="flex items-center gap-1"><i data-lucide="eye" style="width:12px;height:12px;"></i> 1 212</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="text-center mt-6">
+      <a href="./katalog-firm-mockup.html#firmy" class="inline-flex items-center gap-2 px-6 py-3 border rounded text-[.88rem] font-medium transition-all no-underline"
+         style="color:var(--hays-navy); border-color:var(--hays-navy); background:#fff"
+         onmouseover="this.style.background='var(--hays-navy)';this.style.color='#fff'"
+         onmouseout="this.style.background='#fff';this.style.color='var(--hays-navy)'">
+        Zobacz więcej firm
+        <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="text-white/85 mt-auto" style="background:var(--hays-navy)">
+  <div class="max-w-[1200px] mx-auto px-6 pt-12 pb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1.2fr] gap-10 mb-8">
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15)">
+            <i data-lucide="building-2" class="text-white" style="width:24px;height:24px;"></i>
+          </div>
+          <span class="font-display font-extrabold text-[1.4rem] text-white leading-none">
+            Katalog <span style="color:var(--hays-red)">firm</span>
+          </span>
+        </div>
+        <p class="text-[.85rem] text-white/50 leading-[1.7] max-w-[320px]">
+          Część portalu <a href="https://polacyszwajcaria.com" class="font-semibold text-white/70 hover:text-white no-underline">PolacySzwajcaria.com</a> — od 2024 roku tworzymy największą polską społeczność dla Polaków w Szwajcarii.
+        </p>
+      </div>
+      <div>
+        <h4 class="font-display text-[.8rem] font-semibold uppercase tracking-[.1em] text-white mb-4">Dla klientów</h4>
+        <ul class="flex flex-col gap-2.5 list-none">
+          <li><a href="./katalog-firm-mockup.html#firmy" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Przeglądaj firmy</a></li>
+          <li><a href="./katalog-firm-mockup.html#kategorie" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Kategorie</a></li>
+          <li><a href="#" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Dodaj recenzję</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-display text-[.8rem] font-semibold uppercase tracking-[.1em] text-white mb-4">Dla firm</h4>
+        <ul class="flex flex-col gap-2.5 list-none">
+          <li><a href="./katalog-firm-mockup.html#dodaj" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Dodaj firmę</a></li>
+          <li><a href="#" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Edycja wpisu</a></li>
+          <li><a href="#" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Regulamin</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-display text-[.8rem] font-semibold uppercase tracking-[.1em] text-white mb-4">Nasze pozostałe portale</h4>
+        <ul class="flex flex-col gap-2.5 list-none">
+          <li><a href="https://polacyszwajcaria.com" target="_blank" rel="noopener noreferrer" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">PolacySzwajcaria.com</a></li>
+          <li><a href="https://praca-w-szwajcarii.ch" target="_blank" rel="noopener noreferrer" class="text-white/50 hover:text-white text-[.88rem] transition-colors no-underline">Praca-w-szwajcarii.ch</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="pt-5 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-3 text-[.78rem] text-white/40">
+      <span>© 2026 Katalog firm polonijnych w Szwajcarii. Wszystkie prawa zastrzeżone.</span>
+      <div class="flex gap-5">
+        <a href="#" class="text-white/40 hover:text-white transition-colors no-underline">Regulamin</a>
+        <a href="#" class="text-white/40 hover:text-white transition-colors no-underline">Polityka prywatności</a>
+        <a href="#" class="text-white/40 hover:text-white transition-colors no-underline">RODO</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  lucide.createIcons();
+
+  // Gallery thumbnail click → swap main image
+  const mainImg = document.getElementById('mainImg');
+  document.querySelectorAll('.gallery-thumb').forEach((t) => {
+    t.addEventListener('click', () => {
+      const src = t.getAttribute('data-src');
+      if (src && mainImg) mainImg.src = src;
+      document.querySelectorAll('.gallery-thumb').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

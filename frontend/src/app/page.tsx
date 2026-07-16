@@ -418,6 +418,9 @@ export default function HomePage() {
 
   return (
     <div>
+      {/* biały odstęp pod paskiem portalu — tylko na stronie głównej katalogu,
+          bo granatowe menu i granatowe hero zlewały się w jedno */}
+      <div className="h-10 bg-white" aria-hidden="true" />
       {/* HERO — Hays-style navy with pattern + red accent */}
       <section className="relative bg-[#0D2240] text-white overflow-hidden">
         <div className="absolute inset-0 hays-pattern opacity-100 pointer-events-none" />
@@ -598,33 +601,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA SECTION */}
-      <section className="bg-white border-t border-[#E0E3E8]">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-14 lg:py-20">
-          <div className="relative overflow-hidden rounded-md bg-[#0D2240] px-8 py-12 lg:px-12 lg:py-14">
-            <div className="absolute inset-0 hays-pattern pointer-events-none" />
-            <div className="absolute -top-20 -right-20 w-80 h-80 hays-red-glow pointer-events-none" />
-            <div className="relative flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
-              <div className="space-y-3 max-w-2xl">
-                <span className="hays-red-line mx-auto lg:mx-0" />
-                <h2 className="font-display text-3xl sm:text-4xl font-bold text-white">
-                  Masz firmę w Szwajcarii?
-                </h2>
-                <p className="text-base sm:text-lg text-white/70">
-                  Dodaj się do katalogu <span className="font-semibold text-white">za darmo</span> i dotrzyj do tysięcy Polaków szukających usług.
-                </p>
-              </div>
-              <Link
-                href="/dodaj"
-                onClick={(e) => { e.preventDefault(); goToAdd(); }}
-                className="btn-hays whitespace-nowrap px-7 py-4 text-base"
-              >
-                + Dodaj firmę za darmo
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

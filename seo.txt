@@ -1,0 +1,312 @@
+================================================================
+ SEO OPTIMIZATION CHECKLIST — Next.js + dynamic content
+ (na bazie wdrożenia praca-w-szwajcarii.ch, maj 2026)
+================================================================
+
+PROBLEM WYJSCIOWY:
+  - Sitemap mial 4000+ URL ale Google indeksowal tylko ~50.
+  - Strona swieza, niski autorytet domeny -> Google ogranicza crawl budget.
+
+CO ZROBILISMY (i co warto powielic na innych stronach):
+
+================================================================
+ 1) CACHE-CONTROL — najwiekszy ROI (~10 min pracy, OGROMNY wplyw)
+================================================================
+
+PROBLEM:
+  Next.js dla dynamicznych stron (SSR/ISR) domyslnie wysyla:
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+  Googlebot widzi "nigdy nie cachuj" -> ogranicza crawl, traktuje strone
+  jako bardzo wolatilna.
+
+FIX (w next.config.js):
+
+  const PUBLIC_CACHE = "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400";
+  const cachePublicHeader = [{ key: "Cache-Control", value: PUBLIC_CACHE }];
+
+  async headers() {
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      { source: "/", headers: cachePublicHeader },
+      { source: "/oferty", headers: cachePublicHeader },
+      { source: "/oferty/:slug*", headers: cachePublicHeader },
+      { source: "/firmy", headers: cachePublicHeader },
+      { source: "/firmy/:slug*", headers: cachePublicHeader },
+      // ...inne publiczne strony
+      { source: "/sitemap.xml", headers: [{ key: "Cache-Control", value: "public, max-age=600, s-maxage=3600" }] },
+      { source: "/sitemap-:slug*.xml", headers: [{ key: "Cache-Control", value: "public, max-age=600, s-maxage=3600" }] },
+      { source: "/robots.txt", headers: [{ key: "Cache-Control", value: "public, max-age=3600" }] },
+    ];
+  },
+
+DODATKOWO w stronach detalowych (np. app/oferty/[id]/page.tsx):
+
+  export const revalidate = 300;  // ISR — regeneracja co 5 min
+
+WYJASNIENIE:
+  public        = wszyscy moga cachowac (przegladarki, CDN, Googlebot)
+  max-age=300   = browser cache 5 min
+  s-maxage=3600 = CDN/proxy cache 1h
+  stale-while-revalidate=86400 = serwuj stary content do 24h gdy regeneruje
+
+WERIFIKACJA:
+  curl -I https://twoja-domena.pl/jakas-strona
+  Cache-Control: public, max-age=300, s-maxage=3600, stale-while-revalidate=86400  <- POPRAWNIE
+
+================================================================
+ 2) STRUCTURED DATA (JSON-LD) — bogata informacja dla Google
+================================================================
+
+A) WebSite + SearchAction (w app/layout.tsx, JSON-LD):
+
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Nazwa Strony",
+    "url": SITE_URL,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": { "@type": "EntryPoint", "urlTemplate": `${SITE_URL}/oferty?q={search_term_string}` },
+      "query-input": "required name=search_term_string"
+    }
+  }
+
+B) FAQPage (jesli masz FAQ na stronie glownej):
+
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "...", "acceptedAnswer": { "@type": "Answer", "text": "..." } }
+    ]
+  }
+
+C) JobPosting (dla serwisow z ofertami pracy — Google for Jobs):
+
+  Wymagane:
+    title, description, datePosted, hiringOrganization, jobLocation
+
+  Mocno rekomendowane:
+    identifier         -> PropertyValue z value=JOB_ID, name=COMPANY
+    employmentType     -> FULL_TIME | PART_TIME | TEMPORARY | CONTRACTOR | INTERN
+    validThrough       -> data wygasniecia oferty
+    baseSalary         -> MonetaryAmount z minValue, maxValue, unitText
+    directApply        -> true gdy mozna aplikowac na Twojej stronie
+    applicantLocationRequirements -> kraje z ktorych przyjmujesz aplikacje
+    skills             -> lista umiejetnosci jako string (przecinki)
+    experienceRequirements -> OccupationalExperienceRequirements z monthsOfExperience (INT, nie string!)
+    logo w hiringOrganization (fallback na /og.png gdy brak)
+
+  PUTAPKI:
+    - employmentType="OTHER" daje slabe wyniki — uzywaj pelnego mapping
+    - addressLocality=undefined LUB null -> bledy walidacji
+      Fallback: gdy brak miasta -> addressRegion="Switzerland" (lub kraj)
+    - experienceRequirements jako string "manager" -> blad walidacji
+      Musi byc obiekt OccupationalExperienceRequirements z monthsOfExperience (int)
+    - directApply=false serializuje sie jako "http://schema.org/False" w
+      Rich Results Test — to nie blad, tak Google pokazuje boolean
+
+  WERYFIKACJA:
+    https://search.google.com/test/rich-results
+    Wklej URL, sprawdz czy "Prawidlowy element" + ile ostrzezen.
+
+================================================================
+ 3) SITEMAP — index + child sitemaps (zamiast jednego mega-pliku)
+================================================================
+
+DLACZEGO:
+  - Search Console pokazuje status indeksacji per sitemap -> latwiejsza diagnostyka
+  - Per-section <lastmod> -> Google wie co re-crawlowac
+  - Limit Google: 50k URL / 50MB per sitemap (nawet jak miescisz sie, split pomaga)
+
+STRUKTURA (Next.js 14 App Router):
+
+  USUN: app/sitemap.ts (single sitemap)
+  UTWORZ:
+    app/sitemap.xml/route.ts          -> sitemap index (lista child)
+    app/sitemap-static.xml/route.ts   -> strony statyczne (home, regulamin, RODO)
+    app/sitemap-jobs.xml/route.ts     -> oferty/produkty (paginacja po 100)
+    app/sitemap-companies.xml/route.ts -> firmy/profile
+
+WZOR sitemap.xml/route.ts (index):
+
+  export async function GET() {
+    const now = new Date().toISOString();
+    const sitemaps = [
+      { loc: `${SITE_URL}/sitemap-static.xml`, lastmod: now },
+      { loc: `${SITE_URL}/sitemap-jobs.xml`, lastmod: now },
+      { loc: `${SITE_URL}/sitemap-companies.xml`, lastmod: now },
+    ];
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemaps.map(s => `  <sitemap><loc>${s.loc}</loc><lastmod>${s.lastmod}</lastmod></sitemap>`).join("\n")}
+</sitemapindex>`;
+    return new Response(xml, {
+      headers: {
+        "Content-Type": "application/xml; charset=utf-8",
+        "Cache-Control": "public, max-age=600, s-maxage=3600",
+      },
+    });
+  }
+
+WAZNE PUTAPKI:
+  - escape XML (& -> &amp;, < -> &lt;) w URL-ach z parametrami
+  - Content-Type MUSI byc application/xml (nie text/xml)
+  - Paginacja: backend ma zwykle limit per_page (np. 100) — trzeba petli
+  - Jezeli dodajesz sitemap.xml/route.ts to USUN sitemap.ts (konflikt!)
+
+PO DEPLOYU:
+  1. Search Console -> Sitemaps -> sprawdz /sitemap.xml
+  2. Jezeli pokazuje "Nie udalo sie pobrac" dla child sitemap -> dodaj
+     KAZDY child OSOBNO jako sitemap w Search Console:
+       sitemap-static.xml
+       sitemap-jobs.xml
+       sitemap-companies.xml
+     Google wymusi natychmiastowe pobranie (status zmieni sie w 1-2h).
+
+================================================================
+ 4) ROBOTS.TXT — bot-friendly z explicit allow
+================================================================
+
+W app/robots.ts (Next.js):
+
+  - Pozwol Googlebot, Bingbot, DuckDuckBot
+  - Pozwol AI crawlers (jesli chcesz): GPTBot, ClaudeBot, PerplexityBot,
+    Google-Extended (Bard/Gemini training)
+  - Blokuj prywatne: /panel/, /api/, /login, /register
+  - W sitemap: link do /sitemap.xml (nie do child!)
+  - host: pelny URL z https://
+
+ENV VAR pre-launch:
+  NEXT_PUBLIC_NOINDEX=true  -> blokuje wszystkich botow (tryb development/staging)
+  NEXT_PUBLIC_NOINDEX=false -> normalny tryb (produkcja)
+
+================================================================
+ 5) META TAGS w layout.tsx + page.tsx
+================================================================
+
+W layout.tsx:
+  - metadataBase: new URL(SITE_URL) — wazne dla og.png absolute URL
+  - title.template: "%s | Nazwa Strony" — auto-formatowanie tytulow
+  - openGraph: type, locale, url, siteName, images (1200x630)
+  - twitter: card="summary_large_image"
+  - robots: warunkowy index/noindex na podstawie NEXT_PUBLIC_NOINDEX
+
+W page.tsx (server component, dynamic page):
+  export async function generateMetadata({ params }): Promise<Metadata> {
+    const data = await getData(params.id);
+    return {
+      title: data.title,
+      description: data.shortDescription,
+      alternates: { canonical: `${SITE_URL}/...` },  // wazne dla unikania duplicate content
+      openGraph: { title, description, url, type, images },
+      twitter: { card, title, description, images },
+    };
+  }
+
+================================================================
+ 6) GOOGLE INDEXING API (opcjonalnie — push do indeksacji)
+================================================================
+
+OFICJALNIE WSPIERANE:
+  - JobPosting (oferty pracy)
+  - BroadcastEvent (transmisje live)
+
+NIEOFICJALNIE (Google nie gwarantuje):
+  - Inne typy stron (czesto dziala, ale moze zostac zbanowane)
+
+LIMITY:
+  - 200 URL/dzien per project domyslnie (mozna prosic o wiecej)
+  - 600 metadata-only request/dzien
+
+SETUP (skrocony):
+  1. Google Cloud Console -> nowy projekt
+  2. Enable "Web Search Indexing API"
+  3. Utworz Service Account LUB OAuth Client (Desktop app)
+  4. SA: dodaj jako Owner w Search Console (czasem buggy — patrz nizej)
+  5. OAuth: jednorazowy browser flow -> refresh token
+
+PUTAPKA Z SERVICE ACCOUNT:
+  Google ma buga gdzie nowy Search Console UI rzuca "Nie znaleziono
+  adresu e-mail" przy dodawaniu SA jako Owner. Workaround:
+  - Stary UI (https://www.google.com/webmasters/verification/home)
+    juz nie dziala (przekierowuje)
+  - LEPIEJ: uzyj OAuth user flow zamiast SA (Twoj account juz jest Owner)
+
+KOD (Python, OAuth):
+  from google.oauth2.credentials import Credentials
+  from google.auth.transport.requests import Request
+  import httpx
+
+  creds = Credentials(
+    token=None,
+    refresh_token=REFRESH_TOKEN,
+    client_id=CLIENT_ID,
+    client_secret=CLIENT_SECRET,
+    token_uri="https://oauth2.googleapis.com/token",
+    scopes=["https://www.googleapis.com/auth/indexing"],
+  )
+  creds.refresh(Request())
+
+  httpx.post(
+    "https://indexing.googleapis.com/v3/urlNotifications:publish",
+    json={"url": "https://...", "type": "URL_UPDATED"},  # lub URL_DELETED
+    headers={"Authorization": f"Bearer {creds.token}"},
+  )
+
+================================================================
+ 7) DODATKOWE BEST PRACTICES
+================================================================
+
+A) Domeny i URL:
+   - Canonical URL na kazdej stronie detalowej (alternates.canonical)
+   - Slug-friendly URLs (z transliteracja: ó->o, ł->l, ż->z itd.)
+   - Bez trailing slash (lub konsekwentnie z — wybierz jedno)
+
+B) Internal linking:
+   - Z home -> najwazniejsze sekcje
+   - Z list -> detale (oczywiste)
+   - Z detalu -> powiazane (kategoria, firma, podobne oferty)
+   - Breadcrumbs (z BreadcrumbList JSON-LD)
+
+C) Performance (Core Web Vitals):
+   - LCP < 2.5s (obrazy: next/image + priority na fold)
+   - CLS < 0.1 (rezerwuj wymiary dla obrazow, reklam)
+   - INP < 200ms (minimalizuj client-side JS na server components)
+
+D) Mobile-first:
+   - Google indeksuje mobilna wersje (mobile-first indexing)
+   - Test: https://search.google.com/test/mobile-friendly
+
+E) Cloudflare:
+   - Sprawdz Bot Management — moze blokowac Googlebot
+   - Cloudflare doda automatyczne robots.txt z Content-Signal
+     (search=yes, ai-train=no) — to OK dla SEO
+
+F) Submit do Search Console:
+   - Property: dodaj OBA typy (Domain + URL-prefix) jesli mozesz
+   - Sitemap: dodaj /sitemap.xml (index) + KAZDY child osobno na poczatku
+   - URL Inspection: dla nowych waznych stron -> "Request indexing"
+     (manual push, 10-20 URL/dzien)
+
+G) Monitorowanie:
+   - Search Console -> Strony -> Zaindeksowane / Niezaindeksowane
+   - Powod niezaindeksowania (np. "Odkryta — obecnie niezaindeksowana")
+     Wymaga roznych dzialan zaleznie od powodu
+
+================================================================
+ KOLEJNOSC WDROZENIA (od najwiekszego ROI)
+================================================================
+
+1. Cache-Control fix (5-10 min, OGROMNY wplyw)
+2. JSON-LD JobPosting / Product / Article (30 min, sredni wplyw)
+3. Sitemap split (30-45 min, sredni-maly wplyw, lepsza diagnostyka)
+4. Meta tags + canonical (juz powinno byc, sprawdz)
+5. Robots.txt + opt-in dla AI crawlers
+6. Indexing API (godzina-2 setup, push API dla nowych URL)
+7. Internal linking improvements (ciagle)
+8. Core Web Vitals optimization (ciagle)
+
+================================================================
+ KONIEC
+================================================================

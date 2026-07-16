@@ -80,6 +80,7 @@ class CompanyRead(CompanyBase):
     is_verified: bool
     status: Optional[str] = "published"
     rating: Optional[float] = None  # Computed from reviews
+    rating_count: int = 0  # Computed from reviews
     created_at: Optional[float] = None
     updated_at: Optional[float] = None
     views: int = 0

@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CategoryPageClient from "./CategoryPageClient";
 import { Category } from "@/types";
+import { SITE_URL } from "@/lib/siteUrl";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
@@ -55,12 +56,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${category.name} | Katalog Firm Polonijnych`,
       description,
       type: "website",
-      url: `https://katalog-firm.ch/kategoria/${params.slug}`,
+      url: `${SITE_URL}/kategoria/${params.slug}`,
       siteName: "Katalog Firm Polonijnych w Szwajcarii",
       locale: "pl_PL",
       images: [
         {
-          url: "https://katalog-firm.ch/og.png",
+          url: `${SITE_URL}/og.png`,
           width: 1200,
           height: 630,
           alt: `${category.name} — polskie firmy w Szwajcarii`,
@@ -71,10 +72,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: `${category.name} | Katalog Firm`,
       description,
-      images: ["https://katalog-firm.ch/og.png"],
+      images: [`${SITE_URL}/og.png`],
     },
     alternates: {
-      canonical: `https://katalog-firm.ch/kategoria/${params.slug}`,
+      canonical: `${SITE_URL}/kategoria/${params.slug}`,
     },
   };
 }

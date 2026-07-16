@@ -17,6 +17,11 @@ class Settings(BaseSettings):
     google_maps_api_key: Optional[str] = Field(default=None, validation_alias="GOOGLE_MAPS_API_KEY")
     admin_password: Optional[str] = Field(default=None, validation_alias="ADMIN_PASSWORD")
     resend_api_key: Optional[str] = Field(default=None, validation_alias="RESEND_API_KEY")
+    # Publiczny adres serwisu (linki w mailach, newsletter) — na nowej instancji
+    # ustaw PUBLIC_SITE_URL=https://polacyszwajcaria.com/katalog-firm
+    public_site_url: str = Field(default="https://katalog-firm.ch", validation_alias="PUBLIC_SITE_URL")
+    # Nadawca maili transakcyjnych (domena musi być zweryfikowana w Resend)
+    email_from: str = Field(default="Katalog Firm <kontakt@katalog-firm.ch>", validation_alias="EMAIL_FROM")
     open_ai_katalog_firm: Optional[str] = Field(default=None, validation_alias="OPEN_AI_KATALOG_FIRM")
     openai_model: str = Field(default="gpt-5.4-mini", validation_alias="OPENAI_MODEL")
     

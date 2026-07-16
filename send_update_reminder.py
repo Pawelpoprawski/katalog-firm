@@ -56,10 +56,10 @@ if not RESEND_API_KEY:
     print("BLAD: RESEND_API_KEY nie ustawione.", file=sys.stderr)
     sys.exit(1)
 
-FROM_EMAIL = "PolacySzwajcaria <kontakt@katalog-firm.ch>"
+FROM_EMAIL = "PolacySzwajcaria <katalog.firm@polacyszwajcaria.com>"
 REPLY_TO = "kontakt@polacyszwajcaria.com"
-SUBJECT = "katalog-firm.ch — może czas odświeżyć Twoje ogłoszenie?"
-BASE = "https://katalog-firm.ch"
+SUBJECT = "Katalog Firm Polonijnych — może czas odświeżyć Twoje ogłoszenie?"
+BASE = "https://polacyszwajcaria.com/katalog-firm"
 
 TEST_EMAIL = "poprawskipawel@gmail.com"
 # Tryb testowy renderuje FIKCYJNA firme z martwym tokenem —
@@ -217,7 +217,7 @@ def render(company_name, edit_token):
   <tr><td style="background:#f8fafc;padding:24px;text-align:center;border-top:1px solid #e2e8f0;">
     <p style="color:#94a3b8;font-size:12px;margin:0;line-height:1.6;">
       Katalog Firm Polonijnych w Szwajcarii<br>
-      katalog-firm.ch &middot; kontakt@polacyszwajcaria.com
+      polacyszwajcaria.com/katalog-firm &middot; kontakt@polacyszwajcaria.com
     </p>
   </td></tr>
 

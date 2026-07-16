@@ -17,27 +17,28 @@ from ..storage import verify_edit_token as storage_verify_edit_token
 from ..storage import get_newsletter_count
 from ..storage import track_impressions
 from ..security_middleware import limiter, sanitize_html, sanitize_plain_text, validate_url
+from ..settings import get_settings
 
 
 router = APIRouter()
 
 
-def _calculate_rating(company_id: int) -> float | None:
-    """Calculate average rating from reviews for a company."""
+def _calculate_rating(company_id: int) -> tuple[float | None, int]:
+    """Calculate average rating and review count from reviews for a company."""
     reviews = storage_list_reviews(company_id=company_id)
     if not reviews:
-        return None
+        return None, 0
     ratings = [r.get("rating") for r in reviews if r.get("rating")]
     if not ratings:
-        return None
-    return round(sum(ratings) / len(ratings), 1)
+        return None, 0
+    return round(sum(ratings) / len(ratings), 1), len(ratings)
 
 
 def _enrich_company(company: dict) -> dict:
     """Add calculated fields like rating and category name to a company dict."""
     from ..storage import list_categories
     
-    rating = _calculate_rating(company["id"])
+    rating, rating_count = _calculate_rating(company["id"])
     
     # Lookup category name from category_id to prevent stale/grayed category names
     category_name = None
@@ -49,7 +50,7 @@ def _enrich_company(company: dict) -> dict:
             category_name = category["name"]
             category_slug = category.get("slug")
 
-    return {**company, "rating": rating, "category": category_name, "category_slug": category_slug}
+    return {**company, "rating": rating, "rating_count": rating_count, "category": category_name, "category_slug": category_slug}
 
 
 
@@ -128,8 +129,8 @@ def _sort_by_newest(companies: list[dict]) -> list[dict]:
 
 def _build_newsletter_html(enriched: list[dict], cols: int = 3) -> str:
     """Build email-safe HTML for newsletter with N columns per row. Uses URL images instead of base64."""
-    base_url = "https://katalog-firm.ch"
-    api_url = "https://katalog-firm.ch/api"
+    base_url = get_settings().public_site_url.rstrip("/")
+    api_url = f"{base_url}/api"
     col_width = f"{100 // cols}%"
 
     rows_html = ""

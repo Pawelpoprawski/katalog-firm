@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/siteUrl";
 
 export const metadata: Metadata = {
   title: "Dodaj firmę za darmo",
@@ -17,13 +18,13 @@ export const metadata: Metadata = {
     title: "Dodaj firmę za darmo | Katalog Firm Polonijnych",
     description:
       "Dodaj swoją firmę do katalogu polskich firm w Szwajcarii — całkowicie za darmo. 5 minut, bez konta, otrzymasz link do edycji wpisu.",
-    url: "https://katalog-firm.ch/dodaj",
+    url: `${SITE_URL}/dodaj`,
     type: "website",
     siteName: "Katalog Firm Polonijnych w Szwajcarii",
     locale: "pl_PL",
     images: [
       {
-        url: "https://katalog-firm.ch/og.png",
+        url: `${SITE_URL}/og.png`,
         width: 1200,
         height: 630,
         alt: "Dodaj firmę za darmo — Katalog Firm Polonijnych",
@@ -34,10 +35,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Dodaj firmę za darmo | Katalog Firm",
     description: "Bezpłatne dodanie wpisu w katalogu polskich firm w Szwajcarii.",
-    images: ["https://katalog-firm.ch/og.png"],
+    images: [`${SITE_URL}/og.png`],
   },
   alternates: {
-    canonical: "https://katalog-firm.ch/dodaj",
+    canonical: `${SITE_URL}/dodaj`,
   },
 };
 

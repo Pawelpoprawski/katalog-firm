@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SITE_URL } from "@/lib/siteUrl";
 
 export const metadata: Metadata = {
   title: "Regulamin | Katalog Firm Polonijnych w Szwajcarii",
@@ -9,10 +10,10 @@ export const metadata: Metadata = {
     title: "Regulamin | Katalog Firm",
     description:
       "Regulamin korzystania z katalogu polskich firm w Szwajcarii. Dodawanie wpisów jest bezpłatne.",
-    url: "https://katalog-firm.ch/regulamin",
+    url: `${SITE_URL}/regulamin`,
   },
   alternates: {
-    canonical: "https://katalog-firm.ch/regulamin",
+    canonical: `${SITE_URL}/regulamin`,
   },
 };
 
@@ -33,9 +34,9 @@ export default function RegulaminPage() {
         adresem{" "}
         <a
           className="text-primary hover:underline"
-          href="https://katalog-firm.ch"
+          href={SITE_URL}
         >
-          katalog-firm.ch
+          {SITE_URL.replace(/^https?:\/\//, "")}
         </a>
         . Serwis jest częścią portalu{" "}
         <a
