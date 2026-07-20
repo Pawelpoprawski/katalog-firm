@@ -420,7 +420,7 @@ export default function HomePage() {
     <div>
       {/* biały odstęp pod paskiem portalu — tylko na stronie głównej katalogu,
           bo granatowe menu i granatowe hero zlewały się w jedno */}
-      <div className="h-10 bg-white" aria-hidden="true" />
+      <div className="h-2 bg-white" aria-hidden="true" />
       {/* HERO — Hays-style navy with pattern + red accent */}
       <section className="relative bg-[#0D2240] text-white overflow-hidden">
         <div className="absolute inset-0 hays-pattern opacity-100 pointer-events-none" />
