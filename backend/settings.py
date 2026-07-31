@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     # Nadawca maili transakcyjnych (domena musi być zweryfikowana w Resend)
     email_from: str = Field(default="Katalog Firm <kontakt@katalog-firm.ch>", validation_alias="EMAIL_FROM")
     open_ai_katalog_firm: Optional[str] = Field(default=None, validation_alias="OPEN_AI_KATALOG_FIRM")
-    openai_model: str = Field(default="gpt-5.4-mini", validation_alias="OPENAI_MODEL")
+    openai_model: str = Field(default="gpt-5.6-luna", validation_alias="OPENAI_MODEL")
     
     @field_validator('cors_origins', mode='before')
     @classmethod

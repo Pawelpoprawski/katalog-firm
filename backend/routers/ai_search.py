@@ -109,7 +109,7 @@ def ai_search(request: Request, body: AiSearchRequest) -> AiSearchResponse:
     ip = get_client_ip(request)
     query = body.query.strip()
     settings = get_settings()
-    model = settings.openai_model or os.getenv("OPENAI_MODEL", "gpt-5.4-mini")
+    model = settings.openai_model or os.getenv("OPENAI_MODEL", "gpt-5.6-luna")
 
     # Sprawdz wszystkie limity. Gdy przekroczony — pomin call AI i zwroc puste.
     def _skip(reason: str) -> AiSearchResponse:
