@@ -9,6 +9,21 @@ import { SITE_URL } from "@/lib/siteUrl";
 // edytowana w adminie). Lokalnie na serwerze (127.0.0.1:3200), odświeżane co 10 min.
 const PORTAL_MENU_URL = process.env.PORTAL_MENU_URL || "http://127.0.0.1:3200/api/menu/";
 
+// Kurs CHF→PLN do tickera w pasku (jak na portalu — frankfurter.app, cache 1 h).
+async function getChfPln(): Promise<string | null> {
+  try {
+    const res = await fetch("https://api.frankfurter.app/latest?from=CHF&to=PLN", {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { rates?: { PLN?: number } };
+    const v = data?.rates?.PLN;
+    return typeof v === "number" ? v.toFixed(2).replace(".", ",") : null;
+  } catch {
+    return null;
+  }
+}
+
 async function getPortalNav(): Promise<PortalNavItem[]> {
   try {
     const res = await fetch(PORTAL_MENU_URL, { next: { revalidate: 600 } });
@@ -97,7 +112,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const portalNav = await getPortalNav();
+  const [portalNav, chfRate] = await Promise.all([getPortalNav(), getChfPln()]);
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -161,7 +176,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <script defer src="https://stats.polacyszwajcaria.com/script.js" data-website-id="483d2f9a-9d4c-4412-8c95-d8fd52cae895" />
       </head>
       <body className="bg-white text-slate-900 antialiased font-sans">
-        <PortalBar nav={portalNav} />
+        <PortalBar nav={portalNav} chfRate={chfRate} />
         <AppShell>{children}</AppShell>
         <PortalFooter />
       </body>

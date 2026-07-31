@@ -107,7 +107,15 @@ function Dropdown({ item }: { item: PortalNavItem }) {
   );
 }
 
-export default function PortalBar({ nav }: { nav: PortalNavItem[] }) {
+// Szybkie linki na mobilnej belce — te same co na portalu (HeaderNav.tsx).
+const QUICK_LINKS = [
+  { label: "Newsy", href: "/wiadomosci" },
+  { label: "Praca", href: "/praca-w-szwajcarii/oferty" },
+  { label: "Forum", href: "/forum" },
+  { label: "Usługi", href: "/katalog-firm" },
+];
+
+export default function PortalBar({ nav, chfRate }: { nav: PortalNavItem[]; chfRate?: string | null }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -120,23 +128,35 @@ export default function PortalBar({ nav }: { nav: PortalNavItem[] }) {
 
   return (
     <>
-      {/* Logo portalu */}
+      {/* Logo portalu — kompaktowe na mobile (jak na portalu), pełne od md */}
       <div className="bg-white">
-        <div className="mx-auto max-w-[1200px] px-4 py-5">
-          <a href={PORTAL} className="flex flex-col items-center gap-1.5 no-underline">
+        <div className="relative mx-auto max-w-[1200px] px-4 py-2.5 md:py-5">
+          {/* Ticker kursu franka — jak na portalu; tu link do przelicznika na portalu */}
+          {chfRate && (
+            <a
+              href="/kalkulator/waluty"
+              title="Przelicznik walut CHF/PLN"
+              className="absolute left-1 top-1/2 inline-flex -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#ECEEF1] bg-[#F6F7F9] px-2.5 py-1 text-xs font-semibold text-[#0D2240] shadow-sm transition-colors hover:border-[#E1002A] hover:bg-[#E1002A] hover:text-white no-underline md:left-2 md:px-3"
+            >
+              <span aria-hidden="true">🇨🇭</span>
+              <span className="hidden md:inline">1 CHF = {chfRate} zł</span>
+              <span className="md:hidden">{chfRate} zł</span>
+            </a>
+          )}
+          <a href={PORTAL} className="flex flex-row items-center justify-center gap-2.5 no-underline md:flex-col md:gap-1.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${PORTAL}/logo.jpg`}
               alt="Polacy Szwajcaria"
               width={80}
               height={80}
-              className="rounded-full shadow-sm"
+              className="h-11 w-11 rounded-full shadow-sm md:h-20 md:w-20"
             />
-            <div className="text-center leading-none">
-              <span className="font-display text-[2rem] font-bold tracking-tight text-[#E1002A]">
+            <div className="text-left leading-none md:text-center">
+              <span className="font-display text-xl font-bold tracking-tight text-[#E1002A] md:text-[2rem]">
                 Polacy Szwajcaria
               </span>
-              <span className="mt-1.5 block text-[11px] uppercase tracking-[0.35em] text-[#6B7280]">
+              <span className="mt-1 block text-[9px] uppercase tracking-[0.3em] text-[#6B7280] md:mt-1.5 md:text-[11px] md:tracking-[0.35em]">
                 Natalia &amp; Paweł
               </span>
             </div>
@@ -161,8 +181,19 @@ export default function PortalBar({ nav }: { nav: PortalNavItem[] }) {
 
       {/* Pasek nawigacji (mobile) */}
       <div className="sticky top-0 z-40 border-t-[3px] border-[#E1002A] bg-[#0D2240] lg:hidden">
-        <div className="mx-auto flex max-w-[1200px] items-center justify-between px-4 py-3">
-          <span className="text-sm font-semibold uppercase tracking-wide text-white">Menu</span>
+        <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-1 pl-3 pr-2 py-1">
+          {/* Szybkie linki zamiast napisu „Menu" — 1:1 z belką portalu */}
+          <div className="flex min-w-0 flex-1 items-center justify-between gap-0.5">
+            {QUICK_LINKS.map((q) => (
+              <a
+                key={q.label}
+                href={q.href}
+                className="px-1.5 py-3 text-[13px] font-semibold uppercase tracking-wide text-white/90 no-underline hover:text-white"
+              >
+                {q.label}
+              </a>
+            ))}
+          </div>
           <button
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Zamknij menu" : "Otwórz menu"}
