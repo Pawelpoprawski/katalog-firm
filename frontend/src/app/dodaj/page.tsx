@@ -411,11 +411,11 @@ export default function AddCompanyPage() {
                 </p>
                 <div className="group relative">
                   <div className="w-full flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 pr-12 shadow-inner font-mono text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                    <span className="break-all">{`${typeof window !== 'undefined' ? window.location.origin : ''}/edycja/${createdEditToken}`}</span>
+                    <span className="break-all">{`${typeof window !== 'undefined' ? window.location.origin : ''}${process.env.NEXT_PUBLIC_BASE_PATH || ""}/edycja/${createdEditToken}`}</span>
                   </div>
                   <button
                     onClick={() => {
-                      const link = `${window.location.origin}/edycja/${createdEditToken}`;
+                      const link = `${window.location.origin}${process.env.NEXT_PUBLIC_BASE_PATH || ""}/edycja/${createdEditToken}`;
                       navigator.clipboard.writeText(link);
                       alert("Skopiowano link do schowka!");
                     }}

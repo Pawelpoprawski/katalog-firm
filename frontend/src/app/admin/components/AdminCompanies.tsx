@@ -47,7 +47,7 @@ export default function AdminCompanies({
   const [adminSortBy, setAdminSortBy] = useState<"name" | "confirmed" | "created" | "views" | "profile_views" | "clicks">("created");
 
   const copyLink = (token: string) => {
-    const link = `${window.location.origin}/edycja/${token}`;
+    const link = `${window.location.origin}${process.env.NEXT_PUBLIC_BASE_PATH || ""}/edycja/${token}`;
     navigator.clipboard.writeText(link);
     alert("Skopiowano link do schowka: " + link);
   };

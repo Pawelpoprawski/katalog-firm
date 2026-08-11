@@ -103,7 +103,7 @@ export default function ConfirmActivityPage() {
                     </form>
 
                     <div className="mt-8 pt-6 border-t border-[#E0E3E8] text-center">
-                        <a href="/" className="text-sm text-[#555] hover:text-[#E1002A] transition-colors">
+                        <a href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/`} className="text-sm text-[#555] hover:text-[#E1002A] transition-colors">
                             ← Powrót do strony głównej
                         </a>
                     </div>

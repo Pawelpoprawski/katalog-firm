@@ -2,7 +2,7 @@
   "name": "Polskie Uslugi w Szwajcarii - Katalog Firm",
   "short_name": "Katalog Firm",
   "description": "Katalog polskich firm i uslug w Szwajcarii. Znajdz sprawdzone firmy polonijne.",
-  "start_url": "/",
+  "start_url": "/katalog-firm/",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#E30613",
@@ -10,13 +10,13 @@
   "lang": "pl",
   "icons": [
     {
-      "src": "/icon.png",
+      "src": "/katalog-firm/icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/favicon.ico",
+      "src": "/katalog-firm/favicon.ico",
       "sizes": "48x48",
       "type": "image/x-icon"
     }
