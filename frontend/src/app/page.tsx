@@ -497,6 +497,16 @@ export default function HomePage() {
                 >
                   + Dodaj firmę za darmo
                 </Link>
+                {/* Giełda transportu portalu - zwykłe <a>, bo <Link> dokleiłby basePath /katalog-firm */}
+                <a
+                  href="/transport/"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 font-medium text-white transition-colors hover:border-[#E1002A] hover:bg-[#E1002A]"
+                >
+                  Szukasz transportu Polska-Szwajcaria? Porównaj wyceny
+                  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
               </div>
             </div>
 
