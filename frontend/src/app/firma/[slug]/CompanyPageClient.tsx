@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Company } from "@/types";
 import { resolveImageUrl } from "@/lib/utils";
@@ -41,6 +42,11 @@ function formatDescriptionHtml(text: string): string {
 
 
 export default function CompanyPageClient({ company: initialCompany, slug }: Props) {
+  const router = useRouter();
+  // Znacznik dla listy katalogu: przy powrocie (przycisk „Wróć” albo wstecz w przeglądarce) odtwórz wyniki.
+  useEffect(() => {
+    try { sessionStorage.setItem("katalog_powrot_z_firmy", "1"); } catch { /* ignorujemy */ }
+  }, []);
   const [company, setCompany] = useState<Company>(initialCompany);
   const [reviews, setReviews] = useState<Array<{ id: number; author: string; rating: number; comment: string; created_at?: number }>>([]);
   const [relatedCompanies, setRelatedCompanies] = useState<Company[]>([]);
@@ -290,9 +296,17 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
 
       <div className="bg-[#F5F6F8] py-8 sm:py-10">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 space-y-6">
-          {/* Back Button */}
+          {/* Back Button - z listy wracamy wstecz (te same wyniki, filtry i miejsce), inaczej na stronę główną katalogu */}
           <Link
             href="/"
+            onClick={(e) => {
+              try {
+                if (sessionStorage.getItem("katalog_z_listy") === "1" && window.history.length > 1) {
+                  e.preventDefault();
+                  router.back();
+                }
+              } catch { /* brak sessionStorage - zwykły link */ }
+            }}
             className="inline-flex items-center gap-2 text-[#555] hover:text-[#E1002A] transition-colors group text-sm font-medium"
           >
             <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

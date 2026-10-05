@@ -75,6 +75,13 @@ export default function HomePage() {
   const PAGE_SIZE = 24;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
+  // ---- Powrót ze strony firmy do tych samych wyników (prośba Pawła 05.10) ----
+  // Stan listy (fraza, wynik AI, filtry, strona, kolejność, przewinięcie) trzymamy w sessionStorage.
+  // Odtwarzamy go TYLKO po powrocie ze strony firmy (flaga ustawiana na stronie firmy) - zwykłe wejście = czysta lista.
+  const restoreRef = useRef<{ page: number; scrollY: number } | null>(null);
+  const [restoredOrder, setRestoredOrder] = useState<number[] | null>(null);
+  const [restoreReady, setRestoreReady] = useState(false);
+
   const viewedIdsRef = useRef<Set<number>>(new Set());
   const flushTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -108,6 +115,7 @@ export default function HomePage() {
   }, [flushImpressions]);
 
   const goToCompany = (slug?: string, id?: number) => {
+    saveListState();
     router.push(`/firma/${slug || id}`);
   };
 
@@ -361,7 +369,7 @@ export default function HomePage() {
         (a, b) => (rank.get(a.id) ?? 9999) - (rank.get(b.id) ?? 9999)
       );
       setFilteredCompanies(sorted);
-      setCurrentPage(1);
+      setCurrentPage(restoreRef.current?.page || 1);
       return;
     }
 
@@ -375,9 +383,69 @@ export default function HomePage() {
     });
 
     setFilteredCompanies(sorted);
-    setCurrentPage(1);
+    setCurrentPage(restoreRef.current?.page || 1);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companies, searchQuery, selectedCanton, selectedCategory, minRating, mapBounds, mapsReady, searchResultIds]);
+
+  const STATE_KEY = "katalog_stan_listy";
+  const BACK_KEY = "katalog_powrot_z_firmy";
+  function saveListState() {
+    try {
+      sessionStorage.setItem(STATE_KEY, JSON.stringify({
+        searchInput, searchQuery, searchResultIds, selectedCanton, selectedCategory, sortOrder,
+        page: currentPage, scrollY: window.scrollY, order: sortedCompanies.map((c) => c.id),
+      }));
+      sessionStorage.setItem("katalog_z_listy", "1");
+    } catch { /* prywatne okno - bez zapamiętywania */ }
+  }
+
+  // Odtworzenie przy powrocie ze strony firmy (raz, przy wejściu na stronę).
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem(BACK_KEY) !== "1") return;
+      sessionStorage.removeItem(BACK_KEY);
+      const st = JSON.parse(sessionStorage.getItem(STATE_KEY) || "null");
+      if (!st) return;
+      restoreRef.current = { page: st.page || 1, scrollY: st.scrollY || 0 };
+      setSearchInput(st.searchInput || "");
+      setSearchQuery(st.searchQuery || "");
+      setSearchResultIds(Array.isArray(st.searchResultIds) ? st.searchResultIds : null);
+      setSelectedCanton(st.selectedCanton || "");
+      setSelectedCategory(st.selectedCategory ?? null);
+      if (st.sortOrder) setSortOrder(st.sortOrder);
+      if (Array.isArray(st.order) && st.order.length) setRestoredOrder(st.order);
+      setRestoreReady(true);
+    } catch { /* uszkodzony zapis - zwykła lista */ }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Po załadowaniu firm: przewinięcie do miejsca, z którego kliknięto firmę; potem normalne działanie filtrów.
+  useEffect(() => {
+    if (!restoreReady || loading || !restoreRef.current) return;
+    const { scrollY } = restoreRef.current;
+    const t1 = setTimeout(() => window.scrollTo(0, scrollY), 60);
+    const t2 = setTimeout(() => { window.scrollTo(0, scrollY); restoreRef.current = null; }, 400);
+    // Po chwili (gdy dociągną się też ustawienia sortowania) zapamiętana kolejność przestaje być „chroniona”.
+    const t3 = setTimeout(() => { restoreDoneRef.current = true; }, 1500);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [restoreReady, loading]);
+
+  // Pierwsza zmiana filtra/sortowania/wyszukiwania przez użytkownika po powrocie = normalna lista.
+  const restoreDoneRef = useRef(false);
+  useEffect(() => {
+    if (restoreDoneRef.current && restoredOrder) setRestoredOrder(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCanton, selectedCategory, searchResultIds, searchQuery, sortOrder]);
+
+  // Przy kliknięciu karty firmy linkiem (nie przez goToCompany) też zapisujemy stan.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement)?.closest?.("a[href*='/firma/']");
+      if (a) saveListState();
+    };
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
+  });
 
   const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / PAGE_SIZE));
 
@@ -402,6 +470,12 @@ export default function HomePage() {
       return [...promoted, ...regular];
     }
 
+    if (restoredOrder) {
+      // Powrót ze strony firmy: dokładnie ta sama kolejność co wcześniej (losowa lista się nie przetasowuje).
+      const rank = new Map(restoredOrder.map((id, i) => [id, i]));
+      return [...filteredCompanies].sort((a, b) => (rank.get(a.id) ?? 1e9) - (rank.get(b.id) ?? 1e9));
+    }
+
     if (sortOrder === 'newest') {
       regular.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
     } else if (sortOrder === 'alphabetical') {
@@ -410,7 +484,7 @@ export default function HomePage() {
       shuffle(regular);
     }
     return [...promoted, ...regular];
-  }, [filteredCompanies, sortOrder, searchResultIds]);
+  }, [filteredCompanies, sortOrder, searchResultIds, restoredOrder]);
   const paginatedCompanies = sortedCompanies.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE
