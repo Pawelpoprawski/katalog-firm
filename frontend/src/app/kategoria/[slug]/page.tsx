@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CategoryPageClient from "./CategoryPageClient";
-import { Category } from "@/types";
+import { Category, Company } from "@/types";
 import { SITE_URL } from "@/lib/siteUrl";
+import { metaDesc } from "@/lib/utils";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
@@ -23,6 +24,20 @@ async function getCategory(slug: string): Promise<Category | null> {
   }
 }
 
+async function getCompanies(categoryId: number): Promise<Company[] | null> {
+  try {
+    const res = await fetch(`${apiUrl}/companies/`, { next: { revalidate: 300 } });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const all: Company[] = Array.isArray(data) ? data : data.companies || [];
+    const list = all.filter((c) => c.category_id === categoryId && (c as { is_active?: boolean }).is_active !== false);
+    console.log(`[kategoria] firmy z API: ${all.length}, w kategorii ${categoryId}: ${list.length}`);
+    return list;
+  } catch {
+    return null;
+  }
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const category = await getCategory(params.slug);
   if (!category) {
@@ -33,10 +48,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const catName = category.name.toLowerCase();
-  const title = `${category.name} — polskie firmy w Szwajcarii`;
-  const description = category.description
-    ? `${category.description} · Polskie firmy w kategorii ${catName} w Szwajcarii. Sprawdzone usługi polonijne — kontakt, opinie, lokalizacja.`
-    : `Sprawdzone polskie firmy w kategorii ${catName} w Szwajcarii. Polonijny katalog z opisami, kontaktami i opiniami. Dodaj swoją firmę za darmo.`;
+  const title = `${category.name}: polskie firmy w Szwajcarii`;
+  const description = metaDesc(category.description
+    ? `${category.description}. Polskie firmy w kategorii ${catName} w Szwajcarii: kontakt, opinie, lokalizacja.`
+    : `Sprawdzone polskie firmy w kategorii ${catName} w Szwajcarii. Polonijny katalog z opisami, kontaktami i opiniami. Dodaj swoją firmę za darmo.`);
 
   return {
     title,
@@ -85,5 +100,7 @@ export default async function CategoryPage({ params }: Props) {
   if (!category) {
     notFound();
   }
-  return <CategoryPageClient categorySlug={params.slug} />;
+  // Firmy pobrane na serwerze: lista i H1 są w HTML od razu (audyt SEO 05.10 - wcześniej Google dostawał sam szkielet ładowania).
+  const companies = await getCompanies(category!.id);
+  return <CategoryPageClient categorySlug={params.slug} initialCategory={category} initialCompanies={companies} />;
 }

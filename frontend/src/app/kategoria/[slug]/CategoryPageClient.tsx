@@ -5,11 +5,17 @@ import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Company, Category } from "@/types";
 import { resolveImageUrl } from "@/lib/utils";
-export default function CategoryPageClient({ categorySlug }: { categorySlug: string }) {
-  const [category, setCategory] = useState<Category | null>(null);
-  const [companies, setCompanies] = useState<Company[]>([]);
-  const [filteredCompanies, setFilteredCompanies] = useState<Company[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function CategoryPageClient({ categorySlug, initialCategory = null, initialCompanies = null }: {
+  categorySlug: string;
+  /** dane z serwera (SSR) - gdy są, strona nie czeka na pobranie w przeglądarce */
+  initialCategory?: Category | null;
+  initialCompanies?: Company[] | null;
+}) {
+  const ssr = !!initialCategory && !!initialCompanies;
+  const [category, setCategory] = useState<Category | null>(initialCategory);
+  const [companies, setCompanies] = useState<Company[]>(initialCompanies || []);
+  const [filteredCompanies, setFilteredCompanies] = useState<Company[]>(initialCompanies || []);
+  const [loading, setLoading] = useState(!ssr);
   const [error, setError] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [minRating, setMinRating] = useState<number>(0);
@@ -17,6 +23,7 @@ export default function CategoryPageClient({ categorySlug }: { categorySlug: str
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
   useEffect(() => {
+    if (ssr) return; // dane już przyszły z serwera
     const fetchData = async () => {
       try {
         // Fetch categories
@@ -56,7 +63,7 @@ export default function CategoryPageClient({ categorySlug }: { categorySlug: str
     };
 
     fetchData();
-  }, [categorySlug, apiUrl]);
+  }, [categorySlug, apiUrl, ssr]);
 
   // Get unique cities for filters
   const cities = Array.from(new Set(companies.map((c) => c.city).filter(Boolean))).sort();

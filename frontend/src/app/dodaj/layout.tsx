@@ -4,7 +4,7 @@ import { SITE_URL } from "@/lib/siteUrl";
 export const metadata: Metadata = {
   title: "Dodaj firmę za darmo",
   description:
-    "Dodaj swoją polską firmę do katalogu polonijnego w Szwajcarii — bezpłatnie, bez prowizji, w 5 minut. Twoja firma będzie widoczna dla tysięcy Polaków szukających usług po polsku. Otrzymasz link do edycji wpisu na e-mail.",
+    "Dodaj swoją polską firmę do katalogu w Szwajcarii: bezpłatnie, bez prowizji, w 5 minut. Zobaczą ją tysiące Polaków szukających usług po polsku.",
   keywords: [
     "dodaj firmę za darmo",
     "dodaj firmę polonijną",

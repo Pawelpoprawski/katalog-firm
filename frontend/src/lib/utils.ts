@@ -9,3 +9,11 @@ export function resolveImageUrl(img: string | undefined | null, apiUrl: string):
   if (img.startsWith("/images/")) return `${apiUrl}${img}`;
   return img;
 }
+
+/** Opis do meta description: bez HTML, max ~155 zn., ucięty na granicy słowa (audyt SEO 05.10). */
+export function metaDesc(text: string | null | undefined, max = 155): string {
+  const t = (text || "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").replace(/\s+([,.;:!?])/g, "$1").trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max - 1);
+  return cut.slice(0, Math.max(cut.lastIndexOf(" "), max - 20)).replace(/[,;:.\s-]+$/, "") + "…";
+}

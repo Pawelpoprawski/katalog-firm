@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     template: "%s | Katalog Firm",
   },
   description:
-    "Sprawdzony katalog polskich firm i usług w Szwajcarii. 100+ firm polonijnych — fryzjerstwo, gastronomia, transport, finanse, beauty, edukacja, zdrowie. Dodaj swoją firmę za darmo.",
+    "Katalog polskich firm i usług w Szwajcarii: fryzjerzy, gastronomia, transport, finanse, beauty, edukacja i zdrowie. Dodaj swoją firmę za darmo.",
   keywords: [
     "polskie firmy w Szwajcarii",
     "katalog firm polonijnych",

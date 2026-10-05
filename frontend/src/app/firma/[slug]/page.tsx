@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CompanyPageClient from "./CompanyPageClient";
 import { SITE_URL } from "@/lib/siteUrl";
+import { metaDesc } from "@/lib/utils";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
@@ -48,13 +49,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const city = company.city || "";
   const canton = company.canton || "";
   const location = [city, canton].filter(Boolean).join(", ") || "Szwajcaria";
-  const title = `${company.name} — ${categoryName}${city ? `, ${city}` : ""}`;
+  const title = `${company.name} - ${categoryName}${city ? `, ${city}` : ""}`;
 
   // Description — strip HTML, prefer short, fallback build w polskim
   const rawDescription = company.short_description ||
     (company.description ? company.description.replace(/<[^>]+>/g, "").trim() : "");
   const description = rawDescription
-    ? rawDescription.slice(0, 200) + (rawDescription.length > 200 ? "..." : "")
+    ? metaDesc(rawDescription)
     : `${company.name} — polska firma polonijna w Szwajcarii (${categoryName}, ${location}). Kontakt, opinie i lokalizacja na Katalog Firm.`;
 
   // Per-firma keywords (long-tail SEO)
