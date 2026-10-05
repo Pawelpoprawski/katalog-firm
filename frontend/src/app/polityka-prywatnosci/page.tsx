@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: "Polityka prywatności | Katalog Firm",
     description: "Informacje o przetwarzaniu danych osobowych w katalogu polskich firm w Szwajcarii.",
     url: `${SITE_URL}/polityka-prywatnosci`,
+    images: [{ url: `${SITE_URL}/og.png`, width: 1200, height: 630, alt: "Katalog polskich firm w Szwajcarii" }],
   },
   alternates: {
     canonical: `${SITE_URL}/polityka-prywatnosci`,

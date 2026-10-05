@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     title: "Jak to działa? | Katalog Firm",
     description: "3 proste kroki do dodania firmy w katalogu polskich usług w Szwajcarii.",
     url: `${SITE_URL}/jak-to-dziala`,
+    images: [{ url: `${SITE_URL}/og.png`, width: 1200, height: 630, alt: "Katalog polskich firm w Szwajcarii" }],
   },
   alternates: { canonical: `${SITE_URL}/jak-to-dziala` },
 };

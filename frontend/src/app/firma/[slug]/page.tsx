@@ -54,8 +54,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Description — strip HTML, prefer short, fallback build w polskim
   const rawDescription = company.short_description ||
     (company.description ? company.description.replace(/<[^>]+>/g, "").trim() : "");
+  // Bardzo krótkie opisy firm („Stylizacja brwi”) uzupełniamy o kategorię i miejsce (audyt SEO 05.10).
   const description = rawDescription
-    ? metaDesc(rawDescription)
+    ? metaDesc(rawDescription.length < 70 ? `${company.name}: ${rawDescription}. ${categoryName}, ${location} - polska firma w Szwajcarii.` : rawDescription)
     : `${company.name} — polska firma polonijna w Szwajcarii (${categoryName}, ${location}). Kontakt, opinie i lokalizacja na Katalog Firm.`;
 
   // Per-firma keywords (long-tail SEO)

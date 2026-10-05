@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     description:
       "Regulamin korzystania z katalogu polskich firm w Szwajcarii. Dodawanie wpisów jest bezpłatne.",
     url: `${SITE_URL}/regulamin`,
+    images: [{ url: `${SITE_URL}/og.png`, width: 1200, height: 630, alt: "Katalog polskich firm w Szwajcarii" }],
   },
   alternates: {
     canonical: `${SITE_URL}/regulamin`,
