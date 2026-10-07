@@ -11,5 +11,6 @@
     "ps-tools": "../ps-tools",
     "_recon": "../_recon"
   },
-  "incoming_bases": "KATALOG|8201|katalog-firm"
+  "incoming_bases": "KATALOG|8201|katalog-firm",
+  "base_path": "/katalog-firm"
 }

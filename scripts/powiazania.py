@@ -323,6 +323,10 @@ def main(check: bool) -> int:
                     inc = CFG.get("incoming_bases")
                     if strict and inc and any(re.search(inc, b) for b in url_bases.get((lit, w), ())):
                         found.add(w)
+                    # albo publiczny adres z prefiksem aplikacji (base_path, np. ${SITE_URL}/katalog-firm/sitemap.xml)
+                    bp = [s for s in CFG.get("base_path", "").split("/") if s]
+                    if bp and len(ls) > len(bp) + 1 and ls[0] == "{}" and ls[1:1 + len(bp)] == bp and exact(ls[1 + len(bp):]):
+                        found.add(w)
                 elif loose:
                     found.add(w)
         # klient HTTP z baseURL (np. axios baseURL="/api/v1"): w kodzie stoi "/jobs/{}" zamiast "/api/v1/jobs/{}".
