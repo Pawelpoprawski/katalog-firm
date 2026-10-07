@@ -1,3 +1,9 @@
+# POWIĄZANIA
+# Cel: czyszczenie cache proxy nginx po zmianach danych (wołane z schedulera auto-publikacji).
+# Przy zmianie: od przeprowadzki pod /katalog-firm cache nginx dla katalogu może nie być używany - sprawdź
+#   konfigurację nginx przed poleganiem na tym.
+# AUTO używany przez: backend/routers/admin.py, backend/routers/companies.py, backend/scheduler.py
+# /POWIĄZANIA
 """Utility to clear nginx proxy cache."""
 import subprocess
 import logging

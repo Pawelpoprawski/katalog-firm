@@ -1,3 +1,12 @@
+# POWIĄZANIA
+# Cel: API panelu admina katalogu (Bearer z ADMIN_PASSWORD): statystyki, analityka, wyszukiwania AI, firmy
+#   (status, promowanie, kategoria, edycja, usuwanie), opinie, czarna lista IP, ustawienia, auto-publikacja.
+# Przy zmianie: UWAGA: bez ADMIN_PASSWORD w .env panel jest OTWARTY (verify_admin przepuszcza). Frontend
+#   app/admin/*; skrypty mailowe (send_*.py) używają /admin/companies i /admin/track-confirmation-sent.
+# AUTO używany przez: backend/main.py
+# AUTO wywoływany z: deploy_scheduler.py, frontend/src/app/admin/components/AdminAiSearches.tsx, frontend/src/app/admin/components/AdminCategories.tsx, frontend/src/app/admin/components/AdminCompanies.tsx, frontend/src/app/admin/components/AdminReviews.tsx, frontend/src/app/admin/components/AdminSettings.tsx, frontend/src/app/admin/page.tsx, frontend/src/app/archiwizuj/[token]/page.tsx (+14, pełna lista: POWIAZANIA.md)
+# AUTO endpoint: GET /admin/stats, GET /admin/analytics, GET /admin/ai-searches, POST /admin/track-confirmation-sent, GET /admin/companies, GET /admin/reviews, DELETE /admin/reviews/{review_id}, PATCH /admin/companies/{company_id}/status, POST /admin/run-auto-publish, PATCH /admin/companies/{company_id}/promote, PATCH /admin/companies/{company_id}/category, PATCH /admin/companies/{company_id}, DELETE /admin/companies/{company_id}, GET /admin/ip-blacklist, GET /admin/settings, PUT /admin/settings/social-media, PUT /admin/settings/newsletter-count, PUT /admin/settings/sort-order, POST /admin/ip-blacklist/add, DELETE /admin/ip-blacklist/remove, GET /admin/categories, POST /admin/categories, PUT /admin/categories/{category_id}, DELETE /admin/categories/{category_id}
+# /POWIĄZANIA
 from fastapi import APIRouter, HTTPException, status, Body, Depends, Header
 from typing import Any, Optional
 from ..storage import (

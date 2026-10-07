@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: panel admina - firmy (status, promowanie, kategoria, edycja, usuwanie).
+ * Przy zmianie: API /admin/companies*; linki do stron firm wymagają NEXT_PUBLIC_BASE_PATH.
+ * AUTO używany przez: frontend/src/app/admin/page.tsx
+ */
 "use client";
 
 import { useState } from "react";

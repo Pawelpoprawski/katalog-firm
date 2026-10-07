@@ -1,3 +1,9 @@
+/** POWIĄZANIA
+ * Cel: replika stopki portalu w katalogu.
+ * Przy zmianie: treść kolumn pochodzi z web/src/components/Footer.tsx - przy zmianie stopki portalu
+ *   zaktualizuj też ten plik.
+ * AUTO używany przez: frontend/src/app/layout.tsx
+ */
 // Stopka portalu PolacySzwajcaria — replika 1:1 Footer.tsx portalu (kolory hex zamiast
 // tokenów tailwinda portalu; zwykłe <a>, bo linki prowadzą do INNEJ aplikacji).
 // UWAGA: treść (kolumny linków) jest zdefiniowana w kodzie portalu — przy zmianie stopki

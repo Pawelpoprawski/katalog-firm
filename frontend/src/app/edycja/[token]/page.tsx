@@ -1,3 +1,9 @@
+/** POWIĄZANIA
+ * Cel: edycja firmy z linku w mailu (token), bez logowania.
+ * Przy zmianie: API /companies/by-token/{token}, PUT /companies/{id}; linki generują send_update_reminder.py i
+ *   send_photo_request.py.
+ * AUTO adres strony: /edycja/[token]
+ */
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";

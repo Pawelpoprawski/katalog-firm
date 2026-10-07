@@ -1,3 +1,8 @@
+# POWIĄZANIA
+# Cel: rate-limit, nagłówki bezpieczeństwa, sanityzacja HTML/tekstu, walidacja slug/telefonu/URL.
+# Przy zmianie: walidatory używane przy tworzeniu/edycji firm.
+# AUTO używany przez: backend/main.py, backend/routers/ai_search.py, backend/routers/categories.py, backend/routers/reviews.py
+# /POWIĄZANIA
 """
 Security middleware and utilities for the application.
 Includes rate limiting, input sanitization, and security headers.

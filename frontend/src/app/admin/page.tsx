@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: panel admina katalogu (logowanie hasłem, zakładki).
+ * Przy zmianie: API /admin/*; komponenty w admin/components.
+ * AUTO adres strony: /admin
+ */
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";

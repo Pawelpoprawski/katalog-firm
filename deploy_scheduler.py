@@ -1,3 +1,8 @@
+# POWIĄZANIA
+# Cel: STARY skrypt deployu schedulera do dawnej instancji strony/katalog_firm.
+# Przy zmianie: nieaktualny i zawiera jawne hasło SSH i token admina - do usunięcia (lista sprzątania A5).
+# AUTO używany przez: nikt nie importuje (punkt wejścia: skrypt/cron/CLI - patrz Cel)
+# /POWIĄZANIA
 """Deploy scheduler changes to production."""
 import paramiko
 

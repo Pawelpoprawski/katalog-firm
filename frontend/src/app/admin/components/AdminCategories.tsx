@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: panel admina - kategorie.
+ * Przy zmianie: API /admin/categories.
+ * AUTO używany przez: frontend/src/app/admin/page.tsx
+ */
 "use client";
 
 import { useState } from "react";

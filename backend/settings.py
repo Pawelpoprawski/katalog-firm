@@ -1,3 +1,8 @@
+# POWIĄZANIA
+# Cel: ustawienia backendu z .env (sekrety, klucze, ścieżki).
+# Przy zmianie: .env na serwerze (katalog_firm_psz/backend/.env, w backup.sh).
+# AUTO używany przez: backend/email_service.py, backend/main.py, backend/migrate_coordinates.py, backend/routers/admin.py, backend/routers/companies.py, backend/storage.py
+# /POWIĄZANIA
 from functools import lru_cache
 from typing import Optional, Union
 

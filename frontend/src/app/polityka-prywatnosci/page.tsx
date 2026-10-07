@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: polityka prywatności katalogu.
+ * Przy zmianie: nowe przetwarzanie danych (AI search, maile przypominające) wymaga aktualizacji.
+ * AUTO adres strony: /polityka-prywatnosci
+ */
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/siteUrl";
 

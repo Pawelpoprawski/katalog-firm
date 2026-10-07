@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: strona 404 katalogu.
+ * Przy zmianie: bez zależności.
+ * AUTO plik specjalny Next.js (not-found) - ładowany przez framework, nie przez import
+ */
 import Link from "next/link";
 
 export default function NotFound() {

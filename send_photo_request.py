@@ -1,3 +1,9 @@
+# POWIĄZANIA
+# Cel: prośba o dodanie zdjęcia do firm bez zdjęcia (cron: 1. dnia miesiąca 12:00 przez
+#   send_photo_request_cron.sh).
+# Przy zmianie: log wysyłek dedupe; linki edycji z tokenem (/edycja/[token]).
+# AUTO używany przez: nikt nie importuje (punkt wejścia: skrypt/cron/CLI - patrz Cel)
+# /POWIĄZANIA
 # -*- coding: utf-8 -*-
 """
 Prosba o dodanie zdjecia glownego do firm, ktore go nie maja.

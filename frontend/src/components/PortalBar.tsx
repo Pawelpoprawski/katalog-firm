@@ -1,3 +1,9 @@
+/** POWIĄZANIA
+ * Cel: wspólny pasek portalu w katalogu (logo, menu z /api/menu portalu, linki zwykłym <a>).
+ * Przy zmianie: odpowiednik praca/frontend/src/components/PortalBar.tsx i nagłówka portalu - zmiany wyglądu
+ *   rób spójnie we wszystkich.
+ * AUTO używany przez: frontend/src/app/layout.tsx
+ */
 "use client";
 
 import { useEffect, useState } from "react";

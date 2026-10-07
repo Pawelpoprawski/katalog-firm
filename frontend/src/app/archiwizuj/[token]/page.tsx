@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: archiwizacja firmy z linku w mailu (token).
+ * Przy zmianie: API /companies/archive-token; link generują skrypty send_*.py.
+ * AUTO adres strony: /archiwizuj/[token]
+ */
 "use client";
 
 import { useState } from "react";

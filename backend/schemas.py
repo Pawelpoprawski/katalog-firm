@@ -1,3 +1,8 @@
+# POWIĄZANIA
+# Cel: schematy Pydantic (użytkownik, kategoria, firma, opinia, zgłoszenie).
+# Przy zmianie: frontend src/types.ts; portal web/src/lib/katalog.ts (typ CatalogCompany).
+# AUTO używany przez: nikt nie importuje (punkt wejścia: skrypt/cron/CLI - patrz Cel)
+# /POWIĄZANIA
 from __future__ import annotations
 
 from typing import Optional

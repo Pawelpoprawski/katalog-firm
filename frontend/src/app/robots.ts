@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: robots katalogu - MARTWY na produkcji (Google czyta robots.txt z roota domeny).
+ * Przy zmianie: obowiązujące reguły /katalog-firm są w web/src/app/robots.ts.
+ * AUTO plik specjalny Next.js (robots) - ładowany przez framework, nie przez import
+ */
 import { MetadataRoute } from 'next';
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://katalog-firm.ch';

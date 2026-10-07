@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: panel admina - statystyki i wykresy.
+ * Przy zmianie: dane przekazuje admin/page.tsx.
+ * AUTO używany przez: frontend/src/app/admin/page.tsx
+ */
 "use client";
 
 import { useState } from "react";

@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: potwierdzenie aktywności firmy z linku w mailu (token).
+ * Przy zmianie: API /companies/confirm-token.
+ * AUTO adres strony: /potwierdz/[token]
+ */
 "use client";
 
 import { useEffect, useState } from "react";

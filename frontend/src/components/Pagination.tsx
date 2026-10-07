@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: paginacja list.
+ * Przy zmianie: bez zależności.
+ * AUTO używany przez: frontend/src/app/page.tsx
+ */
 "use client";
 
 interface PaginationProps {

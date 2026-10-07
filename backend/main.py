@@ -1,3 +1,11 @@
+# POWIĄZANIA
+# Cel: start backendu katalogu (FastAPI): middleware (bezpieczeństwo, analityka, czarna lista IP), routery,
+#   scheduler auto-publikacji, /health, publiczne /settings.
+# Przy zmianie: na serwerze pm2 katalog-psz-backend :8201 (uvicorn backend.main:app); nginx /katalog-firm/api/
+#   -> :8201. Nowy router = include_router tutaj.
+# AUTO wywoływany z: [_recon] deploy_git_katalog.py, frontend/src/app/admin/page.tsx, frontend/src/app/page.tsx
+# AUTO endpoint: GET /health, GET /settings
+# /POWIĄZANIA
 import logging
 import os
 from fastapi import FastAPI, Request

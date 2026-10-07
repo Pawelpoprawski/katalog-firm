@@ -1,3 +1,8 @@
+# POWIĄZANIA
+# Cel: maile katalogu przez Resend (nowa firma, nowa opinia).
+# Przy zmianie: klucz RESEND_API_KEY w backend/.env; linki budowane z adresu serwisu (_site_url).
+# AUTO używany przez: backend/routers/companies.py
+# /POWIĄZANIA
 """Email service using Resend API."""
 import logging
 import json

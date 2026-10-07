@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: karta firmy na listach.
+ * Przy zmianie: zdjęcie przez resolveImageUrl (obraz przycinany object-cover - logo trzymaj z marginesem).
+ * AUTO używany przez: frontend/src/app/page.tsx
+ */
 "use client";
 
 import Link from "next/link";

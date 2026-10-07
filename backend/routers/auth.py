@@ -1,3 +1,10 @@
+# POWIĄZANIA
+# Cel: rejestracja i logowanie użytkowników katalogu (konta firm).
+# Przy zmianie: frontend app/login, app/rejestracja; użytkownicy w data/users.json.
+# AUTO używany przez: backend/main.py, backend/routers/__init__.py
+# AUTO wywoływany z: frontend/src/app/login/page.tsx, frontend/src/app/rejestracja/page.tsx
+# AUTO endpoint: POST /auth/register, POST /auth/login
+# /POWIĄZANIA
 from fastapi import APIRouter, HTTPException, status
 
 from ..schemas import UserCreate, UserRead

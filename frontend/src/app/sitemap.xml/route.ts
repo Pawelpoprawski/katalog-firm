@@ -1,3 +1,9 @@
+/** POWIĄZANIA
+ * Cel: sitemap katalogu (firmy i kategorie) z kontrolą Cache-Control.
+ * Przy zmianie: zgłoszona w web/src/app/robots.ts; URL-e /firma i /kategoria.
+ * AUTO wywoływany z: [_recon] deploy_admin.py, [praca] deploy_seo_improvements.py, [praca] frontend/src/app/robots.ts, [web] src/app/robots.ts, deploy_seo.py, frontend/src/app/robots.ts
+ * AUTO endpoint: GET /sitemap.xml
+ */
 // Ręczny sitemap route — Next.js MetadataRoute Sitemap nie pozwala kontrolować Cache-Control.
 // force-dynamic + Cache-Control z Response → Googlebot dostaje cacheable sitemap.
 // Backend ma własny cache (revalidate na fetch), więc cost generacji jest niski.

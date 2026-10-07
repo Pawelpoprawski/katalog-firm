@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: rejestracja konta katalogu.
+ * Przy zmianie: API /auth/register.
+ * AUTO adres strony: /rejestracja
+ */
 "use client";
 
 import Link from "next/link";

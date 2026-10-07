@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: kliencka lista firm kategorii (filtry, sortowanie).
+ * Przy zmianie: API /categories/, /companies/.
+ * AUTO używany przez: frontend/src/app/kategoria/[slug]/page.tsx
+ */
 "use client";
 
 import Link from "next/link";

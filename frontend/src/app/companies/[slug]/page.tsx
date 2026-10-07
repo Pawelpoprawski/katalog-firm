@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: STARA (angielska) strona firmy - nadal działa (200), kanoniczna to /firma/<slug>.
+ * Przy zmianie: duplikat treści /firma - kandydat do przekierowania 301 albo usunięcia (decyzja SEO).
+ * AUTO adres strony: /companies/[slug]
+ */
 "use client";
 
 import Link from "next/link";

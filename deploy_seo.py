@@ -1,3 +1,8 @@
+# POWIĄZANIA
+# Cel: STARY skrypt deployu zmian SEO do dawnej instancji strony/katalog_firm.
+# Przy zmianie: nieaktualny (deploy przez _recon/deploy_git_katalog.py) - do usunięcia (lista sprzątania A5).
+# AUTO używany przez: nikt nie importuje (punkt wejścia: skrypt/cron/CLI - patrz Cel)
+# /POWIĄZANIA
 import paramiko
 import sys
 import io

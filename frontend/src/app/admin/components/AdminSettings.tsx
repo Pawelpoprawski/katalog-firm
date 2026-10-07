@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: panel admina - ustawienia (liczba firm w newsletterze, kolejność sortowania).
+ * Przy zmianie: API /admin/settings/*.
+ * AUTO używany przez: frontend/src/app/admin/page.tsx
+ */
 "use client";
 
 import { useState } from "react";

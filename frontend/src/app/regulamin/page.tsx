@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: regulamin katalogu.
+ * Przy zmianie: treść statyczna.
+ * AUTO adres strony: /regulamin
+ */
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE_URL } from "@/lib/siteUrl";

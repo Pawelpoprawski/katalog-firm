@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: strona kategorii /kategoria/<slug> (SSR, ISR) - kanoniczna.
+ * Przy zmianie: listy kategorii odświeżają się do 1 h (fetch revalidate 3600).
+ * AUTO adres strony: /kategoria/[slug]
+ */
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CategoryPageClient from "./CategoryPageClient";

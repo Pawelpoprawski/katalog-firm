@@ -1,3 +1,12 @@
+# POWIĄZANIA
+# Cel: API firm: lista z sortowaniem/promowaniem, profil (id/slug/token), tworzenie, edycja, usuwanie,
+#   liczniki wyświetleń/kliknięć, potwierdzanie aktywności i archiwizacja tokenem, zdjęcia, HTML do newslettera.
+# Przy zmianie: KONSUMENT ZEWNĘTRZNY: portal web/src/lib/katalog.ts (GET /companies/ - pola name, slug, img,
+#   category). Tokeny potwierdzeń/archiwizacji są w linkach maili send_*.py.
+# AUTO używany przez: backend/main.py, backend/routers/__init__.py
+# AUTO wywoływany z: [web] src/lib/katalog.ts, backend/main.py, frontend/src/app/admin/components/AdminCompanies.tsx, frontend/src/app/admin/page.tsx, frontend/src/app/archiwizuj/[token]/page.tsx, frontend/src/app/categories/[slug]/page.tsx, frontend/src/app/companies/[slug]/page.tsx, frontend/src/app/dodaj/page.tsx (+11, pełna lista: POWIAZANIA.md)
+# AUTO endpoint: GET /companies/, GET /companies/newsletter-preview, GET /companies/newsletter, POST /companies/, GET /companies/by-slug/{slug}, GET /companies/{company_id}, POST /companies/batch-view, POST /companies/{company_id}/view, POST /companies/{company_id}/click, PUT /companies/{company_id}, DELETE /companies/{company_id}, GET /companies/by-token/{token}, GET /companies/{company_id}/edit-token, GET /companies/{company_id}/photo/{photo_index}, POST /companies/confirm, POST /companies/confirm-token, POST /companies/archive-token
+# /POWIĄZANIA
 from fastapi import APIRouter, HTTPException, status, Body, Query, Request
 from typing import Any
 import random

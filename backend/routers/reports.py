@@ -1,3 +1,10 @@
+# POWIĄZANIA
+# Cel: zgłoszenia nieprawidłowych wpisów firm.
+# Przy zmianie: dane w data/reports.json.
+# AUTO używany przez: backend/main.py
+# AUTO wywoływany z: frontend/src/app/companies/[slug]/page.tsx
+# AUTO endpoint: GET /reports/, POST /reports/
+# /POWIĄZANIA
 from fastapi import APIRouter, status
 
 from ..schemas import ReportCreate, ReportRead

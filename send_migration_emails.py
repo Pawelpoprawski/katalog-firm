@@ -1,3 +1,10 @@
+# POWIĄZANIA
+# Cel: wysyłka maili do firm: --confirmation (prośba o potwierdzenie aktywności; zastąpiona przez
+#   send_update_reminder.py), --bulk (jednorazowa migracja, legacy), --test.
+# Przy zmianie: cron send_confirmations_cron.sh NIE jest w crontabie serwera (zastąpiony). Szablon
+#   email_migration_template.html.
+# AUTO używany przez: nikt nie importuje (punkt wejścia: skrypt/cron/CLI - patrz Cel)
+# /POWIĄZANIA
 """
 Skrypt wysyłki maili:
   - tryb --test          : wysyła 1 maila do firmy testowej (dummy)

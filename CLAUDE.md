@@ -1,5 +1,27 @@
 # CLAUDE.md
 
+## Zasada nr 1: powiązania (obowiązkowo przy KAŻDEJ zmianie)
+
+1. **Przed zmianą** przeczytaj `POWIAZANIA.md` (gdzie co działa, dane, integracje z portalem `web`, crony,
+   checklisty) i nagłówek `POWIĄZANIA` na górze każdego zmienianego pliku. Linie `AUTO` mówią, kto importuje plik
+   i kto woła endpoint (także z innych repo) - zmień/przetestuj też tamte miejsca.
+2. **Po zmianie** zaktualizuj ręczną część nagłówka (`Cel:`, `Przy zmianie:`) w każdym zmienionym pliku, jeśli
+   zmieniło się, do czego służy albo z czym się wiąże. Linii `AUTO` nie edytuj ręcznie.
+3. **Nowy plik** = od razu nagłówek na samej górze (Python: blok `# POWIĄZANIA` ... `# /POWIĄZANIA`;
+   TS/TSX: `/** POWIĄZANIA ... */` przed importami i przed `"use client"`), z liniami `Cel:` i `Przy zmianie:`.
+4. Uruchom `python scripts/powiazania.py`, potem `python scripts/powiazania.py --check` (musi przejść).
+5. Nowe powiązanie z innym repo, cron albo plik danych -> dopisz w ręcznej części `POWIAZANIA.md`.
+   **Nowe źródło danych / sekret -> obowiązkowo do `web/scripts/backup.sh`.**
+6. Na koniec: `cd frontend && npx tsc --noEmit`.
+
+## Stan aktualny (07.10.2026) - ma pierwszeństwo przed opisem poniżej
+
+Produkcja to `https://polacyszwajcaria.com/katalog-firm` (katalog-firm.ch = 301), katalog na serwerze
+`/home/ubuntu/strony/katalog_firm_psz`, backend :8201, frontend :3201 (pm2 `katalog-psz-*`). Deploy:
+`python ../_recon/deploy_git_katalog.py`. Starsze informacje poniżej (katalog-firm.ch, port 8000,
+`strony/katalog_firm`) są historyczne. Szczegóły: `POWIAZANIA.md`.
+
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview

@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: panel admina - log wyszukiwań AI.
+ * Przy zmianie: API /admin/ai-searches.
+ * AUTO używany przez: frontend/src/app/admin/page.tsx
+ */
 "use client";
 
 import { useEffect, useState } from "react";

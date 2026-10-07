@@ -1,3 +1,8 @@
+# POWIĄZANIA
+# Cel: geokodowanie adresów firm (Google Maps Geocoding API) do mapy.
+# Przy zmianie: klucz Google w .env (klucz map katalogu bywał nieważny - sprawdź przy błędach mapy).
+# AUTO używany przez: nikt nie importuje (punkt wejścia: skrypt/cron/CLI - patrz Cel)
+# /POWIĄZANIA
 """
 Geocoding module for converting addresses to coordinates using Google Maps API.
 """

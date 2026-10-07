@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: typy TypeScript (Company, Category, Review, Report).
+ * Przy zmianie: zgodne z backend/schemas.py.
+ * AUTO używany przez: frontend/src/app/admin/components/AdminCategories.tsx, frontend/src/app/admin/components/AdminCompanies.tsx, frontend/src/app/admin/page.tsx, frontend/src/app/categories/[slug]/page.tsx, frontend/src/app/companies/[slug]/page.tsx, frontend/src/app/dodaj/page.tsx, frontend/src/app/edycja/[token]/page.tsx, frontend/src/app/firma/[slug]/CompanyPageClient.tsx (+6, pełna lista: POWIAZANIA.md)
+ */
 export type Company = {
   id: number;
   name: string;

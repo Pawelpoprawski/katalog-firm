@@ -1,3 +1,9 @@
+/** POWIĄZANIA
+ * Cel: root layout katalogu: wspólny pasek i stopka portalu, menu z API portalu (odświeżane co 10 min), kurs
+ *   CHF, weryfikacja Google.
+ * Przy zmianie: menu z portalu (PORTAL_MENU_URL -> web /api/menu); basePath /katalog-firm.
+ * AUTO plik specjalny Next.js (layout) - ładowany przez framework, nie przez import
+ */
 import type { Metadata } from "next";
 import "./globals.css";
 import AppShell from "./AppShell";

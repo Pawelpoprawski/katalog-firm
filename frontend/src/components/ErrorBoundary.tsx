@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: granica błędów React dla części klienckich.
+ * Przy zmianie: bez zależności.
+ * AUTO używany przez: nikt nie importuje (punkt wejścia: skrypt/cron/CLI - patrz Cel)
+ */
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {

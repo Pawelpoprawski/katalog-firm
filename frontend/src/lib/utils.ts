@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: rozwiązywanie adresów obrazów (base64, zewnętrzne, /images z API) i opisy meta.
+ * Przy zmianie: ścieżki obrazów z backend image_utils.py; basePath.
+ * AUTO używany przez: frontend/src/app/categories/[slug]/page.tsx, frontend/src/app/companies/[slug]/page.tsx, frontend/src/app/firma/[slug]/CompanyPageClient.tsx, frontend/src/app/firma/[slug]/page.tsx, frontend/src/app/kategoria/[slug]/CategoryPageClient.tsx, frontend/src/app/kategoria/[slug]/page.tsx, frontend/src/app/page.tsx
+ */
 /**
  * Resolve image URL - handles base64 data URIs, external URLs, and local API paths.
  * After backend migration, images are stored as /images/company_X_main_0.webp paths.

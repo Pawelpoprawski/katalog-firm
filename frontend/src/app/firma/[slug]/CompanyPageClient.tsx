@@ -1,3 +1,9 @@
+/** POWIĄZANIA
+ * Cel: kliencka część strony firmy (galeria, mapa, opinie, kontakt, liczniki, powrót do wyników).
+ * Przy zmianie: API /companies/by-slug, /reviews, /companies/{id}/view|click; zdjęcia przez lib/utils.ts
+ *   resolveImageUrl.
+ * AUTO używany przez: frontend/src/app/firma/[slug]/page.tsx
+ */
 "use client";
 
 import Link from "next/link";

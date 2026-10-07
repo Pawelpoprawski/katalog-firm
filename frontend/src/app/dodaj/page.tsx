@@ -1,3 +1,9 @@
+/** POWIĄZANIA
+ * Cel: formularz dodania firmy (dane, kategoria, adres z mapą, zdjęcia).
+ * Przy zmianie: API POST /companies/ (walidacja w security_middleware.py); zdjęcia -> image_utils.py; po
+ *   zapisie draft publikowany przez scheduler.
+ * AUTO adres strony: /dodaj
+ */
 "use client";
 import Link from "next/link";
 import Image from "next/image";

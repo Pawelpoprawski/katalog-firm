@@ -1,3 +1,9 @@
+# POWIĄZANIA
+# Cel: STARY skrypt wysyłki configu nginx dla dawnej domeny katalog-firm.ch.
+# Przy zmianie: nieaktualny (deploy przez _recon/deploy_git_katalog.py); zawiera dane logowania - do usunięcia
+#   (lista sprzątania A5).
+# AUTO używany przez: nikt nie importuje (punkt wejścia: skrypt/cron/CLI - patrz Cel)
+# /POWIĄZANIA
 import paramiko
 
 ssh = paramiko.SSHClient()

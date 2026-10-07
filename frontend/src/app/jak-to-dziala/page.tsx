@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: strona "Jak to działa" katalogu.
+ * Przy zmianie: treść statyczna.
+ * AUTO adres strony: /jak-to-dziala
+ */
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE_URL } from "@/lib/siteUrl";

@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: lista ogłoszeń zalogowanego właściciela.
+ * Przy zmianie: API /companies/.
+ * AUTO adres strony: /konto/moje-ogloszenia
+ */
 "use client";
 
 import Link from "next/link";

@@ -1,3 +1,11 @@
+# POWIĄZANIA
+# Cel: wyszukiwanie semantyczne firm przez OpenAI z limitami dziennymi i burst per IP.
+# Przy zmianie: limity w pamięci procesu (pm2 single instance); log wyszukiwań w data/ai_search_log.json
+#   (panel AdminAiSearches).
+# AUTO używany przez: backend/main.py
+# AUTO wywoływany z: frontend/src/app/admin/components/AdminCompanies.tsx, frontend/src/app/edycja/[token]/page.tsx, frontend/src/app/firma/[slug]/page.tsx, frontend/src/app/konto/edytuj/[id]/page.tsx, frontend/src/app/page.tsx
+# AUTO endpoint: POST /companies/ai-search
+# /POWIĄZANIA
 """AI-powered semantic search over companies via OpenAI."""
 import json
 import logging

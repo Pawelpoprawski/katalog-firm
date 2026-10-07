@@ -1,3 +1,9 @@
+/** POWIĄZANIA
+ * Cel: testowy mockup strony firmy (serwuje public/mockup/firma.html) - publicznie dostępny.
+ * Przy zmianie: usuwać razem z public/mockup (lista sprzątania C3).
+ * AUTO wywoływany z: brak literałów URL w kodzie (cron/skrypt/zewnętrzne narzędzie albo URL sklejany dynamicznie - patrz Cel)
+ * AUTO endpoint: GET /firma-test
+ */
 import { readFile } from "fs/promises";
 import path from "path";
 

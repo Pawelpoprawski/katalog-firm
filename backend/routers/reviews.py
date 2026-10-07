@@ -1,3 +1,10 @@
+# POWIĄZANIA
+# Cel: opinie o firmach (lista, dodawanie).
+# Przy zmianie: mail o nowej opinii (email_service.py); moderacja w panelu admina.
+# AUTO używany przez: backend/main.py, backend/routers/__init__.py
+# AUTO wywoływany z: frontend/src/app/admin/page.tsx, frontend/src/app/companies/[slug]/page.tsx, frontend/src/app/firma/[slug]/CompanyPageClient.tsx
+# AUTO endpoint: GET /reviews/, POST /reviews/
+# /POWIĄZANIA
 import logging
 from fastapi import APIRouter, HTTPException, status, Request
 from typing import Optional

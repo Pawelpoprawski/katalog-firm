@@ -1,3 +1,10 @@
+# POWIĄZANIA
+# Cel: lista i tworzenie kategorii.
+# Przy zmianie: KONSUMENT ZEWNĘTRZNY: portal web/src/lib/katalog.ts (GET /categories/).
+# AUTO używany przez: backend/main.py, backend/routers/__init__.py
+# AUTO wywoływany z: [web] src/lib/katalog.ts, backend/main.py, frontend/src/app/admin/components/AdminCategories.tsx, frontend/src/app/admin/page.tsx, frontend/src/app/categories/[slug]/page.tsx, frontend/src/app/dodaj/page.tsx, frontend/src/app/edycja/[token]/page.tsx, frontend/src/app/firma/[slug]/CompanyPageClient.tsx (+5, pełna lista: POWIAZANIA.md)
+# AUTO endpoint: GET /categories/, POST /categories/
+# /POWIĄZANIA
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from ..schemas import CategoryCreate, CategoryRead

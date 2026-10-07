@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: STARA (angielska) strona kategorii - nadal działa (200), nowe strony linkują do /kategoria/<slug>.
+ * Przy zmianie: duplikat treści /kategoria - kandydat do przekierowania 301 albo usunięcia (decyzja SEO).
+ * AUTO adres strony: /categories/[slug]
+ */
 "use client";
 
 import Link from "next/link";

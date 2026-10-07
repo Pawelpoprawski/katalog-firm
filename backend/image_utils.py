@@ -1,3 +1,9 @@
+# POWIĄZANIA
+# Cel: konwersja zdjęć (base64) do WebP i zapis w backend/static/images (company_<id>_<rodzaj>_<n>.webp).
+# Przy zmianie: ścieżki /images/... zapisywane w companies.json (pole img/photos); frontend lib/utils.ts
+#   resolveImageUrl. Katalog static/images jest w backup.sh.
+# AUTO używany przez: backend/routers/companies.py
+# /POWIĄZANIA
 """
 Image processing utilities for converting images to WebP format.
 """

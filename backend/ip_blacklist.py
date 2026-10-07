@@ -1,3 +1,8 @@
+# POWIĄZANIA
+# Cel: middleware blokujący IP z czarnej listy (data/ip_blacklist.txt) + dodawanie/usuwanie.
+# Przy zmianie: IP klienta zza Cloudflare/nginx; zarządzanie z panelu admina (AdminReviews).
+# AUTO używany przez: backend/main.py, backend/routers/admin.py
+# /POWIĄZANIA
 """
 IP Blacklist Middleware
 

@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: filtry listy firm (kategoria, kanton, sortowanie).
+ * Przy zmianie: wartości zgodne z API /companies/.
+ * AUTO używany przez: frontend/src/app/page.tsx
+ */
 "use client";
 
 import { Company, Category } from "@/types";

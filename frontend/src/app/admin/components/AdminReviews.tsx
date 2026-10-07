@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: panel admina - opinie i blokowanie IP autorów.
+ * Przy zmianie: API /admin/reviews, /admin/ip-blacklist/add.
+ * AUTO używany przez: frontend/src/app/admin/page.tsx
+ */
 "use client";
 
 import { useState } from "react";

@@ -1,3 +1,8 @@
+# POWIĄZANIA
+# Cel: hashowanie i weryfikacja haseł.
+# Przy zmianie: używane przez routers/auth.py i storage.
+# AUTO używany przez: backend/routers/auth.py
+# /POWIĄZANIA
 import bcrypt
 
 

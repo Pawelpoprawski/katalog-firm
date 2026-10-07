@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: potwierdzenie aktywności firmy (wariant bez tokenu w ścieżce).
+ * Przy zmianie: API /companies/confirm.
+ * AUTO adres strony: /potwierdz
+ */
 "use client";
 
 import { useState } from "react";

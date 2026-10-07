@@ -1,3 +1,8 @@
+# POWIĄZANIA
+# Cel: jednorazowe geokodowanie firm bez współrzędnych.
+# Przy zmianie: narzędzie ręczne.
+# AUTO używany przez: nikt nie importuje (punkt wejścia: skrypt/cron/CLI - patrz Cel)
+# /POWIĄZANIA
 """
 One-time migration script to geocode existing companies without coordinates.
 Run this script to add latitude/longitude to all companies in the database.

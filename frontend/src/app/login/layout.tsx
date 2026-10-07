@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: metadane logowania.
+ * Przy zmianie: bez zależności.
+ * AUTO plik specjalny Next.js (layout) - ładowany przez framework, nie przez import
+ */
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

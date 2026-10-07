@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: edycja ogłoszenia firmy przez zalogowanego właściciela.
+ * Przy zmianie: API /companies/{id}.
+ * AUTO adres strony: /konto/edytuj/[id]
+ */
 "use client";
 
 import Link from "next/link";

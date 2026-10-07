@@ -1,3 +1,9 @@
+/** POWIĄZANIA
+ * Cel: strona główna katalogu (wyszukiwarka, wyszukiwanie AI, filtry, mapa, lista firm z paginacją).
+ * Przy zmianie: API /companies/, /categories/, /companies/ai-search, /companies/batch-view, /settings; powrót
+ *   ze strony firmy do tych samych wyników (stan w URL).
+ * AUTO adres strony: /
+ */
 "use client";
 
 import Link from "next/link";

@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: mapa firm (Google Maps JS).
+ * Przy zmianie: klucz NEXT_PUBLIC_GOOGLE_MAPS_KEY; współrzędne z geocoding.py.
+ * AUTO używany przez: frontend/src/app/page.tsx
+ */
 "use client";
 
 import { useEffect, useRef } from "react";

@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: logowanie do konta katalogu.
+ * Przy zmianie: API /auth/login.
+ * AUTO adres strony: /login
+ */
 "use client";
 
 import Link from "next/link";

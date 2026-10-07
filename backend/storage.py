@@ -1,3 +1,10 @@
+# POWIĄZANIA
+# Cel: "baza" katalogu w plikach JSON (backend/data: companies, users, categories, reviews, reports, stats,
+#   analytics) z blokadą i cache 60 s.
+# Przy zmianie: zapis atomowy (tmp + replace) - przy ręcznej edycji JSON na serwerze rób tak samo i licz się z
+#   cache 60 s. Pliki danych są w backup.sh (katalog-data).
+# AUTO używany przez: backend/main.py, backend/migrate_coordinates.py, backend/routers/admin.py, backend/routers/auth.py, backend/routers/categories.py, backend/routers/companies.py, backend/routers/reports.py, backend/routers/reviews.py (+1, pełna lista: POWIAZANIA.md)
+# /POWIĄZANIA
 from __future__ import annotations
 
 import json

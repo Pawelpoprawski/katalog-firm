@@ -1,3 +1,10 @@
+# POWIĄZANIA
+# Cel: cykliczne "czas odświeżyć ogłoszenie" + potwierdzenie aktywności (co najwyżej co 3 miesiące na firmę;
+#   cron codziennie 20:00 przez send_update_reminder_cron.sh).
+# Przy zmianie: zastępuje tryb --confirmation z send_migration_emails.py; linki /edycja/[token] i
+#   /potwierdz/[token].
+# AUTO używany przez: nikt nie importuje (punkt wejścia: skrypt/cron/CLI - patrz Cel)
+# /POWIĄZANIA
 # -*- coding: utf-8 -*-
 """
 Cykliczny mail "czas odswiezyc ogloszenie" — laczy przypomnienie o aktualizacji

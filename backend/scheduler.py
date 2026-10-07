@@ -1,3 +1,8 @@
+# POWIĄZANIA
+# Cel: automatyczna publikacja draftów firm po zadanym czasie (pętla asyncio w procesie backendu).
+# Przy zmianie: ustawienia czasu w settings; restart backendu restartuje pętlę.
+# AUTO używany przez: backend/main.py, backend/routers/admin.py
+# /POWIĄZANIA
 """Background scheduler — automatyczna publikacja draftów po zadanym czasie.
 
 Uruchamiany w on_startup z main.py jako asyncio task.

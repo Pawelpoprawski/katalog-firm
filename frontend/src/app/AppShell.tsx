@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: powłoka aplikacji katalogu (od 15.07 bez własnego nagłówka/stopki - używa paska i stopki portalu).
+ * Przy zmianie: pasek PortalBar i stopka PortalFooter w layout.tsx.
+ * AUTO używany przez: frontend/src/app/layout.tsx
+ */
 "use client";
 
 import { useEffect } from "react";

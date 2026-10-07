@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: strona konta użytkownika katalogu.
+ * Przy zmianie: logowanie w app/login.
+ * AUTO adres strony: /konto
+ */
 "use client";
 
 import Link from "next/link";

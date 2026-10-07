@@ -1,3 +1,8 @@
+# POWIĄZANIA
+# Cel: jednorazowa migracja zdjęć base64 z companies.json na pliki WebP.
+# Przy zmianie: narzędzie ręczne (bezpieczne do ponownego uruchomienia).
+# AUTO używany przez: nikt nie importuje (punkt wejścia: skrypt/cron/CLI - patrz Cel)
+# /POWIĄZANIA
 """
 Migration script: Extract base64 images from companies.json to disk files.
 Run once to migrate existing data. Safe to re-run (skips already migrated).

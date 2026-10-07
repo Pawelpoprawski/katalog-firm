@@ -1,3 +1,8 @@
+# POWIĄZANIA
+# Cel: generator grafiki OG katalogu (frontend/public/og.png).
+# Przy zmianie: uruchamiany ręcznie; czcionki w scripts/og-assets.
+# AUTO używany przez: nikt nie importuje (punkt wejścia: skrypt/cron/CLI - patrz Cel)
+# /POWIĄZANIA
 """Generate Open Graph image (1200x630) for katalog-firm.ch in Hays style.
 
 Output: frontend/public/og.png

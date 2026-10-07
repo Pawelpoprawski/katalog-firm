@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: strona firmy /firma/<slug> (SSR, metadane SEO, ISR 300 s) - kanoniczna.
+ * Przy zmianie: slug zostaje po zmianie nazwy firmy (np. pks-finanz-gmbh); linkują tu portal i newsletter.
+ * AUTO adres strony: /firma/[slug]
+ */
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CompanyPageClient from "./CompanyPageClient";

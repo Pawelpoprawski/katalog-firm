@@ -1,3 +1,8 @@
+/** POWIĄZANIA
+ * Cel: metadane strony dodawania firmy.
+ * Przy zmianie: adres kanoniczny z lib/siteUrl.ts.
+ * AUTO plik specjalny Next.js (layout) - ładowany przez framework, nie przez import
+ */
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/siteUrl";
 
