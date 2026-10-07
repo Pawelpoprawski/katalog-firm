@@ -1,5 +1,15 @@
 {
-  "ts_roots": ["frontend"],
-  "py_roots": ["."],
-  "siblings": {"web": "../web", "praca": "../praca", "ps-tools": "../ps-tools", "_recon": "../_recon"}
+  "ts_roots": [
+    "frontend"
+  ],
+  "py_roots": [
+    "."
+  ],
+  "siblings": {
+    "web": "../web",
+    "praca": "../praca",
+    "ps-tools": "../ps-tools",
+    "_recon": "../_recon"
+  },
+  "incoming_bases": "KATALOG|8201|katalog-firm"
 }

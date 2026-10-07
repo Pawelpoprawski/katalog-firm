@@ -123,7 +123,7 @@ _Wygenerowane automatycznie. Odśwież: `python scripts/powiazania.py`._
 | GET | `/reviews/` | `backend/routers/reviews.py:23` list_reviews() | `frontend/src/app/admin/page.tsx`<br>`frontend/src/app/companies/[slug]/page.tsx`<br>`frontend/src/app/firma/[slug]/CompanyPageClient.tsx` |
 | POST | `/reviews/` | `backend/routers/reviews.py:29` create_review() | `frontend/src/app/admin/page.tsx`<br>`frontend/src/app/companies/[slug]/page.tsx`<br>`frontend/src/app/firma/[slug]/CompanyPageClient.tsx` |
 | GET | `/settings` | `backend/main.py:105` get_public_settings() | `frontend/src/app/admin/page.tsx`<br>`frontend/src/app/page.tsx` |
-| GET | `/sitemap.xml` | `frontend/src/app/sitemap.xml/route.ts:66` GET() | `[_recon] deploy_admin.py`<br>`[praca] deploy_seo_improvements.py`<br>`[praca] frontend/src/app/robots.ts`<br>`[web] src/app/robots.ts`<br>`deploy_seo.py`<br>`frontend/src/app/robots.ts` |
+| GET | `/sitemap.xml` | `frontend/src/app/sitemap.xml/route.ts:66` GET() | `deploy_seo.py`<br>`frontend/src/app/robots.ts` |
 
 ### Strony (URL -> plik)
 

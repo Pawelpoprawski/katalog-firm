@@ -158,6 +158,8 @@ def main(check: bool) -> int:
     envs = defaultdict(set)             # ZMIENNA -> {plik}
     tables = defaultdict(set)           # tabela -> {plik}
     url_literals = defaultdict(set)     # znormalizowany URL -> {plik (także z innych repo)}
+    url_bases = defaultdict(set)        # (znormalizowany URL, plik) -> {baza adresu: nazwa zmiennej albo host}
+    url_for_calls = defaultdict(set)    # nazwa funkcji widoku (Flask url_for) -> {plik}
     files_all: list[Path] = []
 
     # tylko słowa kluczowe SQL WIELKIMI literami (inaczej łapie pythonowe "from x import" i "require(...)")
@@ -174,10 +176,20 @@ def main(check: bool) -> int:
             s = m.group(1)
             if len(s) > 1 and not s.startswith("//") and not re.search(r"\.(png|jpe?g|webp|svg|css|ico|js|woff2?|mp4|pdf)$", s.split("?")[0]):
                 # host absolutnego URL-a zamieniamy na "{}" (= "inny serwer / adres bazowy")
-                url_literals[norm_path(re.sub(r"^https?://[^/]+", "{}", s))].add(label)
+                key = norm_path(re.sub(r"^https?://[^/]+", "{}", s))
+                url_literals[key].add(label)
+                b = re.match(r"\$?\{([^}]*)\}|https?://([^/]+)", s)
+                if b:
+                    url_bases[(key, label)].add(b.group(1) or b.group(2))
         # URL-e bez cudzysłowów (skrypty shell: API=http://127.0.0.1:3200/api/...)
-        for m in re.finditer(r"https?://[A-Za-z0-9.\-]+(?::\d+)?(/[^\s'\"`<>)]*)", text):
-            url_literals[norm_path("{}" + m.group(1))].add(label)
+        for m in re.finditer(r"https?://([A-Za-z0-9.\-]+(?::\d+)?)(/[^\s'\"`<>)]*)", text):
+            key = norm_path("{}" + m.group(2))
+            url_literals[key].add(label)
+            url_bases[(key, label)].add(m.group(1))
+        # Flask: url_for('nazwa_widoku') w szablonach i kodzie - tylko w obrębie tego samego repo
+        if not label.startswith("["):
+            for name in re.findall(r"url_for\(\s*['\"](\w+)['\"]", text):
+                url_for_calls[name].add(label)
 
     # ---- TS / Next.js
     app_dirs = []
@@ -263,9 +275,12 @@ def main(check: bool) -> int:
                     meths = re.findall(r"['\"](GET|POST|PUT|PATCH|DELETE)['\"]", m2.group(3)) or ["GET"]
                     endpoints.append(("/".join(meths), m2.group(2), f"{rel(f)}:{i + 1}", fn))
 
-    # ---- własne skrypty shell (crony) - tylko jako wywołujący
+    # ---- własne skrypty shell (crony) i katalogi z szablonami (caller_dirs) - tylko jako wywołujący
     for f in walk(ROOT / "scripts", (".sh",)) if (ROOT / "scripts").is_dir() else []:
         collect_urls(read(f), rel(f))
+    for d in CFG.get("caller_dirs", []):
+        for f in walk(ROOT / d, (".html", ".js", ".jinja", ".j2")) if (ROOT / d).is_dir() else []:
+            collect_urls(read(f), rel(f))
 
     # ---- wywołania z innych repo (tylko literały URL)
     for name, path in CFG.get("siblings", {}).items():
@@ -300,7 +315,15 @@ def main(check: bool) -> int:
             # dotyczy JEGO własnego API, więc nie liczy się jako wywołanie naszego endpointu.
             strict = len(ls) > 1 and ls[0] == "{}" and exact(ls[1:])
             for w in who:
-                if w != own and (strict if w.startswith("[") else loose):
+                if w == own:
+                    continue
+                if w.startswith("["):
+                    # inne repo: pełna ścieżka + baza adresu wskazująca NA TĘ aplikację
+                    # (incoming_bases w powiazania.json, np. "KATALOG|8201" - nazwa zmiennej albo host:port)
+                    inc = CFG.get("incoming_bases")
+                    if strict and inc and any(re.search(inc, b) for b in url_bases.get((lit, w), ())):
+                        found.add(w)
+                elif loose:
                     found.add(w)
         # klient HTTP z baseURL (np. axios baseURL="/api/v1"): w kodzie stoi "/jobs/{}" zamiast "/api/v1/jobs/{}".
         # Tylko dla wywołań z TEGO repo i tylko przy pełnej zgodności reszty ścieżki.
@@ -326,7 +349,7 @@ def main(check: bool) -> int:
         L += ["### Endpointy (API) i kto je wywołuje", "",
               "| Metoda | Ścieżka | Obsługa | Wywoływane z (literały URL w kodzie, też z innych repo) |", "|---|---|---|---|"]
         for meth, path, where, fn in sorted(endpoints, key=lambda e: (e[1], e[0])):
-            c = callers(path, where.split(":")[0])
+            c = sorted(set(callers(path, where.split(":")[0])) | url_for_calls.get(fn, set()))
             L.append(f"| {meth} | `{path}` | `{where}` {fn}() | {'<br>'.join(f'`{x}`' for x in c[:12]) + (f' +{len(c) - 12}' if len(c) > 12 else '') if c else '—'} |")
         L.append("")
     if pages:
@@ -357,6 +380,7 @@ def main(check: bool) -> int:
     for meth, path, where, fn in endpoints:
         fr = where.split(":")[0]
         route_callers[fr].update(callers(path, fr))
+        route_callers[fr].update(url_for_calls.get(fn, set()) - {fr})
         route_files[fr] = (route_files[fr] + ", " if route_files[fr] else "") + f"{meth} {path}"
     page_url = {p: u for u, p in pages}
     missing, changed = [], []
