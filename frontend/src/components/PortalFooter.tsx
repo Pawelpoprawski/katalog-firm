@@ -9,6 +9,8 @@
 // UWAGA: treść (kolumny linków) jest zdefiniowana w kodzie portalu — przy zmianie stopki
 // portalu zaktualizuj też ten plik.
 
+import { SOCIAL } from "@/lib/social";
+
 const PORTAL = "https://polacyszwajcaria.com";
 
 const COLS = [
@@ -44,11 +46,11 @@ const COLS = [
 ];
 
 const SOCIALS = [
-  { label: "Facebook", href: "https://www.facebook.com/PolacySzwajcaria2024/", icon: "fb" },
-  { label: "YouTube", href: "https://www.youtube.com/@pawelszwajcaria", icon: "yt" },
-  { label: "Instagram", href: "https://www.instagram.com/polacyszwajcaria/", icon: "ig" },
-  { label: "TikTok", href: "https://www.tiktok.com/@polacyszwajcaria", icon: "tt" },
-  { label: "X", href: "https://x.com/PolacySzwajca", icon: "x" },
+  { label: "Facebook", href: SOCIAL.facebook, icon: "fb" },
+  { label: "YouTube", href: SOCIAL.youtube, icon: "yt" },
+  { label: "Instagram", href: SOCIAL.instagram, icon: "ig" },
+  { label: "TikTok", href: SOCIAL.tiktok, icon: "tt" },
+  { label: "X", href: SOCIAL.x, icon: "x" },
 ] as const;
 
 const ICONS: Record<string, JSX.Element> = {

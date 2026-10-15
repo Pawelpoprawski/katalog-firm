@@ -10,6 +10,7 @@ import AppShell from "./AppShell";
 import PortalBar, { type PortalNavItem } from "@/components/PortalBar";
 import PortalFooter from "@/components/PortalFooter";
 import { SITE_URL } from "@/lib/siteUrl";
+import { SOCIAL } from "@/lib/social";
 
 // Menu wspólnego paska — z API portalu (jedno źródło prawdy: baza menu portalu,
 // edytowana w adminie). Lokalnie na serwerze (127.0.0.1:3200), odświeżane co 10 min.
@@ -135,10 +136,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         },
         description: "Największy katalog polskich firm i usług w Szwajcarii",
         foundingDate: "2024",
-        sameAs: [
-          "https://www.facebook.com/PolacySzwajcaria2024",
-          "https://polacyszwajcaria.com"
-        ],
+        sameAs: [...Object.values(SOCIAL), "https://polacyszwajcaria.com"],
       },
       {
         "@type": "WebSite",

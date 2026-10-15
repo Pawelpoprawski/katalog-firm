@@ -229,7 +229,7 @@ _Wygenerowane automatycznie. Odśwież: `python scripts/powiazania.py`._
 | `frontend/src/app/konto/layout.tsx` | — | — |
 | `frontend/src/app/konto/moje-ogloszenia/page.tsx` | — | — |
 | `frontend/src/app/konto/page.tsx` | — | — |
-| `frontend/src/app/layout.tsx` | `frontend/src/app/AppShell.tsx`<br>`frontend/src/components/PortalBar.tsx`<br>`frontend/src/components/PortalFooter.tsx`<br>`frontend/src/lib/siteUrl.ts` | — |
+| `frontend/src/app/layout.tsx` | `frontend/src/app/AppShell.tsx`<br>`frontend/src/components/PortalBar.tsx`<br>`frontend/src/components/PortalFooter.tsx`<br>`frontend/src/lib/siteUrl.ts`<br>`frontend/src/lib/social.ts` | — |
 | `frontend/src/app/login/layout.tsx` | — | — |
 | `frontend/src/app/login/page.tsx` | — | — |
 | `frontend/src/app/not-found.tsx` | — | — |
@@ -249,8 +249,9 @@ _Wygenerowane automatycznie. Odśwież: `python scripts/powiazania.py`._
 | `frontend/src/components/GoogleMap.tsx` | `frontend/src/types.ts` | `frontend/src/app/page.tsx` |
 | `frontend/src/components/Pagination.tsx` | — | `frontend/src/app/page.tsx` |
 | `frontend/src/components/PortalBar.tsx` | — | `frontend/src/app/layout.tsx` |
-| `frontend/src/components/PortalFooter.tsx` | — | `frontend/src/app/layout.tsx` |
+| `frontend/src/components/PortalFooter.tsx` | `frontend/src/lib/social.ts` | `frontend/src/app/layout.tsx` |
 | `frontend/src/lib/siteUrl.ts` | — | `frontend/src/app/dodaj/layout.tsx`<br>`frontend/src/app/firma/[slug]/page.tsx`<br>`frontend/src/app/jak-to-dziala/page.tsx`<br>`frontend/src/app/kategoria/[slug]/page.tsx`<br>`frontend/src/app/layout.tsx`<br>`frontend/src/app/polityka-prywatnosci/page.tsx`<br>`frontend/src/app/regulamin/page.tsx` |
+| `frontend/src/lib/social.ts` | — | `frontend/src/app/layout.tsx`<br>`frontend/src/components/PortalFooter.tsx` |
 | `frontend/src/lib/utils.ts` | — | `frontend/src/app/categories/[slug]/page.tsx`<br>`frontend/src/app/companies/[slug]/page.tsx`<br>`frontend/src/app/firma/[slug]/CompanyPageClient.tsx`<br>`frontend/src/app/firma/[slug]/page.tsx`<br>`frontend/src/app/kategoria/[slug]/CategoryPageClient.tsx`<br>`frontend/src/app/kategoria/[slug]/page.tsx`<br>`frontend/src/app/page.tsx` |
 | `frontend/src/types.ts` | — | `frontend/src/app/admin/components/AdminCategories.tsx`<br>`frontend/src/app/admin/components/AdminCompanies.tsx`<br>`frontend/src/app/admin/page.tsx`<br>`frontend/src/app/categories/[slug]/page.tsx`<br>`frontend/src/app/companies/[slug]/page.tsx`<br>`frontend/src/app/dodaj/page.tsx`<br>`frontend/src/app/edycja/[token]/page.tsx`<br>`frontend/src/app/firma/[slug]/CompanyPageClient.tsx`<br>`frontend/src/app/kategoria/[slug]/CategoryPageClient.tsx`<br>`frontend/src/app/kategoria/[slug]/page.tsx`<br>`frontend/src/app/page.tsx`<br>`frontend/src/components/CompanyCard.tsx`<br>`frontend/src/components/Filters.tsx`<br>`frontend/src/components/GoogleMap.tsx` |
 | `scripts/generate_og.py` | — | — |
