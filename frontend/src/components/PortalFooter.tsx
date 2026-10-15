@@ -45,7 +45,7 @@ const COLS = [
 
 const SOCIALS = [
   { label: "Facebook", href: "https://www.facebook.com/PolacySzwajcaria2024/", icon: "fb" },
-  { label: "YouTube", href: "https://www.youtube.com/@PolacySzwajcaria", icon: "yt" },
+  { label: "YouTube", href: "https://www.youtube.com/@pawelszwajcaria", icon: "yt" },
   { label: "Instagram", href: "https://www.instagram.com/polacyszwajcaria/", icon: "ig" },
   { label: "TikTok", href: "https://www.tiktok.com/@polacyszwajcaria", icon: "tt" },
   { label: "X", href: "https://x.com/PolacySzwajca", icon: "x" },
