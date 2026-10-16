@@ -218,6 +218,7 @@ _Wygenerowane automatycznie. Odśwież: `python scripts/powiazania.py`._
 | `frontend/src/app/dodaj/page.tsx` | `frontend/src/types.ts` | — |
 | `frontend/src/app/edycja/[token]/page.tsx` | `frontend/src/types.ts` | — |
 | `frontend/src/app/edycja/layout.tsx` | — | — |
+| `frontend/src/app/error.tsx` | — | — |
 | `frontend/src/app/firma-test/route.ts` | — | — |
 | `frontend/src/app/firma/[slug]/CompanyPageClient.tsx` | `frontend/src/lib/utils.ts`<br>`frontend/src/types.ts` | `frontend/src/app/firma/[slug]/page.tsx` |
 | `frontend/src/app/firma/[slug]/page.tsx` | `frontend/src/app/firma/[slug]/CompanyPageClient.tsx`<br>`frontend/src/lib/siteUrl.ts`<br>`frontend/src/lib/utils.ts` | — |
