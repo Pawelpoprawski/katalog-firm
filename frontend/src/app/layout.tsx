@@ -5,6 +5,7 @@
  * AUTO plik specjalny Next.js (layout) - ładowany przez framework, nie przez import
  */
 import type { Metadata } from "next";
+import { Roboto, Roboto_Slab } from "next/font/google";
 import "./globals.css";
 import AppShell from "./AppShell";
 import PortalBar, { type PortalNavItem } from "@/components/PortalBar";
@@ -46,6 +47,22 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
 };
+
+// Czcionki przez next/font (self-hosted, bez <link> do Google Fonts): Cloudflare Fonts podmieniał te <link> w <head>
+// na inline <style> i React zgłaszał błędy hydratacji #418/#423 na KAŻDEJ stronie katalogu (re-render po stronie
+// klienta). Tak samo robią portal i praca.
+const roboto = Roboto({
+  subsets: ["latin", "latin-ext"],
+  weight: ["300", "400", "500", "700"],
+  variable: "--font-body",
+  display: "swap",
+});
+const robotoSlab = Roboto_Slab({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -165,12 +182,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <meta name="theme-color" content="#E1002A" />
         {/* manifest z basePath — bez niego przeglądarka prosi o /manifest.json z roota domeny (404) */}
         <link rel="manifest" href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/manifest.json`} />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -179,7 +190,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             (portal + /praca-w-szwajcarii + /katalog-firm). */}
         <script defer src="https://stats.polacyszwajcaria.com/script.js" data-website-id="483d2f9a-9d4c-4412-8c95-d8fd52cae895" />
       </head>
-      <body className="bg-white text-slate-900 antialiased font-sans">
+      <body className={`${roboto.variable} ${robotoSlab.variable} bg-white text-slate-900 antialiased font-sans`}>
         <PortalBar nav={portalNav} chfRate={chfRate} />
         <AppShell>{children}</AppShell>
         <PortalFooter />

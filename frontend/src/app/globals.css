@@ -34,14 +34,14 @@
 
   body {
     @apply bg-white text-slate-900 transition-colors duration-300;
-    font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-body), 'Roboto', system-ui, -apple-system, sans-serif;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4 {
-    font-family: 'Roboto Slab', Georgia, serif;
+    font-family: var(--font-display), 'Roboto Slab', Georgia, serif;
     letter-spacing: -0.01em;
     font-weight: 700;
     text-rendering: optimizeLegibility;
@@ -99,7 +99,7 @@
   /* --- Hays-style components --- */
 
   .font-display {
-    font-family: 'Roboto Slab', Georgia, serif;
+    font-family: var(--font-display), 'Roboto Slab', Georgia, serif;
   }
 
   /* 3px red accent line under section labels */

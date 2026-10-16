@@ -31,8 +31,8 @@ module.exports = {
         }
       },
       fontFamily: {
-        sans: ['Roboto', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['Roboto Slab', 'Georgia', 'serif'],
+        sans: ['var(--font-body)', 'Roboto', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['var(--font-display)', 'Roboto Slab', 'Georgia', 'serif'],
       },
       borderRadius: {
         '3xl': '1.5rem',
