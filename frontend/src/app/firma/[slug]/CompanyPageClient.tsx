@@ -321,6 +321,41 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
             Wróć do listy firm
           </Link>
 
+          {/* Nagłówek firmy NAD zdjęciem i kontaktem: na telefonie nazwa była dopiero pod zdjęciem i kontaktem */}
+          <div className="space-y-3 rounded-md border border-[#E0E3E8] bg-white p-5 sm:p-6">
+            <span className="hays-red-line" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold text-[#0D2240]">{company.name}</h1>
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              {(company.city || company.canton || company.address) && (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.address || `${company.city}, ${company.canton}, Switzerland`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#555] hover:text-[#E1002A] transition-colors inline-flex items-center gap-1"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  {[company.city, company.canton].filter(Boolean).join(", ") || company.address}
+                </a>
+              )}
+              {company.category && (
+                <span className="inline-flex items-center gap-1 rounded bg-[#FFF0F3] px-2.5 py-1 text-[11px] font-semibold text-[#E1002A] uppercase tracking-wider">
+                  {company.category}
+                </span>
+              )}
+              {company.rating && (
+                <span className="inline-flex items-center gap-1 rounded bg-[#C5A253]/10 px-2.5 py-1 text-[11px] font-semibold text-[#C5A253]">
+                  <svg className="w-3 h-3 fill-current" viewBox="0 0 20 20">
+                    <path d="M10 1l2.928 5.93 6.542.95-4.735 4.616 1.118 6.52L10 16l-5.853 3.016 1.118-6.52L.53 7.88l6.542-.95z" />
+                  </svg>
+                  {company.rating.toFixed(1)}
+                </span>
+              )}
+            </div>
+            </div>
+
           {/* Top row: Image + Contact sidebar */}
           <div className="grid gap-6 md:grid-cols-[1.2fr,1fr]">
             <div
@@ -492,41 +527,6 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
 
           {/* Full-width section: Company info, description, gallery */}
           <div className="rounded-md border border-[#E0E3E8] bg-white p-6 sm:p-8 space-y-6">
-            {/* Company Header */}
-            <div className="space-y-3 border-b border-[#E0E3E8] pb-5">
-              <span className="hays-red-line" />
-              <h1 className="font-display text-2xl sm:text-3xl font-bold text-[#0D2240]">{company.name}</h1>
-              <div className="flex flex-wrap items-center gap-2 text-sm">
-                {(company.city || company.canton || company.address) && (
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.address || `${company.city}, ${company.canton}, Switzerland`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#555] hover:text-[#E1002A] transition-colors inline-flex items-center gap-1"
-                  >
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    {[company.city, company.canton].filter(Boolean).join(", ") || company.address}
-                  </a>
-                )}
-                {company.category && (
-                  <span className="inline-flex items-center gap-1 rounded bg-[#FFF0F3] px-2.5 py-1 text-[11px] font-semibold text-[#E1002A] uppercase tracking-wider">
-                    {company.category}
-                  </span>
-                )}
-                {company.rating && (
-                  <span className="inline-flex items-center gap-1 rounded bg-[#C5A253]/10 px-2.5 py-1 text-[11px] font-semibold text-[#C5A253]">
-                    <svg className="w-3 h-3 fill-current" viewBox="0 0 20 20">
-                      <path d="M10 1l2.928 5.93 6.542.95-4.735 4.616 1.118 6.52L10 16l-5.853 3.016 1.118-6.52L.53 7.88l6.542-.95z" />
-                    </svg>
-                    {company.rating.toFixed(1)}
-                  </span>
-                )}
-              </div>
-            </div>
-
             {/* Description */}
             <div
               className="company-description max-w-none text-base text-[#1A1A1A] leading-relaxed"
@@ -613,7 +613,9 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
                           type="button"
                           onClick={() => setRating(star)}
                           onMouseEnter={() => setRating(star)}
-                          className="focus:outline-none transition-transform hover:scale-110"
+                          aria-label={`Ocena ${star} z 5`}
+                          aria-pressed={star <= rating}
+                          className="flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A253] transition-transform hover:scale-110 active:scale-95"
                         >
                           <svg
                             className={`h-7 w-7 ${star <= rating ? "text-[#C5A253] fill-current" : "text-[#E0E3E8] fill-current"}`}

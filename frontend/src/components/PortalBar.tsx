@@ -115,10 +115,10 @@ function Dropdown({ item }: { item: PortalNavItem }) {
 
 // Szybkie linki na mobilnej belce — te same co na portalu (HeaderNav.tsx).
 const QUICK_LINKS = [
-  { label: "Newsy", href: "/wiadomosci" },
-  { label: "Praca", href: "/praca-w-szwajcarii/oferty" },
   { label: "Forum", href: "/forum" },
+  { label: "Praca", href: "/praca-w-szwajcarii/oferty" },
   { label: "Usługi", href: "/katalog-firm" },
+  { label: "Turystyka", href: "/turystyka" },
 ];
 
 export default function PortalBar({ nav, chfRate }: { nav: PortalNavItem[]; chfRate?: string | null }) {
