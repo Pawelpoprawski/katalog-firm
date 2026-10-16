@@ -799,11 +799,11 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
       {/* Contact Modal - simplified */}
       {showContactModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4"
           onClick={() => setShowContactModal(false)}
         >
           <div
-            className="w-full max-w-md rounded-md border border-[#E0E3E8] bg-white p-6 shadow-2xl"
+            className="my-auto max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-md border border-[#E0E3E8] bg-white p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="space-y-2 mb-5">
@@ -885,11 +885,11 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
       {/* Share Modal */}
       {showShareModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4"
           onClick={() => setShowShareModal(false)}
         >
           <div
-            className="w-full max-w-md rounded-md border border-[#E0E3E8] bg-white p-6 shadow-2xl"
+            className="my-auto max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-md border border-[#E0E3E8] bg-white p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-5">
@@ -897,7 +897,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
                 <span className="hays-red-line" />
                 <h3 className="font-display text-lg font-bold text-[#0D2240]">Udostępnij firmę</h3>
               </div>
-              <button onClick={() => setShowShareModal(false)} className="p-1 rounded hover:bg-[#F5F6F8] transition-colors">
+              <button onClick={() => setShowShareModal(false)} aria-label="Zamknij" className="flex h-10 w-10 items-center justify-center rounded hover:bg-[#F5F6F8] transition-colors">
                 <svg className="w-5 h-5 text-[#888]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
@@ -968,7 +968,7 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
         >
           <button
             onClick={() => setLightboxImage(null)}
-            className="absolute top-4 right-4 text-white hover:text-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white z-10"
+            className="absolute top-4 right-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white z-10"
             aria-label="Zamknij"
           >
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
