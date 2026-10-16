@@ -14,6 +14,21 @@ function isChunkError(error: Error): boolean {
 }
 
 // Jedno przeładowanie z parametrem omijającym cache (świeży HTML z serwera); bez zapętlania.
+// HTML z cache Cloudflare może być ze starego builda: jego <script src=/_next/static/chunks/...> już nie istnieje
+// (HEAD -> 404). Wtedy jedyną sensowną reakcją jest przeładowanie z pominięciem cache.
+async function isStaleBuild(): Promise<boolean> {
+  try {
+    const script = Array.from(document.querySelectorAll<HTMLScriptElement>("script[src*='/_next/static/chunks/']")).find(
+      (s) => /\/chunks\/app\//.test(s.src),
+    ) || document.querySelector<HTMLScriptElement>("script[src*='/_next/static/chunks/']");
+    if (!script) return false;
+    const res = await fetch(script.src, { method: "HEAD", cache: "no-store" });
+    return res.status === 404;
+  } catch {
+    return false;
+  }
+}
+
 function reloadOnceForFreshHtml(): boolean {
   try {
     const KEY = "psz_chunk_reload";
@@ -32,7 +47,11 @@ function reloadOnceForFreshHtml(): boolean {
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
     console.error("Render error:", error);
-    if (isChunkError(error)) reloadOnceForFreshHtml();
+    if (isChunkError(error)) {
+      reloadOnceForFreshHtml();
+      return;
+    }
+    isStaleBuild().then((stale) => stale && reloadOnceForFreshHtml());
   }, [error]);
 
   return (
