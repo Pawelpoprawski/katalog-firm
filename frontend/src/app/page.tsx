@@ -14,6 +14,8 @@ import { resolveImageUrl } from "@/lib/utils";
 import CompanyCard from "@/components/CompanyCard";
 import Filters from "@/components/Filters";
 import GoogleMap from "@/components/GoogleMap";
+import { ConsentPlaceholder } from "@/components/ExternalGate";
+import { useConsent } from "@/lib/consent";
 import Pagination from "@/components/Pagination";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
@@ -344,9 +346,10 @@ export default function HomePage() {
     fetchData();
   }, [apiUrl]);
 
-  // Load Google Maps API script with delay
+  // Load Google Maps API script with delay - tylko po zgodzie na pliki cookie (baner, 18.10.2026)
+  const { allowed: mapsAllowed } = useConsent("google-maps");
   useEffect(() => {
-    if (!googleMapsKey || typeof window === "undefined") return;
+    if (!googleMapsKey || typeof window === "undefined" || !mapsAllowed) return;
     if (window.google?.maps) {
       setMapsReady(true);
       return;
@@ -364,7 +367,7 @@ export default function HomePage() {
 
     return () => clearTimeout(delayTimer);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [mapsAllowed]);
 
   // Filter and sort companies
   useEffect(() => {
@@ -595,13 +598,17 @@ export default function HomePage() {
               id="mapa"
               className="relative aspect-square sm:h-[420px] sm:aspect-auto overflow-hidden rounded-md border border-white/10 shadow-2xl bg-white"
             >
-              <GoogleMap
-                companies={filteredWithBounds}
-                onBoundsChange={setMapBounds}
-                onCompanyClick={goToCompany}
-                isMobile={isMobile}
-                mapsReady={mapsReady}
-              />
+              {mapsAllowed ? (
+                <GoogleMap
+                  companies={filteredWithBounds}
+                  onBoundsChange={setMapBounds}
+                  onCompanyClick={goToCompany}
+                  isMobile={isMobile}
+                  mapsReady={mapsReady}
+                />
+              ) : (
+                <ConsentPlaceholder service="google-maps" what="Mapa polskich firm w Szwajcarii" height="100%" />
+              )}
             </div>
           </div>
         </div>

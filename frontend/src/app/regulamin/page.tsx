@@ -217,12 +217,7 @@ export default function RegulaminPage() {
         <p className="text-[#1A1A1A]">
           Zasady przetwarzania danych osobowych opisane są w odrębnym
           dokumencie{" "}
-          <Link
-            href="/polityka-prywatnosci"
-            className="text-primary hover:underline"
-          >
-            Polityka prywatności
-          </Link>
+          <a href="/polityka-prywatnosci/" className="text-primary hover:underline">Polityka prywatności</a>
           .
         </p>
       </section>

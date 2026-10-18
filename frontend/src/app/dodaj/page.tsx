@@ -5,6 +5,8 @@
  * AUTO adres strony: /dodaj
  */
 "use client";
+import { PlacesConsentNote } from "@/components/ExternalGate";
+import { useConsent } from "@/lib/consent";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -344,8 +346,10 @@ export default function AddCompanyPage() {
     }
   };
 
+  // Podpowiedzi adresów Google Places tylko po zgodzie na pliki cookie (18.10.2026), inaczej adres wpisuje się ręcznie.
+  const { allowed: placesAllowed } = useConsent("google-maps");
   useEffect(() => {
-    if (!googleKey || typeof window === "undefined") return;
+    if (!googleKey || typeof window === "undefined" || !placesAllowed) return;
     if (window.google?.maps?.places) {
       setPlacesReady(true);
       return;
@@ -355,7 +359,7 @@ export default function AddCompanyPage() {
     script.async = true;
     script.onload = () => setPlacesReady(true);
     document.head.appendChild(script);
-  }, [googleKey]);
+  }, [googleKey, placesAllowed]);
 
   useEffect(() => {
     if (!placesReady || !addressInputRef.current || !window.google?.maps?.places) return;
@@ -591,7 +595,8 @@ export default function AddCompanyPage() {
                         required
                       />
                     </div>
-                    {errors.address && <p className="text-xs font-bold text-red-500 animate-shake">{errors.address}</p>}
+                    <PlacesConsentNote />
+{errors.address && <p className="text-xs font-bold text-red-500 animate-shake">{errors.address}</p>}
                   </div>
 
                   <div className="space-y-3">

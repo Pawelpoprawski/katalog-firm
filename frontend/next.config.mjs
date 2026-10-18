@@ -19,6 +19,13 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
 
+  // Jedna polityka prywatności dla całej domeny (18.10.2026): /katalog-firm/polityka-prywatnosci -> /polityka-prywatnosci/ portalu.
+  async redirects() {
+    const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
+    if (!base) return [];
+    return [{ source: `${base}/polityka-prywatnosci`, destination: '/polityka-prywatnosci/', permanent: true, basePath: false }];
+  },
+
   async headers() {
     return [
       { source: '/:path*', headers: securityHeaders },
@@ -28,7 +35,6 @@ const nextConfig = {
       { source: '/firma/:slug*', headers: cachePublicHeader },
       { source: '/kategoria/:slug*', headers: cachePublicHeader },
       { source: '/jak-to-dziala', headers: cachePublicHeader },
-      { source: '/polityka-prywatnosci', headers: cachePublicHeader },
       { source: '/dodaj', headers: cachePublicHeader },
 
       // Robots — sitemap zarządza się sam przez `export const revalidate` w sitemap.ts

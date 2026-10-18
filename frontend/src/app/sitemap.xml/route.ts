@@ -73,7 +73,6 @@ export async function GET() {
     urlEntry(`${baseUrl}/dodaj`, now, "monthly", "0.7"),
     urlEntry(`${baseUrl}/jak-to-dziala`, now, "monthly", "0.6"),
     urlEntry(`${baseUrl}/regulamin`, now, "yearly", "0.3"),
-    urlEntry(`${baseUrl}/polityka-prywatnosci`, now, "yearly", "0.3"),
   ];
 
   for (const cat of categories) {

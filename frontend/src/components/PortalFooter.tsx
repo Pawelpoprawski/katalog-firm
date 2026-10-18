@@ -9,6 +9,7 @@
 // UWAGA: treść (kolumny linków) jest zdefiniowana w kodzie portalu — przy zmianie stopki
 // portalu zaktualizuj też ten plik.
 
+import CookieSettingsLink from "@/components/CookieSettingsLink";
 import { SOCIAL } from "@/lib/social";
 
 const PORTAL = "https://polacyszwajcaria.com";
@@ -112,7 +113,8 @@ export default function PortalFooter() {
           <p>© {new Date().getFullYear()} Polacy Szwajcaria · Natalia &amp; Paweł</p>
           <p className="flex flex-wrap justify-center gap-x-4">
             <a href="/katalog-firm/regulamin" className="text-white/40 hover:text-white no-underline">Regulamin katalogu</a>
-            <a href="/katalog-firm/polityka-prywatnosci" className="text-white/40 hover:text-white no-underline">Polityka prywatności</a>
+            <a href="/polityka-prywatnosci/" className="text-white/40 hover:text-white no-underline">Polityka prywatności</a>
+            <CookieSettingsLink className="text-white/40 hover:text-white" />
           </p>
         </div>
       </div>

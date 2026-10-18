@@ -5,6 +5,7 @@
  */
 "use client";
 
+import ExternalGate from "@/components/ExternalGate";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -406,6 +407,7 @@ export default function CompanyPage({ params }: Props) {
               </div>
               <div className="h-40 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
                 {googleMapsKey ? (
+                  <ExternalGate service="google-maps" what="Mapa lokalizacji firmy" height={160}>
                   <iframe
                     title={`Mapa lokalizacji ${company.name}`}
                     src={`https://www.google.com/maps/embed/v1/place?key=${googleMapsKey}&q=${encodeURIComponent(company.address || `${company.city}, ${company.canton}, Switzerland`)}&zoom=12&maptype=roadmap`}
@@ -413,6 +415,7 @@ export default function CompanyPage({ params }: Props) {
                     loading="lazy"
                     aria-label={`Mapa lokalizacji firmy ${company.name}`}
                   />
+                  </ExternalGate>
                 ) : mapboxToken ? (
                   <iframe
                     title={`Mapa lokalizacji ${company.name}`}

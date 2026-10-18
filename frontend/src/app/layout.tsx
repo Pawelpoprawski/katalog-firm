@@ -10,6 +10,7 @@ import "./globals.css";
 import AppShell from "./AppShell";
 import PortalBar, { type PortalNavItem } from "@/components/PortalBar";
 import PortalFooter from "@/components/PortalFooter";
+import CookieBanner from "@/components/CookieBanner";
 import { SITE_URL } from "@/lib/siteUrl";
 import { SOCIAL } from "@/lib/social";
 
@@ -194,6 +195,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <PortalBar nav={portalNav} chfRate={chfRate} />
         <AppShell>{children}</AppShell>
         <PortalFooter />
+        {/* Baner zgody na pliki cookie - wybór wspólny z portalem i pracą (ciasteczko psz_consent) */}
+        <CookieBanner />
       </body>
     </html>
   );
