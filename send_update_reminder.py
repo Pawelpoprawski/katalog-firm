@@ -1,8 +1,9 @@
 # POWIĄZANIA
-# Cel: cykliczne "czas odświeżyć ogłoszenie" + potwierdzenie aktywności (co najwyżej co 3 miesiące na firmę;
-#   cron codziennie 20:00 przez send_update_reminder_cron.sh).
+# Cel: cykliczne "czas odświeżyć ogłoszenie" + potwierdzenie aktywności (cron codziennie 20:00 przez
+#   send_update_reminder_cron.sh). Reguła (Paweł 25.10.2026): po edycji ogłoszenia przez firmę kolejny mail za 6 mc,
+#   bez zmian po naszym mailu albo po „Nie potrzebuję zmian” - za 3 mc.
 # Przy zmianie: zastępuje tryb --confirmation z send_migration_emails.py; linki /edycja/[token] i
-#   /potwierdz/[token].
+#   /potwierdz/[token]. Pole last_owner_edit_at ustawia backend/routers/companies.py (PUT z edit_token).
 # AUTO używany przez: nikt nie importuje (punkt wejścia: skrypt/cron/CLI - patrz Cel)
 # /POWIĄZANIA
 # -*- coding: utf-8 -*-
@@ -10,11 +11,10 @@
 Cykliczny mail "czas odswiezyc ogloszenie" — laczy przypomnienie o aktualizacji
 z potwierdzeniem aktywnosci (zastepuje stary mail confirmation z send_migration_emails.py).
 
-Kazda firma dostaje maila maksymalnie co 3 miesiace, liczac od NAJPOZNIEJSZEGO z:
-  - utworzenia firmy (created_at)
-  - ostatniej edycji (updated_at)
-  - ostatniego potwierdzenia / kliku "Nie potrzebuje zmian" (last_confirmed_at)
-  - ostatniej wysylki tego maila (log — dedupe, gdy firma nie zareagowala)
+Firma dostaje maila, gdy minely WSZYSTKIE terminy:
+  - 3 mc od utworzenia, ostatniej zmiany (updated_at) i potwierdzenia "Nie potrzebuje zmian" (last_confirmed_at)
+  - 6 mc od ostatniej edycji ogloszenia przez sama firme (last_owner_edit_at, link z tokenem) - decyzja 25.10.2026
+  - 3 mc od ostatniej wysylki tego maila (log - gdy firma nic nie zmienila, kolejny mail znowu za 3 mc)
 
 Tryby:
   python send_update_reminder.py test   -> 1 mail do adresu testowego
@@ -25,6 +25,7 @@ Filtr kandydatow:
   status == "published"
   ma email + edit_token
   max(created_at, updated_at, last_confirmed_at) starsze niz STALE_DAYS (90)
+  last_owner_edit_at starsze niz OWNER_EDIT_DAYS (180)
   ostatnia wysylka z logu starsza niz COOLDOWN_DAYS (90)
 
 Mail zawiera:
@@ -77,6 +78,7 @@ TEST_TOKEN = "TEST-TOKEN-NIEAKTYWNY"
 RATE_SLEEP = 0.6      # ~1.6 req/s (Resend free tier = 2/s)
 STALE_DAYS = 90       # ostatnia aktywnosc (utworzenie/edycja/potwierdzenie) starsza niz 3 mc
 COOLDOWN_DAYS = 90    # nie wysylaj ponownie czesciej niz co 3 mc (dedupe z logu)
+OWNER_EDIT_DAYS = 180 # firma sama zaktualizowala ogloszenie -> kolejne przypomnienie dopiero po 6 mc
 
 
 def load_companies():
@@ -152,6 +154,9 @@ def pick_targets():
             continue
         change = last_change(c)
         if change is None or (now - change) < timedelta(days=STALE_DAYS):
+            continue
+        owner_edit = _parse_iso(c.get("last_owner_edit_at"))
+        if owner_edit and (now - owner_edit) < timedelta(days=OWNER_EDIT_DAYS):
             continue
         last = sent.get(c.get("id"))
         if last and (now - last) < timedelta(days=COOLDOWN_DAYS):

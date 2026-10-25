@@ -4,7 +4,7 @@
 # Przy zmianie: KONSUMENT ZEWNĘTRZNY: portal web/src/lib/katalog.ts (GET /companies/ - pola name, slug, img,
 #   category). Tokeny potwierdzeń/archiwizacji są w linkach maili send_*.py.
 # AUTO używany przez: backend/main.py, backend/routers/__init__.py
-# AUTO wywoływany z: [web] src/lib/katalog.ts, backend/main.py, frontend/src/app/admin/components/AdminCompanies.tsx, frontend/src/app/admin/page.tsx, frontend/src/app/archiwizuj/[token]/page.tsx, frontend/src/app/categories/[slug]/page.tsx, frontend/src/app/companies/[slug]/page.tsx, frontend/src/app/dodaj/page.tsx (+11, pełna lista: POWIAZANIA.md)
+# AUTO wywoływany z: [web] src/lib/forumAuto/katalog.ts, [web] src/lib/katalog.ts, backend/main.py, frontend/src/app/admin/components/AdminCompanies.tsx, frontend/src/app/admin/page.tsx, frontend/src/app/archiwizuj/[token]/page.tsx, frontend/src/app/categories/[slug]/page.tsx, frontend/src/app/companies/[slug]/page.tsx (+12, pełna lista: POWIAZANIA.md)
 # AUTO endpoint: GET /companies/, GET /companies/newsletter-preview, GET /companies/newsletter, POST /companies/, GET /companies/by-slug/{slug}, GET /companies/{company_id}, POST /companies/batch-view, POST /companies/{company_id}/view, POST /companies/{company_id}/click, PUT /companies/{company_id}, DELETE /companies/{company_id}, GET /companies/by-token/{token}, GET /companies/{company_id}/edit-token, GET /companies/{company_id}/photo/{photo_index}, POST /companies/confirm, POST /companies/confirm-token, POST /companies/archive-token
 # /POWIĄZANIA
 from fastapi import APIRouter, HTTPException, status, Body, Query, Request
@@ -379,6 +379,10 @@ def update_company(
             update_data["short_description"] = sanitize_plain_text(update_data["short_description"])
         if update_data.get("photos") and isinstance(update_data["photos"], list) and len(update_data["photos"]) > 20:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Maksymalnie 20 zdjęć.")
+        # Edycja przez firmę (link z tokenem): send_update_reminder.py liczy od niej 6 miesięcy do kolejnego
+        # przypomnienia (updated_at zmieniają też potwierdzenia i panel admina, więc nie nadaje się do tego).
+        from datetime import datetime, timezone
+        update_data["last_owner_edit_at"] = datetime.now(timezone.utc).isoformat()
         updated = storage_update_company(company_id, update_data)
         return _enrich_company(updated.copy())
     except ValueError as e:
