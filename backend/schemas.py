@@ -86,6 +86,10 @@ class CompanyRead(CompanyBase):
     status: Optional[str] = "published"
     rating: Optional[float] = None  # Computed from reviews
     rating_count: int = 0  # Computed from reviews
+    # Nazwa i slug kategorii z _enrich_company (routers/companies.py). Bez tych pól FastAPI je wycinał i strona firmy
+    # miała w tytule „usługi” zamiast kategorii i bez okruszka kategorii (audyt SEO 01.11.2026).
+    category: Optional[str] = None
+    category_slug: Optional[str] = None
     created_at: Optional[float] = None
     updated_at: Optional[float] = None
     views: int = 0
