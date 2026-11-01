@@ -129,16 +129,10 @@ def _write_list(path: Path, data: list[dict]) -> None:
 
 
 def generate_slug(text: str) -> str:
-    """Generate URL-friendly slug from text (lowercase, no Polish chars, dashes)."""
-    if not text:
-        return ""
-    # Normalize unicode (NFD) and remove diacritics
-    text = unicodedata.normalize("NFD", text)
-    text = "".join(c for c in text if unicodedata.category(c) != "Mn")
-    # Convert to lowercase and replace spaces/special chars with dashes
-    text = re.sub(r"[^\w\s-]", "", text.lower())
-    text = re.sub(r"[-\s]+", "-", text)
-    return text.strip("-")
+    """Slug z samych a-z0-9 i myślników (linki.generuj_slug). Wcześniej NFD zostawiało „ł” i ozdobne litery Unicode
+    w adresie (audyt SEO 01.11.2026)."""
+    from .linki import generuj_slug
+    return generuj_slug(text)
 
 
 def _next_id(items: list[dict]) -> int:
@@ -309,7 +303,10 @@ def get_company_by_slug(slug: str) -> Optional[dict]:
     """Get company by slug."""
     with _lock:
         companies = _read_list(COMPANIES_FILE)
-        return next((c for c in companies if (c.get("slug") or "").lower() == slug.lower()), None)
+        s = (slug or "").lower()
+        hit = next((c for c in companies if (c.get("slug") or "").lower() == s), None)
+        # Stare slugi (przed zmianą na ASCII 01.11.2026) - frontend przekierowuje 301 na aktualny.
+        return hit or next((c for c in companies if s in [(o or "").lower() for o in (c.get("old_slugs") or [])]), None)
 
 
 def create_company(payload: dict) -> dict:
@@ -321,7 +318,9 @@ def create_company(payload: dict) -> dict:
         demo_user = get_or_create_demo_user()
         
         # Generate slug if not provided
-        slug = payload.get("slug") or generate_slug(payload.get("name", ""))
+        slug = generate_slug(payload.get("slug") or "") or generate_slug(payload.get("name", ""))
+        from .linki import normalizuj_linki
+        normalizuj_linki(payload)  # „www.x.ch” -> https://www.x.ch (inaczej względny link = 404 na stronie firmy)
         if not slug:
             slug = f"firma-{_next_id(companies)}"
 
@@ -389,6 +388,8 @@ def update_company(company_id: int, updates: dict) -> dict:
     if updates.get('photos') and isinstance(updates['photos'], list):
         updates['photos'] = [save_image_to_disk(photo, company_id, "photo", idx) for idx, photo in enumerate(updates['photos']) if photo]
     
+    from .linki import normalizuj_linki
+    normalizuj_linki(updates)  # jak przy dodaniu firmy (audyt SEO 01.11.2026)
     with _lock:
         companies = _read_list(COMPANIES_FILE)
         for idx, c in enumerate(companies):

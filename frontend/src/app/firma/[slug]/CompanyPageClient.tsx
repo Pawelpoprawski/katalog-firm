@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Company } from "@/types";
 import { resolveImageUrl } from "@/lib/utils";
+import { linkZewnetrzny } from "@/lib/linki";
 
 type Props = {
   company: Company;
@@ -55,6 +56,13 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
     try { sessionStorage.setItem("katalog_powrot_z_firmy", "1"); } catch { /* ignorujemy */ }
   }, []);
   const [company, setCompany] = useState<Company>(initialCompany);
+  // Linki zewnętrzne tylko z poprawnym adresem (lib/linki.ts); sama nazwa („Karol Haustechnik”) = tekst, nie link
+  // (audyt SEO 01.11.2026: względne linki dawały 404 /katalog-firm/firma/<tekst>).
+  const wwwUrl = linkZewnetrzny(company.website, "website");
+  const fbUrl = linkZewnetrzny(company.facebook, "facebook");
+  const igUrl = linkZewnetrzny(company.instagram, "instagram");
+  const socialTekst = [!fbUrl && company.facebook && company.facebook.trim() !== "-" ? `Facebook: ${company.facebook.trim()}` : "",
+    !igUrl && company.instagram && company.instagram.trim() !== "-" ? `Instagram: ${company.instagram.trim()}` : ""].filter(Boolean);
   const [reviews, setReviews] = useState<Array<{ id: number; author: string; rating: number; comment: string; created_at?: number }>>([]);
   const [relatedCompanies, setRelatedCompanies] = useState<Company[]>([]);
   const [relatedCategoryName, setRelatedCategoryName] = useState<string>("");
@@ -279,16 +287,16 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
     },
     telephone: company.phone,
     email: company.email,
-    url: company.website ? (/^https?:\/\//i.test(company.website) ? company.website : `https://${company.website}`) : undefined,
+    url: linkZewnetrzny(company.website, "website") || undefined,
     image: company.img,
     areaServed: {
       "@type": "Country",
       name: "Switzerland"
     },
-    ...(company.facebook || company.instagram ? {
+    ...(fbUrl || igUrl ? {
       sameAs: [
-        ...(company.facebook ? [company.facebook] : []),
-        ...(company.instagram ? [company.instagram] : [])
+        ...(fbUrl ? [fbUrl] : []),
+        ...(igUrl ? [igUrl] : [])
       ]
     } : {})
   };
@@ -425,12 +433,12 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
                   </a>
                 </div>
               )}
-              {company.website && (
+              {wwwUrl && company.website && (
                 <div className="flex items-start gap-3">
                   <svg className="w-4 h-4 text-[#888] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                   </svg>
-                  <a href={/^https?:\/\//i.test(company.website) ? company.website : `https://${company.website}`} target="_blank" rel="noopener noreferrer" className="text-[#0D2240] hover:text-[#E1002A] break-all transition-colors" onClick={handleTrackClick}>
+                  <a href={wwwUrl} target="_blank" rel="noopener noreferrer" className="text-[#0D2240] hover:text-[#E1002A] break-all transition-colors" onClick={handleTrackClick}>
                     {company.website.replace(/^https?:\/\//, "")}
                   </a>
                 </div>
@@ -453,23 +461,24 @@ export default function CompanyPageClient({ company: initialCompany, slug }: Pro
               )}
             </div>
 
+            {socialTekst.length > 0 && <p className="pt-2 text-sm text-[#555]">{socialTekst.join(" · ")}</p>}
             {/* Social Media Icons */}
-            {(company.facebook || company.instagram) && (
+            {(fbUrl || igUrl) && (
               <div className="flex gap-3 pt-2">
-                {company.facebook && company.facebook !== "-" && (
+                {fbUrl && (
                   <a
-                    href={company.facebook}
-                    onClick={(e) => { e.preventDefault(); window.location.href = company.facebook!; }}
+                    href={fbUrl}
+                    onClick={(e) => { e.preventDefault(); window.location.href = fbUrl; }}
                     className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                     aria-label="Facebook"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" /></svg>
                   </a>
                 )}
-                {company.instagram && company.instagram !== "-" && (
+                {igUrl && (
                   <a
-                    href={company.instagram}
-                    onClick={(e) => { e.preventDefault(); window.location.href = company.instagram!; }}
+                    href={igUrl}
+                    onClick={(e) => { e.preventDefault(); window.location.href = igUrl; }}
                     className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 text-white hover:opacity-90 transition-opacity"
                     aria-label="Instagram"
                   >

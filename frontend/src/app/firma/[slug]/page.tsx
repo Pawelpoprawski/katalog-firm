@@ -1,13 +1,17 @@
 /** POWIĄZANIA
- * Cel: strona firmy /firma/<slug> (SSR, metadane SEO, ISR 300 s) - kanoniczna.
- * Przy zmianie: slug zostaje po zmianie nazwy firmy (np. pks-finanz-gmbh); linkują tu portal i newsletter.
+ * Cel: strona firmy /firma/<slug> (SSR, metadane SEO, ISR 300 s) - kanoniczna; pod profilem serwerowy blok
+ *   InfoFirmy (fakty z bazy + inne firmy z kategorii i kantonu).
+ * Przy zmianie: slug zostaje po zmianie nazwy firmy (np. pks-finanz-gmbh); linkują tu portal i newsletter. Canonical
+ *   = company.slug (stare slugi z „ł”/Unicode przekierowuje src/middleware.ts). Tytuł max ~65 znaków (audyt SEO 01.11.2026).
  * AUTO adres strony: /firma/[slug]
  */
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CompanyPageClient from "./CompanyPageClient";
+import InfoFirmy from "./InfoFirmy";
 import { SITE_URL } from "@/lib/siteUrl";
 import { metaDesc } from "@/lib/utils";
+import { linkZewnetrzny } from "@/lib/linki";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
@@ -42,6 +46,22 @@ async function getCompany(slug: string) {
   }
 }
 
+const SUFIKS = " | Katalog Firm"; // z szablonu tytułu w layout.tsx
+const MAX_TYTUL = 65;
+
+/** Tytuł strony firmy do ~65 znaków: najpierw pełny (nazwa, kategoria, miasto + sufiks), potem coraz krótsze
+ * warianty; długą nazwę przycinamy na granicy słowa (audyt SEO 01.11.2026: ~20 tytułów > 70 znaków). */
+function tytulFirmy(nazwa: string, kat: string, miasto: string): string | { absolute: string } {
+  const pelny = `${nazwa} - ${kat}${miasto ? `, ${miasto}` : ""}`;
+  if ((pelny + SUFIKS).length <= MAX_TYTUL) return pelny;
+  const zMiastem = miasto ? `${nazwa}, ${miasto}` : nazwa;
+  if ((zMiastem + SUFIKS).length <= MAX_TYTUL) return zMiastem;
+  if (pelny.length <= MAX_TYTUL) return { absolute: pelny };
+  if (zMiastem.length <= MAX_TYTUL) return { absolute: zMiastem };
+  const ciete = nazwa.slice(0, MAX_TYTUL - 1);
+  return { absolute: (ciete.includes(" ") ? ciete.slice(0, ciete.lastIndexOf(" ")) : ciete).replace(/[\s,.\-|:]+$/, "") };
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const company = await getCompany(params.slug);
   if (!company) {
@@ -54,7 +74,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const city = company.city || "";
   const canton = company.canton || "";
   const location = [city, canton].filter(Boolean).join(", ") || "Szwajcaria";
-  const title = `${company.name} - ${categoryName}${city ? `, ${city}` : ""}`;
+  const title = tytulFirmy(company.name, categoryName, city);
+  const adres = `${SITE_URL}/firma/${company.slug || params.slug}`;
 
   // Description — strip HTML, prefer short, fallback build w polskim
   const rawDescription = company.short_description ||
@@ -90,7 +111,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${company.name} | Katalog Firm Polonijnych`,
       description,
       type: "website",
-      url: `${SITE_URL}/firma/${params.slug}`,
+      url: adres,
       siteName: "Katalog Firm Polonijnych w Szwajcarii",
       locale: "pl_PL",
       images: [{ url: ogImage, width: 1200, height: 630, alt: `${company.name} — ${categoryName} w ${location}` }],
@@ -102,7 +123,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [ogImage],
     },
     alternates: {
-      canonical: `${SITE_URL}/firma/${params.slug}`,
+      canonical: adres,
     },
   };
 }
@@ -127,7 +148,7 @@ export default async function CompanyPage({ params }: Props) {
   }
   breadcrumbItems.push({
     name: company.name,
-    item: `${SITE_URL}/firma/${params.slug}`,
+    item: `${SITE_URL}/firma/${company.slug || params.slug}`,
   });
   const breadcrumbData = {
     "@context": "https://schema.org",
@@ -144,7 +165,7 @@ export default async function CompanyPage({ params }: Props) {
     "@type": "LocalBusiness",
     name: company.name,
     description: company.short_description || company.description?.replace(/<[^>]*>/g, "").slice(0, 200) || "",
-    url: company.website || `${SITE_URL}/firma/${params.slug}`,
+    url: linkZewnetrzny(company.website, "website") || `${SITE_URL}/firma/${company.slug || params.slug}`,
     ...(company.img ? { image: company.img.startsWith("/images/") ? `${SITE_URL}/api${company.img}` : company.img } : {}),
     ...(company.phone ? { telephone: company.phone } : {}),
     ...(company.email ? { email: company.email } : {}),
@@ -183,7 +204,8 @@ export default async function CompanyPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
       />
-      <CompanyPageClient company={company} slug={params.slug} />
+      <CompanyPageClient company={company} slug={company.slug || params.slug} />
+      <InfoFirmy company={company} />
     </>
   );
 }
