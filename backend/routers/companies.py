@@ -312,7 +312,8 @@ def create_company(
 def get_company_by_slug(slug: str):
     """Get company by slug (SEO-friendly URL)."""
     company = storage_get_company_by_slug(slug)
-    if not company:
+    # Zarchiwizowana (zawieszona) firma nie ma publicznej strony - tylko panel admina i edycja tokenem.
+    if not company or company.get("status") == "archived":
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     return _enrich_company(company.copy())
 

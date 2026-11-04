@@ -36,7 +36,9 @@ async function getCompany(slug: string) {
         next: { revalidate: 60 },
       });
       if (resById.ok) {
-        return await resById.json();
+        const c = await resById.json();
+        // Zarchiwizowana firma: brak publicznej strony (by-slug zwraca wtedy 404, tu to samo dla adresu z id).
+        return c?.status === "archived" ? null : c;
       }
     }
 
